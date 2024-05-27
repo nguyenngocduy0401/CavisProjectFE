@@ -38,15 +38,18 @@ export default function InputGeneric({
 const styles = StyleSheet.create({
     container: {
         marginBottom: '3%',
-        marginTop: '6%',
+        marginTop: '7%',
+        marginLeft: '2%',
+        
     },
     inputContainerStyle: {
         borderWidth: 1, // Độ dày của đường viền
         borderColor: '#ccc', // Màu của đường viền
         borderRadius: 8, // Độ cong của góc
-        paddingHorizontal: '3%', // Khoảng cách giữa đường viền và nội dung bên trong
+        paddingHorizontal: '2.6%', // Khoảng cách giữa đường viền và nội dung bên trong
         paddingVertical: '1.7%',// Khoảng cách giữa đường viền và nội dung bên trong
         height: 50,
+        width: 410,
     },
     inputStyle: {
     },
