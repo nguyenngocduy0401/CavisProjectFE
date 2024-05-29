@@ -8,20 +8,23 @@ import GenericButton from '../../components/button/GenericButton';
 import ButtonLoginGoogle from '../../components/button/ButtonLoginGoogle';
 import {login} from '../../services/AuthService';
 import Toast from "react-native-toast-message";
+import { reporter } from '../../../metro.config';
 
  
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const registerSceen ='Register';
-export default function Login() {
+export default function Register() {
 
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [email, setEmail] = useState('');
   const [checked, setChecked] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleLogin = async () => {
-    const responseData = await login({userName, password});
+  const handleRegister = async () => {
+    const responseData = await reporter({userName, password});
     
     if (responseData.isSuccess) {
       // Navigate to the next screen or home screen
@@ -43,8 +46,8 @@ export default function Login() {
       <View style={styles.topHalf}>
         <ImageBackground source={headerImage} style={styles.topImage} >
           <View style={styles.mainTitle}>
-            <Text style={styles.title}>Sign In</Text>
-            <Text style={styles.subTitle}>Welcome back. Enter your credentials to access your account</Text>
+            <Text style={styles.title}>Sign up</Text>
+            <Text style={styles.subTitle}>Welcome! Enter your credentials to create your account</Text>
           </View>
         </ImageBackground>
       </View>

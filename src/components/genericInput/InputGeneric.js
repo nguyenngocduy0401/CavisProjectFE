@@ -27,20 +27,18 @@ export default function InputGeneric({
             disabled={disabled}
             leftIcon={leftIconName && <Icon name={leftIconName} size={20} />}
             rightIcon={rightIconName && <Icon name={rightIconName} size={20} />}
-            containerStyle={[styles.container, { width: width ? width : screenWidth, height: height ? height : 40 }]}
+            containerStyle={styles.container}
             inputContainerStyle={styles.inputContainerStyle}
             inputStyle={styles.inputStyle}
             labelStyle={styles.labelStyle}
             disabledInputStyle={styles.disabledStyle}
+            errorStyle={styles.errorStyle}
         />
     );
 }
 const styles = StyleSheet.create({
     container: {
-        marginBottom: '3%',
-        marginTop: '7%',
         marginLeft: '2%',
-        
     },
     inputContainerStyle: {
         borderWidth: 1, // Độ dày của đường viền
@@ -59,6 +57,9 @@ const styles = StyleSheet.create({
         color: '#333',
         marginLeft: '2%',
     },
-        
+    errorStyle:{
+        marginTop: 0,
+        marginBottom: 0,
+    },
     disabledStyle: {},
 })
