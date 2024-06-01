@@ -1,131 +1,166 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, Dimensions, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import { Input } from '@rneui/themed';
 import headerImage from '../../../assets/images/Header-Items.png';
 import GenericInput from '../../components/genericInput/InputGeneric';
 import GenericCheckbox from '../../components/checkbox/GenericCheckbox';
 import GenericButton from '../../components/button/GenericButton';
 import ButtonLoginGoogle from '../../components/button/ButtonLoginGoogle';
-import {login} from '../../services/AuthService';
+import { login, register } from '../../services/AuthService';
 import Toast from "react-native-toast-message";
-import { reporter } from '../../../metro.config';
-
- 
+import * as yup from 'yup'
+import { Formik } from 'formik';
+import { useNavigation } from '@react-navigation/native';
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-const registerSceen ='Register';
+const registerSceen = 'Register';
 export default function Register() {
 
-  const [userName, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [email, setEmail] = useState('');
-  const [checked, setChecked] = useState(true);
+  const navigation = useNavigation();
   const [errorMessage, setErrorMessage] = useState('');
+  const schema = yup.object().shape({
+    userName: yup.string().required("Tài khoản là trường bắt buộc"),
+    name: yup.string().required("Tên là trường bắt buộc"),
+    email: yup.string().required("Email là trường bắt buộc").email('Email có định dạng không hợp lệ!'),
+    phoneNumber: yup.string().required("Số điện thoại là trường bắt buộc").matches(/^0[0-9]{9}$/, 'Số điện thoại phải có 10 chữ số và bắt đầu bằng 0!'),
+    password: yup.string().required("Mật khẩu là trường bắt buộc").min(6, 'Mật khẩu phải có độ dài ít nhất 6 ký tự!').matches(/[0-9]+/, 'Mật khẩu của bạn phải chứa ít nhất một số!'),
+    passwordConfirm: yup.string().required("Mật khẩu xác nhận là trường bắt buộc").oneOf([yup.ref('password'), null], 'Mật khẩu xác nhận của bạn là sai!')
+  });
 
-  const handleRegister = async () => {
-    const responseData = await reporter({userName, password});
-    
-    if (responseData.isSuccess) {
-      // Navigate to the next screen or home screen
-      navigation.navigate(registerSceen);
-    }else
-    {
-      setErrorMessage(responseData.message);
-    }
-  };
-
-  const handleForgotPassword = () => {
-    // Handle forgot password logic
-    console.log('Forgot Password pressed');
-  };
-
-  const toggleCheckbox = () => setChecked(!checked);
   return (
-    <View style={styles.container}>
-      <View style={styles.topHalf}>
-        <ImageBackground source={headerImage} style={styles.topImage} >
-          <View style={styles.mainTitle}>
-            <Text style={styles.title}>Sign up</Text>
-            <Text style={styles.subTitle}>Welcome! Enter your credentials to create your account</Text>
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <View style={styles.container}>
+        <View style={styles.topHalf}>
+          <ImageBackground source={headerImage} style={styles.topImage} >
+            <View style={styles.mainTitle}>
+              <Text style={styles.title}>Đăng kí</Text>
+              <Text style={styles.subTitle}>Chào mừng! Nhập thông tin cần thiết để tạo tài khoản mới</Text>
+            </View>
+          </ImageBackground>
+        </View>
+
+        <View style={styles.bottomHalf}>
+          <Formik
+            initialValues={{
+              userName: '',
+              name: '',
+              email: '',
+              phoneNumber: '',
+              password: '',
+              passwordConfirm: ''
+            }}
+            onSubmit={async (values) => {
+              try {
+                const responseData = await register(values);
+
+                if (responseData.isSuccess) {
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Đăng ký thành công',
+                    text2: 'Bạn đã đăng ký thành công. Hãy đăng nhập!',
+                  });
+                  navigation.navigate('Login');
+                } else {
+                  setErrorMessage(responseData.message);
+                }
+              } catch (error) {
+                setErrorMessage(error.message);
+              }
+            }}
+            validationSchema={schema}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+              <>
+                <GenericInput
+                  label="Tài khoản"
+                  placeholder="Tài khoản"
+                  value={values.userName}
+                  onChangeText={handleChange('userName')}
+                  errorMessage={touched.userName && errors.userName}
+                />
+                <GenericInput
+                  label="Tên"
+                  placeholder="Tên"
+                  value={values.name}
+                  onChangeText={handleChange('name')}
+                  errorMessage={touched.name && errors.name}
+                />
+                <GenericInput
+                  label="Email"
+                  placeholder="Email"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  errorMessage={touched.email && errors.email}
+                />
+                <GenericInput
+                  label="Số điện thoại"
+                  placeholder="Số điện thoại"
+                  value={values.phoneNumber}
+                  onChangeText={handleChange('phoneNumber')}
+                  errorMessage={touched.phoneNumber && errors.phoneNumber}
+                />
+                <GenericInput
+                  secureTextEntry={true}
+                  label="Mật khẩu"
+                  placeholder="Mật khẩu"
+                  value={values.password}
+                  onChangeText={handleChange('password')}
+                  rightIconName='eye-outline'
+                  errorMessage={touched.password && errors.password}
+                />
+                <GenericInput
+                  secureTextEntry={true}
+                  label="Xác nhận mật khẩu"
+                  placeholder="Xác nhận mật khẩu"
+                  value={values.passwordConfirm}
+                  onChangeText={handleChange('passwordConfirm')}
+                  rightIconName='eye-outline'
+                  errorMessage={touched.passwordConfirm && errors.passwordConfirm}
+                />
+                {errorMessage ? ( // Hiển thị thông báo lỗi dưới trường mật khẩu nếu có lỗi
+                  <Text style={styles.errorMessage}>{errorMessage}</Text>
+                ) : null}
+                <View style={styles.buttonLogin}>
+                  <GenericButton
+                    title='Đăng kí'
+                    titleStyle={styles.titleStyleButton}
+                    buttonStyle={styles.buttonStyleButton}
+                    onPress={handleSubmit}
+                  />
+                </View>
+              </>
+            )}
+          </Formik>
+          <View style={styles.optionsRow}>
           </View>
-        </ImageBackground>
+          <View style={styles.options}>
+            <View style={styles.line} />
+            <Text style={styles.using}>Đăng kí bằng cách khác</Text>
+            <View style={styles.line} />
+          </View>
+          <View style={styles.buttonLogin}>
+            <ButtonLoginGoogle
+
+            />
+          </View>
+          <View style={styles.optionsSignUp}>
+            <Text >Đã có tài khoản? </Text>
+            <TouchableOpacity onPress={()=>navigation.navigate('Login')} >
+              <Text style={styles.signup}>Đăng nhập tại đây!</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
       </View>
-      
-      <View style={styles.bottomHalf}>
-      
-        <GenericInput
-          label="UserName"
-          placeholder="UserName"
-          value={userName}
-          onChangeText={setUsername}
-        />
-        <GenericInput
-          label="Password"
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          rightIconName='eye-outline'
-        />
-        
-        {errorMessage ? ( // Hiển thị thông báo lỗi dưới trường mật khẩu nếu có lỗi
-          <Text style={styles.errorMessage}>{errorMessage}</Text>
-        ) : null}
-        <View style={styles.optionsRow}>
-
-          {/* <GenericCheckbox
-            title='Keep me signed in'
-            checked={checked}
-            onPress={toggleCheckbox}
-            iconType='material-community'
-            checkedIcon='checkbox-marked'
-            uncheckedIcon='checkbox-blank-outline'
-            checkedColor='#DE8186'
-            titleProps={styles.titleProps}
-          /> */}
-            
-          <TouchableOpacity onPress={handleForgotPassword}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
-          </TouchableOpacity>
-
-        </View>
-
-
-        <View style={styles.buttonLogin}>
-          <GenericButton
-            title='SIGN IN'
-            titleStyle={styles.titleStyleButton}
-            buttonStyle={styles.buttonStyleButton}
-            onPress={handleLogin}
-          />
-        </View>
-
-        <View style={styles.options}>
-          <View style={styles.line} />
-          <Text style={styles.using}>Or Sign In using</Text>
-          <View style={styles.line} />
-        </View>
-        <View style={styles.buttonLogin}>
-          <ButtonLoginGoogle
-            onPress={handleForgotPassword}
-          />
-        </View>
-        <View style={styles.optionsSignUp}>
-        <Text >Don't have an Account? </Text>
-          <TouchableOpacity >
-            <Text style={styles.signup}>Sign Up here</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: screenWidth
+    width: screenWidth,
+    height: 1000,
   },
+
   mainTitle: {
     paddingLeft: '6%',
     paddingBottom: '4%',
@@ -155,7 +190,6 @@ const styles = StyleSheet.create({
     top: 180,
     borderTopLeftRadius: 30, // Bo tròn góc trên bên trái
     borderTopRightRadius: 30, // Bo tròn góc trên bên phải
-    height: screenHeight,
     paddingTop: 30,
   },
   optionsRow: {
@@ -205,17 +239,18 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.43)',
     marginHorizontal: 7
   },
-  optionsSignUp:{
+  optionsSignUp: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
+    paddingBottom: 40,
   },
-  signup:{
-    color:'#F27272'
+  signup: {
+    color: '#F27272'
   },
   errorMessage: {
     color: 'red',
     marginLeft: 20,
-},
+  },
 });

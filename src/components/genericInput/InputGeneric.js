@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { Input } from "@rneui/base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Dimensions, StyleSheet } from 'react-native';
-
+import { Dimensions, StyleSheet,TouchableOpacity } from 'react-native';
 const screenWidth = Dimensions.get('window').width
 
 export default function InputGeneric({
@@ -14,11 +13,14 @@ export default function InputGeneric({
     disabled,
     leftIconName,
     rightIconName,
-    width,
-    height
-}) {
+    secureTextEntry
+}) {const [passwordVisible, setPasswordVisible] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible)};
     return (
         <Input
+            secureTextEntry={secureTextEntry && (!passwordVisible ? true : false)}
             label={label}
             placeholder={placeholder}
             value={value}
@@ -26,7 +28,14 @@ export default function InputGeneric({
             errorMessage={errorMessage}
             disabled={disabled}
             leftIcon={leftIconName && <Icon name={leftIconName} size={20} />}
-            rightIcon={rightIconName && <Icon name={rightIconName} size={20} />}
+            rightIcon={rightIconName && (
+                <TouchableOpacity onPress={togglePasswordVisibility}>
+                    <Icon
+                        name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
+                        size={20}
+                    />
+                </TouchableOpacity>
+            )}
             containerStyle={styles.container}
             inputContainerStyle={styles.inputContainerStyle}
             inputStyle={styles.inputStyle}
@@ -53,11 +62,11 @@ const styles = StyleSheet.create({
     },
     labelStyle: {
         fontSize: 13,
-        fontWeight: 'bold', 
+        fontWeight: 'bold',
         color: '#333',
         marginLeft: '2%',
     },
-    errorStyle:{
+    errorStyle: {
         marginTop: 0,
         marginBottom: 0,
     },

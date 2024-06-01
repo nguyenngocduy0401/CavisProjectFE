@@ -8,13 +8,13 @@ import GenericButton from '../../components/button/GenericButton';
 import ButtonLoginGoogle from '../../components/button/ButtonLoginGoogle';
 import {login} from '../../services/AuthService';
 import Toast from "react-native-toast-message";
-
+import { useNavigation } from '@react-navigation/native';
  
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const registerSceen ='Register';
 export default function Login() {
-
+  const navigation = useNavigation();
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState(true);
@@ -25,13 +25,16 @@ export default function Login() {
     
     if (responseData.isSuccess) {
       // Navigate to the next screen or home screen
-      navigation.navigate(registerSceen);
+      navigation.navigate('Home');
+      setErrorMessage("");
     }else
     {
-      setErrorMessage(responseData.message);
+      setErrorMessage("Username or password is incorrect!");
     }
   };
-
+  const handleRegister= async () => {
+      navigation.navigate(Register);
+  };
   const handleForgotPassword = () => {
     // Handle forgot password logic
     console.log('Forgot Password pressed');
@@ -43,8 +46,8 @@ export default function Login() {
       <View style={styles.topHalf}>
         <ImageBackground source={headerImage} style={styles.topImage} >
           <View style={styles.mainTitle}>
-            <Text style={styles.title}>Sign In</Text>
-            <Text style={styles.subTitle}>Welcome back. Enter your credentials to access your account</Text>
+            <Text style={styles.title}>Đăng nhập</Text>
+            <Text style={styles.subTitle}>Chào mừng trở lại. Nhập thông tin cần thiết để đăng nhập</Text>
           </View>
         </ImageBackground>
       </View>
@@ -52,18 +55,20 @@ export default function Login() {
       <View style={styles.bottomHalf}>
       
         <GenericInput
-          label="UserName"
-          placeholder="UserName"
+          label="Tài khoản"
+          placeholder="Tài khoản"
           value={userName}
           onChangeText={setUsername}
         />
         <GenericInput
-          label="Password"
-          placeholder="Password"
+          secureTextEntry={true}
+          label="Mật khẩu"
+          placeholder="Mật khẩu"
           value={password}
           onChangeText={setPassword}
           rightIconName='eye-outline'
         />
+        
         
         {errorMessage ? ( // Hiển thị thông báo lỗi dưới trường mật khẩu nếu có lỗi
           <Text style={styles.errorMessage}>{errorMessage}</Text>
@@ -81,8 +86,8 @@ export default function Login() {
             titleProps={styles.titleProps}
           /> */}
             
-          <TouchableOpacity onPress={handleForgotPassword}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+          <TouchableOpacity onPress={()=>navigation.navigate('Forget')}>
+            <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
           </TouchableOpacity>
 
         </View>
@@ -90,7 +95,7 @@ export default function Login() {
 
         <View style={styles.buttonLogin}>
           <GenericButton
-            title='SIGN IN'
+            title='Đăng nhập'
             titleStyle={styles.titleStyleButton}
             buttonStyle={styles.buttonStyleButton}
             onPress={handleLogin}
@@ -99,7 +104,7 @@ export default function Login() {
 
         <View style={styles.options}>
           <View style={styles.line} />
-          <Text style={styles.using}>Or Sign In using</Text>
+          <Text style={styles.using}>Đăng nhập bằng cách khác</Text>
           <View style={styles.line} />
         </View>
         <View style={styles.buttonLogin}>
@@ -108,9 +113,9 @@ export default function Login() {
           />
         </View>
         <View style={styles.optionsSignUp}>
-        <Text >Don't have an Account? </Text>
-          <TouchableOpacity >
-            <Text style={styles.signup}>Sign Up here</Text>
+        <Text >Chưa có tài khoản? </Text>
+          <TouchableOpacity onPress={()=>navigation.navigate('Register')} >
+            <Text style={styles.signup}>Đăng kí tại đây!</Text>
           </TouchableOpacity>
         </View>
       </View>
