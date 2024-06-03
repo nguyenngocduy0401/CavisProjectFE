@@ -4,7 +4,7 @@ import { Input } from '@rneui/themed';
 import headerImage from '../../../assets/images/Header-Items.png';
 import GenericInput from '../../components/genericInput/InputGeneric';
 import GenericButton from '../../components/button/GenericButton';
-import { login, register } from '../../services/AuthService';
+import { sendOTP, resetPassword } from '../../services/AuthService';
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as yup from 'yup'
@@ -16,8 +16,15 @@ export default function Forget() {
 
     const navigation = useNavigation();
     const [errorMessage, setErrorMessage] = useState('');
-    const schema = yup.object().shape({
+    const [step, setStep] = useState(1);
+    const [email, setEmail] = useState('');
+    const schemaStep1 = yup.object().shape({
         email: yup.string().required("Email là trường bắt buộc").email('Email có định dạng không hợp lệ!'),
+    });
+    const schemaStep2 = yup.object().shape({
+        otp: yup.string().required("OTP là trường bắt buộc").matches(/^\d{6}$/, 'OTP phải có 6 chữ số'),
+        newPassword: yup.string().required("Mật khẩu là trường bắt buộc").min(6, 'Mật khẩu phải có độ dài ít nhất 6 ký tự!').matches(/^(?=.*[a-zA-Z])(?=.*\d).+$/, 'Mật khẩu của bạn phải chứa ít nhất một số và một chữ!'),
+        confirmPassword: yup.string().required("Mật khẩu xác nhận là trường bắt buộc").oneOf([yup.ref('newPassword'), null], 'Mật khẩu xác nhận của bạn là sai!')
     });
 
     return (
@@ -33,25 +40,28 @@ export default function Forget() {
                 </View>
 
                 <View style={styles.bottomHalf}>
-                    <Formik
+                    {step === 1 && <Formik
                         initialValues={{
                             email: '',
                         }}
                         onSubmit={async (values) => {
                             try {
-                                const responseData = await register(values);
-
-                                if (responseData.isSuccess) {
-
-                                    navigation.navigate(registerSceen);
-                                } else {
+                                const responseData = await sendOTP(values);
+                                if (responseData.isSuccess && responseData.data) {
+                                    setEmail(values.email);
+                                    setErrorMessage(null);
+                                    setStep(2);
+                                } else if (responseData.isSuccess && !responseData.data) {
                                     setErrorMessage(responseData.message);
+                                } else {
+                                    setErrorMessage("Không thể gửi OTP! Xin vui lòng thử lại sau.");
                                 }
                             } catch (error) {
-                                setErrorMessage(error.message);
+                                console.log(error.message);
+                                setErrorMessage("Không thể gửi OTP! Xin vui lòng thử lại sau.");
                             }
                         }}
-                        validationSchema={schema}
+                        validationSchema={schemaStep1}
                     >
                         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                             <>
@@ -69,7 +79,7 @@ export default function Forget() {
                                 ) : null}
 
                                 <View style={styles.optionsSignUp}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('Login')&& setErrorMessage(null)}>
                                         <Text style={styles.forgotPassword}><Icon name='arrow-left' />Quay trở lại</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -83,7 +93,88 @@ export default function Forget() {
                                 </View>
                             </>
                         )}
-                    </Formik>
+                    </Formik>}
+                    {step === 2 && <Formik
+                        initialValues={{
+                            email: email,
+                            otp: '',
+                            newPassword: '',
+                            confirmPassword: '',
+                        }}
+                        onSubmit={async (values) => {
+                                 console.log("halo");
+                            try {
+                                const responseData = await resetPassword(values);
+                                
+                                if (responseData.isSuccess && responseData.data) {
+                                    Toast.show({
+                                        type: 'success',
+                                        text1: 'Đổi mật khẩu thành công',
+                                        text2: 'Bạn đã thay đổi mật khẩu thành công. Hãy đăng nhập!',
+                                      });
+                                    setErrorMessage(null);
+                                    navigation.navigate('Login');
+                                } else if (responseData.isSuccess && !responseData.data) {
+                                    setErrorMessage(responseData.message);
+                                } else {
+                                    setErrorMessage("Không thể đổi mật khẩu vui lòng thử lại sau!");
+                                }
+                            } catch (error) {
+                                console.log(error.message);
+                                setErrorMessage("Không thể đổi mật khẩu vui lòng thử lại sau!");
+                            }
+                        }}
+                        validationSchema={schemaStep2}
+                    >
+                        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                            <>
+                                <GenericInput
+                                    label="OTP"
+                                    placeholder="OTP"
+                                    value={values.otp}
+                                    onChangeText={handleChange('otp')}
+                                    errorMessage={touched.otp && errors.otp}
+                                />
+                                <GenericInput
+                                    secureTextEntry={true}
+                                    label="Mật khẩu mới"
+                                    placeholder="Mật khẩu mới"
+                                    rightIconName='eye-outline'
+                                    value={values.newPassword}
+                                    onChangeText={handleChange('newPassword')}
+                                    errorMessage={touched.newPassword && errors.newPassword}
+                                />
+                                <GenericInput
+                                    secureTextEntry={true}
+                                    label="Xác nhận mật khẩu"
+                                    placeholder="Xác nhận mật khẩu"
+                                    value={values.confirmPassword}
+                                    onChangeText={handleChange('confirmPassword')}
+                                    rightIconName='eye-outline'
+                                    errorMessage={touched.confirmPassword && errors.confirmPassword}
+                                />
+
+
+                                {errorMessage ? ( // Hiển thị thông báo lỗi dưới trường mật khẩu nếu có lỗi
+                                    <Text style={styles.errorMessage}>{errorMessage}</Text>
+                                ) : null}
+
+                                <View style={styles.optionsSignUp}>
+                                    <TouchableOpacity onPress={() => setStep(1) && setErrorMessage(null)}>
+                                        <Text style={styles.forgotPassword}><Icon name='arrow-left' />Quay trở lại</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.buttonLogin}>
+                                    <GenericButton
+                                        title='Xác nhận'
+                                        titleStyle={styles.titleStyleButton}
+                                        buttonStyle={styles.buttonStyleButton}
+                                        onPress={handleSubmit }
+                                    />
+                                </View>
+                            </>
+                        )}
+                    </Formik>}
                 </View>
 
             </View>

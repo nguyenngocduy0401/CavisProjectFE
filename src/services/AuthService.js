@@ -25,3 +25,14 @@ export const register = async (userRegister) => {
   }
   return response.data;
 };
+export const sendOTP = async (emailObj) => {
+  console.log(emailObj.email);
+  console.log(emailObj);
+  const response = await instance.post(API_URL+"/otp-email", emailObj);
+  console.log(response);
+  return response.data;
+};
+export const resetPassword = async (resetPassword) => {
+  const response = await instance.put(API_URL+"/reset-password/"+resetPassword.email, resetPassword);
+  return response.data;
+};

@@ -26,7 +26,7 @@ export default function Login() {
     if (responseData.isSuccess) {
       // Navigate to the next screen or home screen
       navigation.navigate('Home');
-      setErrorMessage("");
+      setErrorMessage(null);
     }else
     {
       setErrorMessage("Username or password is incorrect!");
@@ -86,7 +86,7 @@ export default function Login() {
             titleProps={styles.titleProps}
           /> */}
             
-          <TouchableOpacity onPress={()=>navigation.navigate('Forget')}>
+          <TouchableOpacity onPress={()=>navigation.navigate('Forget') && setErrorMessage(null)}>
             <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
           </TouchableOpacity>
 
@@ -114,7 +114,7 @@ export default function Login() {
         </View>
         <View style={styles.optionsSignUp}>
         <Text >Chưa có tài khoản? </Text>
-          <TouchableOpacity onPress={()=>navigation.navigate('Register')} >
+          <TouchableOpacity onPress={()=>navigation.navigate('Register') && setErrorMessage(null)} >
             <Text style={styles.signup}>Đăng kí tại đây!</Text>
           </TouchableOpacity>
         </View>

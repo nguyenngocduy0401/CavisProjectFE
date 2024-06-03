@@ -22,7 +22,7 @@ export default function Register() {
     name: yup.string().required("Tên là trường bắt buộc"),
     email: yup.string().required("Email là trường bắt buộc").email('Email có định dạng không hợp lệ!'),
     phoneNumber: yup.string().required("Số điện thoại là trường bắt buộc").matches(/^0[0-9]{9}$/, 'Số điện thoại phải có 10 chữ số và bắt đầu bằng 0!'),
-    password: yup.string().required("Mật khẩu là trường bắt buộc").min(6, 'Mật khẩu phải có độ dài ít nhất 6 ký tự!').matches(/[0-9]+/, 'Mật khẩu của bạn phải chứa ít nhất một số!'),
+    password: yup.string().required("Mật khẩu là trường bắt buộc").min(6, 'Mật khẩu phải có độ dài ít nhất 6 ký tự!').matches(/^(?=.*[a-zA-Z])(?=.*\d).+$/, 'Mật khẩu của bạn phải chứa ít nhất một số và một chữ!'),
     passwordConfirm: yup.string().required("Mật khẩu xác nhận là trường bắt buộc").oneOf([yup.ref('password'), null], 'Mật khẩu xác nhận của bạn là sai!')
   });
 
@@ -58,6 +58,7 @@ export default function Register() {
                     text1: 'Đăng ký thành công',
                     text2: 'Bạn đã đăng ký thành công. Hãy đăng nhập!',
                   });
+                  setErrorMessage(null);
                   navigation.navigate('Login');
                 } else {
                   setErrorMessage(responseData.message);
@@ -144,7 +145,7 @@ export default function Register() {
           </View>
           <View style={styles.optionsSignUp}>
             <Text >Đã có tài khoản? </Text>
-            <TouchableOpacity onPress={()=>navigation.navigate('Login')} >
+            <TouchableOpacity onPress={()=>navigation.navigate('Login') && setErrorMessage(null)} >
               <Text style={styles.signup}>Đăng nhập tại đây!</Text>
             </TouchableOpacity>
           </View>
