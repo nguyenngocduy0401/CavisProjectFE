@@ -25,7 +25,7 @@ export default function Login() {
     
     if (responseData.isSuccess) {
       // Navigate to the next screen or home screen
-      navigation.navigate('Home');
+      navigation.navigate('Questions');
       setErrorMessage(null);
     }else
     {

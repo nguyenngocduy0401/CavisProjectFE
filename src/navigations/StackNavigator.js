@@ -10,7 +10,7 @@ import Questions from '../screens/questions/Questions';
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
     return (
-        <Stack.Navigator initialRouteName='Root'>
+        <Stack.Navigator initialRouteName='Questions'>
             <Stack.Screen
                 name="Root"
                 component={BottomTabNavigator}

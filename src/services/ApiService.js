@@ -1,8 +1,9 @@
 import axios from "axios";
 import { refresh } from "./refresh";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import API_URL_ENV from "../config/api";
 
-const url = process.env.EXPO_PUBLIC_API_LINK;
+const url = API_URL_ENV;
 const instance = axios.create({
     baseURL: url,
     headers: {

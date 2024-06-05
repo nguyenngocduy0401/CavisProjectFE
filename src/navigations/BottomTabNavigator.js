@@ -41,6 +41,7 @@ const BottomTabNavigator = () => {
                             </View>
                         )
                     },
+                    tabBarLabel: 'Trang Chủ',
                 }}
             />
             <Tab.Screen
@@ -56,7 +57,7 @@ const BottomTabNavigator = () => {
                                 <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Skin care</Text>
                             </View>
                         )
-                    }
+                    },
                 }}
             />
             <Tab.Screen
@@ -103,7 +104,7 @@ const BottomTabNavigator = () => {
                                 }}>Insights</Text>
                             </View>
                         )
-                    }
+                    },
                 }}
             />
             <Tab.Screen
@@ -119,7 +120,7 @@ const BottomTabNavigator = () => {
                                 <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Make up</Text>
                             </View>
                         )
-                    }
+                    },
                 }} />
             <Tab.Screen
                 name="Account"
@@ -134,7 +135,8 @@ const BottomTabNavigator = () => {
                                 <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Account</Text>
                             </View>
                         )
-                    }
+                    },
+                    tabBarLabel: 'Tài khoản',
                 }}
             />
         </Tab.Navigator>

@@ -16,86 +16,10 @@ import QuestionAnswerCheck from '../../components/questionAnswerCheck/QuestionAn
 import { useNavigation } from '@react-navigation/native';
 import TitleText from '../../components/text/TitleText';
 import NormalText from '../../components/text/NormalText';
+import { getSkinCondition } from '../../services/SkinConditionService';
+import { getSkinTypes } from '../../services/SkinTypeService';
 
 const screenWidth = Dimensions.get('window').width
-
-const skinDataList = [
-    {
-        id: 1,
-        name: 'Normal skin',
-        description: 'Balanced skin with a healthy appearance, neither too oily nor too dry, and minimal imperfections.'
-    },
-    {
-        id: 2,
-        name: 'Combination skin',
-        description: 'A mix of skin types; typically, the T-zone (forehead, nose, and chin) is oily while the cheeks are dry or normal.'
-    },
-    {
-        id: 3,
-        name: 'Sensitive skin',
-        description: 'Skin that easily reacts to products and environmental factors, often resulting in redness, itching, or irritation.'
-    },
-    {
-        id: 4,
-        name: 'Dry skin',
-        description: 'Skin that lacks moisture, often feeling tight, rough, or flaky, and may appear dull.'
-    },
-    {
-        id: 5,
-        name: 'Oily skin',
-        description: 'Skin that produces excess sebum, leading to a shiny appearance and a higher likelihood of acne and enlarged pores.'
-    },
-]
-const concernDataList = [
-    {
-        id: 1,
-        name: 'Acne&Blemishes',
-    },
-    {
-        id: 2,
-        name: 'Black heads',
-    },
-    {
-        id: 3,
-        name: 'Sensitive skin',
-    },
-    {
-        id: 4,
-        name: 'Oiliness',
-    },
-    {
-        id: 5,
-        name: 'Dryness',
-    },
-    {
-        id: 6,
-        name: 'Dullness',
-    },
-    {
-        id: 7,
-        name: 'Dark Circle',
-    },
-    {
-        id: 8,
-        name: 'Redness',
-    },
-    {
-        id: 9,
-        name: 'Pufiness',
-    },
-    {
-        id: 10,
-        name: 'Dark spots',
-    },
-    {
-        id: 11,
-        name: 'Visible Pores',
-    },
-    {
-        id: 12,
-        name: 'Antii-Aging',
-    },
-]
 
 export default function Questions() {
     const navigation = useNavigation();
@@ -108,19 +32,20 @@ export default function Questions() {
 
     const [concerns, setConcerns] = useState([]);
     const [concernList, setConcernList] = useState([]);
-    //setProgress((prevProgress) => Math.min(prevProgress + 1/3, 1));
     async function getAllSkins() {
         try {
-            // const data = await getSkins();
-            setSkins(skinDataList)
+            const data = await getSkinTypes();
+            if (data) {
+                setSkins(data?.data?.items)
+            }
         } catch (error) {
             console.log(error)
         }
     }
     async function getAllConcerns() {
         try {
-            // const data = await getSkins();
-            setConcerns(concernDataList)
+            const data = await getSkinCondition();
+            setConcerns(data?.data?.items)
         } catch (error) {
             console.log(error)
         }
@@ -152,12 +77,12 @@ export default function Questions() {
                 <>
                     <TitleText title="Giới tính của bạn gì?" />
                     <View style={styles.genderAnswers}>
-                        <GenderCheck active={gender === 'male'} onPress={() => setGender('male')} label={'Male'} icon={gender === 'male' ? maleIconActive : maleIcon} />
-                        <GenderCheck active={gender === 'female'} onPress={() => setGender('female')} label={'Female'} icon={gender === 'female' ? femaleIconActive : femaleIcon} />
-                        <GenderCheck active={gender === 'other'} onPress={() => setGender('other')} label={'Other'} icon={gender === 'other' ? otherGenderIconActive : otherGenderIcon} />
+                        <GenderCheck active={gender === 'male'} onPress={() => setGender('male')} label={'Nam'} icon={gender === 'male' ? maleIconActive : maleIcon} />
+                        <GenderCheck active={gender === 'female'} onPress={() => setGender('female')} label={'Nữ'} icon={gender === 'female' ? femaleIconActive : femaleIcon} />
+                        <GenderCheck active={gender === 'other'} onPress={() => setGender('other')} label={'Khác'} icon={gender === 'other' ? otherGenderIconActive : otherGenderIcon} />
                     </View>
-                    <TitleText title="Bạn sinh ngày nào?"/>
-                    <DatePicker maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() - 12))} style={styles.datePicker} date={dateOfBirth} onDateChange={setDateOfBirth} mode='date' />
+                    <TitleText title="Bạn sinh ngày nào?" />
+                    <DatePicker locale='vi' maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() - 12))} style={styles.datePicker} date={dateOfBirth} onDateChange={setDateOfBirth} mode='date' />
                     <View style={styles.buttonContainer}>
                         <GenericButton
                             title={'NEXT'}
@@ -174,10 +99,10 @@ export default function Questions() {
                     <View style={styles.skinAnswers}>
                         {skins.length > 0 && skins.map((skinData) => (
                             <View key={skinData.id}>
-                                <QuestionAnswerCheck active={skin === skinData.id} onPress={() => setSkin(skinData.id)} label={skinData.name} />
+                                <QuestionAnswerCheck active={skin === skinData.id} onPress={() => setSkin(skinData.id)} label={skinData.skinsName} />
                                 {skin === skinData.id && <View style={{ flexDirection: "row" }}>
                                     <View style={{ borderRadius: 20, backgroundColor: "#F6D6C0", width: 4, height: "100%", marginRight: 8 }}></View>
-                                    <NormalText text={skinData.description} key={skinData.id}/>
+                                    <NormalText text={skinData.description} />
                                 </View>}
                             </View>
                         ))}
@@ -202,14 +127,12 @@ export default function Questions() {
                     <TitleText title="Vấn đề da bạn gặp phải là gì?" />
                     <View style={styles.concernAnswers}>
                         {concerns.length > 0 && concerns.map((concern) => (
-                            <>
-                                <QuestionAnswerCheck
-                                    key={concern.id}
-                                    active={concernList.includes(concern.id)}
-                                    onPress={() => toggleConcern(concern.id)}
-                                    label={concern.name}
-                                />
-                            </>
+                            <QuestionAnswerCheck
+                                key={concern.id}
+                                active={concernList.includes(concern.id)}
+                                onPress={() => toggleConcern(concern.id)}
+                                label={concern.skinsName}
+                            />
                         ))}
                     </View>
                     <View style={styles.buttonContainer}>
