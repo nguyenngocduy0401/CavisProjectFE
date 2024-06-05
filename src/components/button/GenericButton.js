@@ -14,6 +14,7 @@ export default function GenericButton({
     buttonStyle,
     onPress,
     iconRight,
+    disabled,
 }) {
     return (
         
@@ -30,16 +31,16 @@ export default function GenericButton({
                 titleStyle={titleStyle}
                 buttonStyle={buttonStyle}
                 onPress={onPress}
-                containerStyle={[styles.container, { style: containerStyle }]}
+                containerStyle={[styles.container, containerStyle]}
                 iconRight={iconRight}
+                disabled={disabled}
             />
         
     );
 }
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 19,
+        marginHorizontal: 20,
         marginVertical: 10,
     },
-
 })

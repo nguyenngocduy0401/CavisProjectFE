@@ -1,175 +1,213 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, Dimensions, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
-import { Input } from '@rneui/themed';
-import headerImage from '../../../assets/images/Header-Items.png';
-import GenericInput from '../../components/genericInput/InputGeneric';
-import GenericButton from '../../components/button/GenericButton';
-import { login, register } from '../../services/AuthService';
-import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import * as yup from 'yup'
-import { Formik } from 'formik';
+import { View, Text, Button, StyleSheet, Image, Dimensions, ImageBackground, TouchableOpacity, ScrollView, FlatList, SafeAreaView } from 'react-native';
+import Header from '../../components/header/Header';
+import GenericCarousel from '../../components/genericCarousel/GenericCarousel';
+import { Avatar } from '@rneui/themed';
+import TitleText from '../../components/text/TitleText';
+import HomeTopButton from '../../components/homeTopButton/HomeTopButton';
+import skincareTopIcon from '../../../assets/icons/skincare-home-icon.png';
+import makeupTopIcon from '../../../assets/icons/makeup-home-icon.png';
 import { useNavigation } from '@react-navigation/native';
+import PremiumBanner from '../../components/premiumBanner/PremiumBanner';
+import SeeAllButton from '../../components/button/SeeAllButton';
+import ProductReview from '../../components/productReview/ProductReview';
+import TopMethod from '../../components/topMethod/TopMethod';
+import Method from '../../components/method/Method';
+import HomeCheckList from '../../components/homeCheckList/HomeCheckList';
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
+const productData = [
+    {
+        id: 1,
+        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
+        title: "The cocoon",
+        description: "Sản phẩm cocoon abcxyz"
+    },
+    {
+        id: 2,
+        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
+        title: "The cocoon",
+        description: "Sản phẩm cocoon abcxyz"
+    },
+    {
+        id: 3,
+        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
+        title: "The cocoon",
+        description: "Sản phẩm cocoon abcxyz"
+    },
+    {
+        id: 4,
+        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
+        title: "The cocoon",
+        description: "Sản phẩm cocoon abcxyz"
+    },
+    {
+        id: 5,
+        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
+        title: "The cocoon",
+        description: "Sản phẩm cocoon abcxyz"
+    },
+]
+const methodData = [
+    {
+        id: 1,
+        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
+        title: "New VR Headsets That Will Shape the Metaverse",
+        author: {
+            fullName: "Mason Eduard",
+            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
+        },
+        type: "Skincare",
+        date: "2024-01-03T14:48:00.000Z"
+    },
+    {
+        id: 2,
+        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
+        title: "New VR Headsets That Will Shape the Metaverse",
+        author: {
+            fullName: "Mason Eduard",
+            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
+        },
+        type: "Skincare",
+        date: "2024-01-03T14:48:00.000Z"
+    },
+    {
+        id: 3,
+        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
+        title: "New VR Headsets That Will Shape the Metaverse",
+        author: {
+            fullName: "Mason Eduard",
+            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
+        },
+        type: "Skincare",
+        date: "2024-01-03T14:48:00.000Z"
+    },
+    {
+        id: 4,
+        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
+        title: "New VR Headsets That Will Shape the Metaverse",
+        author: {
+            fullName: "Mason Eduard",
+            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
+        },
+        type: "Skincare",
+        date: "2024-01-03T14:48:00.000Z"
+    },
+]
+
 export default function Home() {
-
-    const navigation = useNavigation();
-    const [errorMessage, setErrorMessage] = useState('');
-    const schema = yup.object().shape({
-        email: yup.string().required("Email là trường bắt buộc").email('Email có định dạng không hợp lệ!'),
-    });
-
+    const navigation = useNavigation()
+    const user = {
+        name: 'Huyền Nguyễn',
+        avatar: 'https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg'
+    }
+    const currentHour = new Date().getHours();
+    const [checklist, setChecklist] = useState([])
+    const [products, setProducts] = useState(productData)
+    const [methods, setMethods] = useState(methodData)
     return (
-        <ScrollView contentContainerStyle={styles.scrollView}>
-            <View style={styles.container}>
-                <View style={styles.topHalf}>
-                    <ImageBackground source={headerImage} style={styles.topImage} >
-                        <View style={styles.mainTitle}>
-                            <Text style={styles.title}>Chào mừng</Text>
-                            <Text style={styles.subTitle}>Chào mừng</Text>
-                        </View>
-                    </ImageBackground>
+        <ScrollView style={styles.container}>
+            <Header />
+            <View style={styles.topGreeting}>
+                <Avatar size={70} rounded source={{ uri: user.avatar }} containerStyle={styles.avatar} />
+                <View>
+                    <TitleText
+                        title={currentHour < 12
+                            ? 'Good morning,'
+                            : currentHour < 18
+                                ? 'Good afternoon,'
+                                : 'Good night,'}
+                        color={'#FBBD98'}
+                        style={{ marginTop: 0, marginBottom: 0, marginLeft: 10 }}
+                    />
+                    <TitleText
+                        title={user.name}
+                        style={{ marginTop: 0, marginBottom: 0, marginLeft: 10 }}
+                    />
                 </View>
-
-                <View style={styles.bottomHalf}>
-                    <Formik
-                        initialValues={{
-                            email: '',
-                        }}
-                        onSubmit={async (values) => {
-                            try {
-                                const responseData = await register(values);
-
-                                if (responseData.isSuccess) {
-
-                                    navigation.navigate(registerSceen);
-                                } else {
-                                    setErrorMessage(responseData.message);
-                                }
-                            } catch (error) {
-                                setErrorMessage(error.message);
-                            }
-                        }}
-                        validationSchema={schema}
-                    >
-                        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                            <>
-                                
-
-
-                                
-
-                                <View style={styles.optionsSignUp}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                                        <Text style={styles.forgotPassword}><Icon name='arrow-left' />Quay trở lại</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.buttonLogin}>
-                                    <GenericButton
-                                        title='Xác nhận'
-                                        titleStyle={styles.titleStyleButton}
-                                        buttonStyle={styles.buttonStyleButton}
-                                        onPress={handleSubmit}
-                                    />
-                                </View>
-                            </>
-                        )}
-                    </Formik>
-                </View>
-
             </View>
+            <GenericCarousel />
+            <>
+                <TitleText title={'Personalised insights'} style={styles.title} />
+                <View style={styles.topButton}>
+                    <HomeTopButton onPress={() => navigation.navigate('Root', { screen: 'Skincare' })} title={'Skincare'} backgroundColor={'#FFF9F0'} icon={skincareTopIcon} />
+                    <HomeTopButton onPress={() => navigation.navigate('Root', { screen: 'Makeup' })} title={'Makeup'} backgroundColor={'#EBF3F8'} icon={makeupTopIcon} />
+                </View>
+            </>
+            <HomeCheckList />
+            <PremiumBanner />
+            <>
+                <View style={styles.titleContainer}>
+                    <View style={{ width: "80%" }}>
+                        <TitleText title={'Recent reviews'} style={styles.title} />
+                    </View>
+                    <SeeAllButton onPress={() => console.log('See all product')} />
+                </View>
+                <FlatList
+                    style={styles.productReview}
+                    horizontal
+                    data={productData}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <ProductReview key={item.id} image={item.image} title={item.title} description={item.description} onPress={() => console.log("click product" + product.id)} />
+                    )}
+                />
+            </>
+            <>
+                <View style={styles.titleContainer}>
+                    <View style={{ width: "80%" }}>
+                        <TitleText title={'Useful tips'} style={styles.title} />
+                    </View>
+                    <SeeAllButton onPress={() => console.log('See all product')} />
+                </View>
+                {methods.length > 0 &&
+                    <View style={{ paddingTop: 20 }}>
+                        <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => console.log(methods[0].id)} />
+                        {methods.length > 1 && methods.slice(1).map((method) => (
+                            <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => console.log(method.id)} />
+                        ))}
+                    </View>
+                }
+            </>
         </ScrollView>
-    );
+    )
 }
-
 const styles = StyleSheet.create({
     container: {
-        width: screenWidth,
-        height: 1000,
+        flex: 1,
+        backgroundColor: 'white',
     },
-
-    mainTitle: {
-        paddingLeft: '6%',
-        paddingBottom: '4%',
+    avatar: {
+        borderWidth: 2,
+        borderColor: '#FDD3CA',
+    },
+    topGreeting: {
+        flexDirection: 'row',
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+    },
+    topButton: {
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     title: {
-        fontSize: 33,
-        fontWeight: '500',
-        color: 'black',
-        marginBottom: '2%',
-        marginTop: '17%',
-    },
-    subTitle: {
-        fontSize: 16,
-        paddingEnd: '34%',
-    },
-    topHalf: {
-        position: 'absolute',
-        top: 0,
-    },
-    topImage: {
-        width: screenWidth,
-        height: 210,
-    },
-    bottomHalf: {
-        backgroundColor: 'white',
-        position: 'relative',
-        top: 180,
-        borderTopLeftRadius: 30, // Bo tròn góc trên bên trái
-        borderTopRightRadius: 30, // Bo tròn góc trên bên phải
-        paddingTop: 30,
-        height: screenHeight
-    },
-    optionsRow: {
-        // flexDirection: 'row',
-        // justifyContent: 'right',
-        alignItems: 'right',
-        marginTop: 10,
-    },
-    forgotPassword: {
-        marginRight: 20,
-        textAlign: 'left',
         marginLeft: 20,
-        marginTop: 10,
-        fontWeight: '300',
-        color: '#F27272',
-        fontSize: 16,
+        marginBottom: 0,
+        marginTop: 20,
     },
-    buttonLogin: {
-        position: 'relative',
-        top: 10,
-        height: 90
-    },
-    titleProps: {
-        fontWeight: '0',
-        color: '#808080',
-        marginLeft: 6
-    },
-    buttonStyleButton: {
-        height: 50,
-        borderWidth: 0,
-        borderRadius: 30,
-    },
-    options: {
+    titleContainer: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        paddingRight: 20,
     },
-    line: {
-        flex: 1,
-        height: 1.5,
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-        marginHorizontal: 28,
+    productReview: {
+        paddingTop: 10,
+        paddingBottom: 10,
     },
-    using: {
-        color: 'rgba(0, 0, 0, 0.43)',
-        marginHorizontal: 7
-    },
-    signup: {
-        color: '#F27272'
-    },
-    errorMessage: {
-        color: 'red',
-        marginLeft: 20,
-    },
-});
+})

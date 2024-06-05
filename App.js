@@ -1,10 +1,11 @@
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, LogBox } from 'react-native'
 import React from 'react'
 import StackNavigator from './src/navigations/StackNavigator'
 import { NavigationContainer } from '@react-navigation/native'
 import Forget from './src/screens/login/Forget'
 import Toast from "react-native-toast-message";
 export default function App() {
+  LogBox.ignoreAllLogs();
   return (
     <View style={styles.container}>
       <NavigationContainer>
@@ -19,10 +20,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFF',
   },
   unsafe: {
     flex: 0,
-    backgroundColor: '#000000'
+    backgroundColor: '#fff'
   }
 });

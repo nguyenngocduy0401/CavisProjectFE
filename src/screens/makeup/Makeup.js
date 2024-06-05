@@ -1,0 +1,16 @@
+import { View, Text, StyleSheet } from 'react-native'
+import React from 'react'
+
+export default function MakeUp() {
+  return (
+    <View style={styles.container}>
+      <Text>MakeUp</Text>
+    </View>
+  )
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+})
