@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Image } from '@rneui/themed'
 import NormalText from '../text/NormalText'
@@ -8,14 +8,14 @@ const screenWidth = Dimensions.get('window').width
 
 export default function ProductReview({ image, title, description, onPress }) {
     return (
-        <View style={styles.container}>
+        <TouchableOpacity onPress={onPress} style={styles.container}>
             <Image
                 source={{ uri: image }}
                 containerStyle={styles.image}
             />
             <Text style={styles.title}>{title}</Text>
             <NormalText text={description}/>
-        </View>
+        </TouchableOpacity>
     )
 }
 const styles = StyleSheet.create({
