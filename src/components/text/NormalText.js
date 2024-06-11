@@ -8,9 +8,8 @@ export default function NormalText({ text, color }) {
 }
 const styles = StyleSheet.create({
     title: {
-        width: "100%",
         textAlign: "left",
         fontSize: 14,
-        fontWeight: '300'
+        fontWeight: '300',
     },
 })

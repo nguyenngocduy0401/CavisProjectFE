@@ -142,15 +142,15 @@ export default function Home() {
                     <View style={{ width: "80%" }}>
                         <TitleText title={'Recent reviews'} style={styles.title} />
                     </View>
-                    <SeeAllButton onPress={() => console.log('See all product')} />
+                    <SeeAllButton onPress={() => navigation.navigate('Products')} />
                 </View>
                 <FlatList
-                    style={styles.productReview}
+                    style={[styles.productReview]}
                     horizontal
-                    data={productData}
+                    data={products}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <ProductReview key={item.id} image={item.image} title={item.title} description={item.description} onPress={() => console.log("click product" + product.id)} />
+                        <ProductReview key={item.id} image={item.image} title={item.title} description={item.description} onPress={() => navigation.navigate("ProductDetail", { id: item.id })} />
                     )}
                 />
             </>
@@ -159,7 +159,7 @@ export default function Home() {
                     <View style={{ width: "80%" }}>
                         <TitleText title={'Useful tips'} style={styles.title} />
                     </View>
-                    <SeeAllButton onPress={() => console.log('See all product')} />
+                    <SeeAllButton onPress={() => console.log('See all tips')} />
                 </View>
                 {methods.length > 0 &&
                     <View style={{ paddingTop: 20 }}>

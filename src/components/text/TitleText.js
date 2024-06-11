@@ -8,9 +8,8 @@ export default function TitleText({ title, color, style }) {
 }
 const styles = StyleSheet.create({
     title: {
-        width: "100%",
         textAlign: "left",
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: "600",
         marginTop: 40,
         marginLeft: 40,
