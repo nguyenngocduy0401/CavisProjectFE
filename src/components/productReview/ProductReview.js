@@ -3,6 +3,7 @@ import React from 'react'
 import { Image } from '@rneui/themed'
 import NormalText from '../text/NormalText'
 import { Dimensions } from 'react-native'
+import { truncateText } from '../../utils/utils'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -13,8 +14,8 @@ export default function ProductReview({ image, title, description, onPress }) {
                 source={{ uri: image }}
                 containerStyle={styles.image}
             />
-            <Text style={styles.title}>{title}</Text>
-            <NormalText text={description}/>
+            <Text style={styles.title}>{truncateText(title, 25)}</Text>
+            <NormalText text={truncateText(description, 45)} />
         </TouchableOpacity>
     )
 }

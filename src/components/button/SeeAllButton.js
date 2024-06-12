@@ -5,7 +5,7 @@ import { Icon } from '@rneui/themed';
 export default function SeeAllButton({ onPress, style }) {
     return (
         <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-            <Text style={styles.text}>See all</Text>
+            <Text style={styles.text}>Tất cả</Text>
             <Icon
                 name='chevron-right'
                 type='entypo'

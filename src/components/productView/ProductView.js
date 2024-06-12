@@ -3,6 +3,7 @@ import React from 'react'
 import { Image } from '@rneui/themed'
 import NormalText from '../text/NormalText'
 import { Dimensions } from 'react-native'
+import { truncateText } from '../../utils/utils'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -14,8 +15,8 @@ export default function ProductView({ image, title, price, description, onPress 
                 containerStyle={styles.image}
             />
             <View style={styles.descriptionView}>
-                <Text style={styles.title}>{title}</Text>
-                <NormalText text={description} />
+                <Text style={styles.title}>{truncateText(title, 25)}</Text>
+                <NormalText text={truncateText(description, 80)} />
                 <Text style={styles.price}>{price && price.toLocaleString()}₫</Text>
             </View>
         </TouchableOpacity>
@@ -34,6 +35,8 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 16,
         width: screenWidth / 4,
+        borderWidth: 1,
+        borderColor: '#E7E3E4'
     },
     title: {
         color: "black",

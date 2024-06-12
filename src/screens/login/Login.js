@@ -9,12 +9,15 @@ import ButtonLoginGoogle from '../../components/button/ButtonLoginGoogle';
 import {login} from '../../services/AuthService';
 import Toast from "react-native-toast-message";
 import { useNavigation } from '@react-navigation/native';
+import { fetchUser } from '../../store/features/authSlice';
+import { useDispatch } from 'react-redux';
  
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const registerSceen ='Register';
 export default function Login() {
   const navigation = useNavigation();
+  const dispatch = useDispatch()
   const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState(true);
@@ -25,7 +28,8 @@ export default function Login() {
     
     if (responseData.isSuccess) {
       // Navigate to the next screen or home screen
-      navigation.navigate('Questions');
+      // navigation.navigate('Questions');
+      dispatch(fetchUser())
       setErrorMessage(null);
     }else
     {

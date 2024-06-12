@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Image, ScrollView, Linking } from 'react-native';
 import Header from '../../components/header/Header';
 import { useNavigation } from '@react-navigation/native';
@@ -6,6 +6,8 @@ import InsideHeader from '../../components/insideHeader/InsideHeader';
 import NormalText from '../../components/text/NormalText';
 import TitleText from '../../components/text/TitleText';
 import GenericButton from '../../components/button/GenericButton';
+import { getProduct } from '../../services/ProductService';
+import { truncateText } from '../../utils/utils';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -13,45 +15,45 @@ const screenHeight = Dimensions.get('window').height;
 export default function ProductDetail({ route }) {
     const navigation = useNavigation()
     const { id } = route.params
-    const [product, setProduct] = useState({
-        id: 1,
-        brand: {
-            image: "https://uploads-ssl.webflow.com/5f64407650a79f5bde012490/606d35de2483400d5d593872_cocoon.png",
-            name: "Cocoon",
-        },
-        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-        title: "Cà phê Đắk Lắk",
-        description: "Hạt cà phê nguyên chất từ Đắk Lắk kết hợp với bơ ca cao Tiền Giang giúp làm sạch da chết cơ thể hiệu quả, làm đều màu da, khơi dậy năng lượng giúp da trở nên mềm mịn và rạng rỡ.",
-        price: 200000,
-        productLink: "https://hasaki.vn/san-pham/ca-phe-dak-lak-tay-da-chet-toan-than-cocoon-200ml-84643.html",
-    })
+    const [product, setProduct] = useState(null)
+    async function getProductDetail(id) {
+        try {
+            const data = await getProduct(id);
+            setProduct(data?.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        getProductDetail(id)
+    }, [id])
     const openExternalLink = (url) => {
         Linking.openURL(url).catch((err) => console.error('Can\'t open this link: ', err));
     };
     return (
         <ScrollView style={styles.container}>
+            <InsideHeader title={'Thông tin sản phẩm'} />
             {product &&
                 <>
-                    <InsideHeader title={product.title} />
                     <View style={styles.detailContainer}>
-                        <View style={styles.brandContainer}>
+                        {/* <View style={styles.brandContainer}>
                             <Image
                                 source={{ uri: product.brand.image }}
                                 style={styles.brandImage}
                             />
-                        </View>
+                        </View> */}
                         <Image
-                            source={{ uri: product.image }}
+                            source={{ uri: product.urlImage }}
                             style={styles.image}
                         />
-                        <NormalText text={product.brand.name} />
-                        <TitleText title={product.title} style={styles.title} />
-                        <NormalText text={'Regular Price:'} />
+                        {/* <NormalText text={product.brand.name} /> */}
+                        <TitleText title={product.productName} style={styles.title} />
+                        <NormalText text={'Giá:'} />
                         <TitleText title={`${product.price.toLocaleString()}₫`} style={styles.price} color={'#DE8186'} />
                         <NormalText text={product.description} />
                         <GenericButton
-                            title={'BUY NOW'}
-                            onPress={() => openExternalLink(product.productLink)}
+                            title={'Mua ngay'}
+                            onPress={() => openExternalLink(product.url)}
                             buttonStyle={styles.buttonStyleButton}
                         />
                     </View>
@@ -87,6 +89,8 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 16,
         marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#E7E3E4'
     },
     title: {
         marginLeft: 0,

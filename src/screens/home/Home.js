@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, Image, Dimensions, ImageBackground, TouchableOpacity, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import Header from '../../components/header/Header';
 import GenericCarousel from '../../components/genericCarousel/GenericCarousel';
@@ -14,41 +14,12 @@ import ProductReview from '../../components/productReview/ProductReview';
 import TopMethod from '../../components/topMethod/TopMethod';
 import Method from '../../components/method/Method';
 import HomeCheckList from '../../components/homeCheckList/HomeCheckList';
+import { getAnalystProducts } from '../../services/PersonalAnalystService';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../store/selector';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const productData = [
-    {
-        id: 1,
-        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-        title: "The cocoon",
-        description: "Sản phẩm cocoon abcxyz"
-    },
-    {
-        id: 2,
-        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-        title: "The cocoon",
-        description: "Sản phẩm cocoon abcxyz"
-    },
-    {
-        id: 3,
-        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-        title: "The cocoon",
-        description: "Sản phẩm cocoon abcxyz"
-    },
-    {
-        id: 4,
-        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-        title: "The cocoon",
-        description: "Sản phẩm cocoon abcxyz"
-    },
-    {
-        id: 5,
-        image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-        title: "The cocoon",
-        description: "Sản phẩm cocoon abcxyz"
-    },
-]
 const methodData = [
     {
         id: 1,
@@ -98,38 +69,46 @@ const methodData = [
 
 export default function Home() {
     const navigation = useNavigation()
-    const user = {
-        name: 'Huyền Nguyễn',
-        avatar: 'https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg'
-    }
+    const user = useSelector(userSelector)
     const currentHour = new Date().getHours();
     const [checklist, setChecklist] = useState([])
-    const [products, setProducts] = useState(productData)
+    const [products, setProducts] = useState([])
     const [methods, setMethods] = useState(methodData)
+    async function getProducts() {
+        try {
+            const data = await getAnalystProducts(null);
+            setProducts(data?.data?.items)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        getProducts()
+    }, [])
     return (
         <ScrollView style={styles.container}>
             <Header />
             <View style={styles.topGreeting}>
-                <Avatar size={70} rounded source={{ uri: user.avatar }} containerStyle={styles.avatar} />
+                <Avatar size={70} rounded source={{ uri: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg" }} containerStyle={styles.avatar} />
                 <View>
                     <TitleText
                         title={currentHour < 12
-                            ? 'Good morning,'
+                            ? 'Chào buổi sáng,'
                             : currentHour < 18
-                                ? 'Good afternoon,'
-                                : 'Good night,'}
+                                ? 'Chào buổi chiều,'
+                                : 'Chào buổi tối,'}
                         color={'#FBBD98'}
                         style={{ marginTop: 0, marginBottom: 0, marginLeft: 10 }}
                     />
                     <TitleText
-                        title={user.name}
+                        title={user.fullName ? user.fullName : user.userName}
                         style={{ marginTop: 0, marginBottom: 0, marginLeft: 10 }}
                     />
                 </View>
             </View>
             <GenericCarousel />
             <>
-                <TitleText title={'Personalised insights'} style={styles.title} />
+                <TitleText title={'Cá nhân hóa'} style={styles.title} />
                 <View style={styles.topButton}>
                     <HomeTopButton onPress={() => navigation.navigate('Root', { screen: 'Skincare' })} title={'Skincare'} backgroundColor={'#FFF9F0'} icon={skincareTopIcon} />
                     <HomeTopButton onPress={() => navigation.navigate('Root', { screen: 'Makeup' })} title={'Makeup'} backgroundColor={'#EBF3F8'} icon={makeupTopIcon} />
@@ -140,7 +119,7 @@ export default function Home() {
             <>
                 <View style={styles.titleContainer}>
                     <View style={{ width: "80%" }}>
-                        <TitleText title={'Recent reviews'} style={styles.title} />
+                        <TitleText title={'Sản phẩm gợi ý'} style={styles.title} />
                     </View>
                     <SeeAllButton onPress={() => navigation.navigate('Products')} />
                 </View>
@@ -150,14 +129,14 @@ export default function Home() {
                     data={products}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <ProductReview key={item.id} image={item.image} title={item.title} description={item.description} onPress={() => navigation.navigate("ProductDetail", { id: item.id })} />
+                        <ProductReview key={item.id} image={item.urlImage} title={item.productName} description={item.description} onPress={() => navigation.navigate("ProductDetail", { id: item.id })} />
                     )}
                 />
             </>
             <>
                 <View style={styles.titleContainer}>
                     <View style={{ width: "80%" }}>
-                        <TitleText title={'Useful tips'} style={styles.title} />
+                        <TitleText title={'Phương pháp hữu ích'} style={styles.title} />
                     </View>
                     <SeeAllButton onPress={() => console.log('See all tips')} />
                 </View>

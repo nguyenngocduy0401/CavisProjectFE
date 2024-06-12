@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, Image, Dimensions, ImageBackground, TouchableOpacity, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import Header from '../../components/header/Header';
 import GenericCarousel from '../../components/genericCarousel/GenericCarousel';
@@ -13,42 +13,10 @@ import ProductReview from '../../components/productReview/ProductReview';
 import TopMethod from '../../components/topMethod/TopMethod';
 import Method from '../../components/method/Method';
 import MakeupCategory from '../../components/makeupCategory/MakeupCategory';
+import { getAnalystProducts } from '../../services/PersonalAnalystService';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-
-const productData = [
-  {
-    id: 1,
-    image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-    title: "The cocoon",
-    description: "Sản phẩm cocoon abcxyz"
-  },
-  {
-    id: 2,
-    image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-    title: "The cocoon",
-    description: "Sản phẩm cocoon abcxyz"
-  },
-  {
-    id: 3,
-    image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-    title: "The cocoon",
-    description: "Sản phẩm cocoon abcxyz"
-  },
-  {
-    id: 4,
-    image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-    title: "The cocoon",
-    description: "Sản phẩm cocoon abcxyz"
-  },
-  {
-    id: 5,
-    image: "https://product.hstatic.net/200000551679/product/tay-da-chet-toan-than-cocoon-tu_4141e9e2ed2c4de0bcea91c5d56125e9_1024x1024.jpg",
-    title: "The cocoon",
-    description: "Sản phẩm cocoon abcxyz"
-  },
-]
 const methodData = [
   {
     id: 1,
@@ -131,12 +99,23 @@ export default function MakeUp() {
   const navigation = useNavigation()
 
   const [category, setCategory] = useState(categoryData)
-  const [products, setProducts] = useState(productData)
+  const [products, setProducts] = useState([])
   const [methods, setMethods] = useState(methodData)
+  async function getProducts() {
+    try {
+      const data = await getAnalystProducts(null);
+      setProducts(data?.data?.items)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getProducts()
+  }, [])
   return (
     <ScrollView style={styles.container}>
       <Header />
-      <TitleText title={'Skincare'} style={styles.title} />
+      <TitleText title={'Makeup'} style={styles.title} />
       <GenericCarousel />
       <FlatList
         style={styles.category}
@@ -151,7 +130,7 @@ export default function MakeUp() {
       <>
         <View style={styles.titleContainer}>
           <View style={{ width: "80%" }}>
-            <TitleText title={'Recent reviews'} style={styles.title} />
+            <TitleText title={'Sản phẩm gợi ý'} style={styles.title} />
           </View>
           <SeeAllButton onPress={() => navigation.navigate('Products')} />
         </View>
@@ -161,14 +140,14 @@ export default function MakeUp() {
           data={products}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <ProductReview key={item.id} image={item.image} title={item.title} description={item.description} onPress={() => navigation.navigate("ProductDetail", { id: item.id })} />
+            <ProductReview key={item.id} image={item.urlImage} title={item.productName} description={item.description} onPress={() => navigation.navigate("ProductDetail", { id: item.id })} />
           )}
         />
       </>
       <>
         <View style={styles.titleContainer}>
           <View style={{ width: "80%" }}>
-            <TitleText title={'Useful tips'} style={styles.title} />
+            <TitleText title={'Phương pháp hữu ích'} style={styles.title} />
           </View>
           <SeeAllButton onPress={() => console.log('See all tips')} />
         </View>

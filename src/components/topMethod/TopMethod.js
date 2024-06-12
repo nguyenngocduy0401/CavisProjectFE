@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'rea
 import React from 'react'
 import { Avatar } from '@rneui/themed'
 import { format } from 'date-fns'
+import { vi } from 'date-fns/locale';
 
 const screenWidth = Dimensions.get('window').width
 
@@ -16,9 +17,9 @@ export default function TopMethod({ image, title, author, type, date, onPress })
             <View style={styles.detailContainer}>
                 <View style={styles.author}>
                     <Avatar rounded size={24} source={{ uri: author.avatar }} />
-                    <Text style={styles.authorText}>By: <Text style={{ fontWeight: '600', color: 'black' }}>{author.fullName}</Text> </Text>
+                    <Text style={styles.authorText}>Tác giả: <Text style={{ fontWeight: '600', color: 'black' }}>{author.fullName}</Text> </Text>
                 </View>
-                {date && <Text style={styles.viewText}>{format(new Date(date), 'MMM d, yyyy')}</Text>}
+                {date && <Text style={styles.viewText}>{format(new Date(date), 'd, MMM yyyy', { locale: vi })}</Text>}
             </View>
         </TouchableOpacity>
     )
