@@ -37,11 +37,10 @@ const BottomTabNavigator = () => {
                             <View style={styles.tabBarContainer}>
                                 {focused && <View style={styles.tabLabelBarActive}></View>}
                                 <Image source={icon} style={styles.tabIcon} />
-                                <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Home</Text>
+                                <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Trang Chủ</Text>
                             </View>
                         )
                     },
-                    tabBarLabel: 'Trang Chủ',
                 }}
             />
             <Tab.Screen
@@ -132,11 +131,10 @@ const BottomTabNavigator = () => {
                             <View style={styles.tabBarContainer}>
                                 {focused && <View style={styles.tabLabelBarActive}></View>}
                                 <Image source={icon} style={styles.tabIcon} />
-                                <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Account</Text>
+                                <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Tài khoản</Text>
                             </View>
                         )
                     },
-                    tabBarLabel: 'Tài khoản',
                 }}
             />
         </Tab.Navigator>

@@ -2,18 +2,20 @@ import { View, Text, ImageBackground, StyleSheet, Image, Dimensions, Touchable, 
 import React from 'react'
 import image from '../../../assets/images/carousel-image-2.png'
 import background from '../../../assets/images/premium-banner.png'
+import { useNavigation } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 
 export default function PremiumBanner() {
+    const navigation = useNavigation()
     return (
-        <TouchableOpacity onPress={() => console.log("premium")} style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate('Premium')} style={styles.container}>
             <ImageBackground source={background} style={styles.information} imageStyle={{ borderRadius: 16 }}>
                 <View style={styles.saleBanner}>
-                    <Text style={styles.saleTitle}>Save 50%</Text>
+                    <Text style={styles.saleTitle}>Tiết kiệm 165.000₫</Text>
                 </View>
-                <Text style={styles.title}>7 Day free trial</Text>
-                <Text style={styles.description}>Then 19.99$/year (only 1.67$/month)</Text>
+                <Text style={styles.title}>Chỉ 200.000₫/năm</Text>
+                <Text style={styles.description}>Dùng thử với giá 5.000₫/5 ngày</Text>
                 <Image source={image} style={styles.image} />
             </ImageBackground>
         </TouchableOpacity>
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     saleBanner: {
-        width: 100,
+        width: 150,
         height: 35,
         backgroundColor: '#fff',
         alignItems: 'center',

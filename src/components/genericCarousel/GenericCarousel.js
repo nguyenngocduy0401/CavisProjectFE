@@ -9,18 +9,18 @@ const screenWidth = Dimensions.get('window').width;
 const slides = [
     {
         image: require('../../../assets/images/carousel-image-1.png'),
-        title: 'Create selfie',
-        description: 'Find out what your skin says about you'
+        title: 'Chụp ảnh',
+        description: 'Khám phá điều làn da bạn nói về bạn'
     },
     {
         image: require('../../../assets/images/carousel-image-2.png'),
-        title: 'Analyze Skin',
-        description: 'Find out what your skin says about you'
+        title: 'Phân tích da',
+        description: 'Khám phá điều làn da bạn nói về bạn'
     },
     {
         image: require('../../../assets/images/carousel-image-3.png'),
-        title: 'Touch-up',
-        description: 'Find out what your skin says about you'
+        title: 'Tô điểm',
+        description: 'Khám phá điều làn da bạn nói về bạn'
     },
 ]
 
@@ -46,7 +46,7 @@ export default function GenericCarousel() {
                                 containerStyle={{
                                     marginLeft: 0
                                 }}
-                                title={'TRY NOW'}
+                                title={'Thử ngay'}
                                 onPress={() => console.log("try camera")}
                                 buttonStyle={styles.buttonStyleButton}
                             />

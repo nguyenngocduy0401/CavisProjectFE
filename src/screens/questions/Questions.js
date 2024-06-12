@@ -18,12 +18,21 @@ import TitleText from '../../components/text/TitleText';
 import NormalText from '../../components/text/NormalText';
 import { getSkinCondition } from '../../services/SkinConditionService';
 import { getSkinTypes } from '../../services/SkinTypeService';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../store/selector';
+import { updateUser } from '../../services/UserService';
+import { addSkinAnalyst } from '../../services/PersonalAnalystService';
 
 const screenWidth = Dimensions.get('window').width
 
-export default function Questions() {
+export default function Questions({ route }) {
     const navigation = useNavigation();
-    const [step, setStep] = useState(1);
+    const user = useSelector(userSelector)
+    const type = route.params?.type
+    if (user.checkExistPersonal && !type) {
+        navigation.replace('Root')
+    }
+    const [step, setStep] = useState(user.checkExistPersonal ? 2 : 1);
     const [gender, setGender] = useState(null);
     const [dateOfBirth, setDateOfBirth] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 12)))
 
@@ -63,6 +72,18 @@ export default function Questions() {
             }
         });
     };
+    const handleSubmit = async () => {
+        try {
+            if (!user.checkExistPersonal) {
+                await updateUser({ dateOfBirth, gender })
+            }
+            const list = [...concernList, skin]
+            await addSkinAnalyst(list)
+                .then(() => navigation.navigate('Root'))
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <View style={styles.container}>
             <Image source={headerLogo} style={styles.topLogo} />
@@ -85,7 +106,7 @@ export default function Questions() {
                     <DatePicker locale='vi' maximumDate={new Date(new Date().setFullYear(new Date().getFullYear() - 12))} style={styles.datePicker} date={dateOfBirth} onDateChange={setDateOfBirth} mode='date' />
                     <View style={styles.buttonContainer}>
                         <GenericButton
-                            title={'NEXT'}
+                            title={'Tiếp theo'}
                             onPress={() => setStep(2)}
                             buttonStyle={[styles.buttonStyleButton, { width: screenWidth - 40 }]}
                             disabled={!(gender && dateOfBirth)}
@@ -109,12 +130,12 @@ export default function Questions() {
                     </View>
                     <View style={styles.buttonContainer}>
                         <GenericWhiteButton
-                            title={'BACK'}
+                            title={'Quay lại'}
                             onPress={() => setStep(1)}
                             buttonStyle={[styles.whiteButtonStyleButton, { width: screenWidth / 2 - 40 }]}
                         />
                         <GenericButton
-                            title={'NEXT'}
+                            title={'Tiếp theo'}
                             onPress={() => setStep(3)}
                             buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
                             disabled={!skin}
@@ -137,13 +158,13 @@ export default function Questions() {
                     </View>
                     <View style={styles.buttonContainer}>
                         <GenericWhiteButton
-                            title={'BACK'}
+                            title={'Quay lại'}
                             onPress={() => setStep(2)}
                             buttonStyle={[styles.whiteButtonStyleButton, { width: screenWidth / 2 - 40 }]}
                         />
                         <GenericButton
-                            title={'NEXT'}
-                            onPress={() => navigation.navigate("Root")}
+                            title={'Tiếp theo'}
+                            onPress={handleSubmit}
                             buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
                             disabled={!(concernList.length > 0)}
                         />

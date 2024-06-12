@@ -9,7 +9,7 @@ const screenWidth = Dimensions.get('window').width;
 const dailyListData = [
     {
         id: 1,
-        title: "Do morning log",
+        title: "Nhật ký buổi sáng",
         backgroundColor: "#E7F2E7",
         checkColor: "#7CB97C",
         image: require('../../../assets/images/morning-log-image.png'),
@@ -17,7 +17,7 @@ const dailyListData = [
     },
     {
         id: 2,
-        title: "Do evening log",
+        title: "Nhật ký buổi tối",
         backgroundColor: "#EBE2F5",
         checkColor: "#703CAA",
         image: require('../../../assets/images/evening-log-image.png'),
@@ -25,7 +25,7 @@ const dailyListData = [
     },
     {
         id: 3,
-        title: "Do selfie log",
+        title: "Nhật ký chụp ảnh",
         backgroundColor: "#FDF0F0",
         checkColor: "#BE3333",
         image: require('../../../assets/images/selfie-log-image.png'),
@@ -33,7 +33,7 @@ const dailyListData = [
     },
     {
         id: 4,
-        title: "Morning routine",
+        title: "Lịch trình buổi sáng",
         backgroundColor: "#FAF3E8",
         checkColor: "#DCBD9E",
         image: require('../../../assets/images/morning-routine.png'),
@@ -41,7 +41,7 @@ const dailyListData = [
     },
     {
         id: 5,
-        title: "Evening routine",
+        title: "Lịch trình buổi tối",
         backgroundColor: "#E6F0F6",
         checkColor: "#78B5D1",
         image: require('../../../assets/images/evening-routine.png'),
@@ -54,7 +54,7 @@ export default function HomeCheckList() {
         <>
             <View style={styles.titleContainer}>
                 <View style={{ width: "80%" }}>
-                    <TitleText title={'Your daily checklist'} style={styles.title} />
+                    <TitleText title={'Hàng ngày'} style={styles.title} />
                 </View>
             </View>
             <FlatList
