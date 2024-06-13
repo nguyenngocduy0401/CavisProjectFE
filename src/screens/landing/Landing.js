@@ -7,7 +7,7 @@ export default function Landing() {
     const navigation = useNavigation();
 
     useEffect(() => {
-        setTimeout(() => navigation.navigate('Login'), 2500)
+        setTimeout(() => navigation.replace('Login'), 2500)
     }, [])
     return (
         <View style={styles.container}>
