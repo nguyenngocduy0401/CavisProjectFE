@@ -52,7 +52,7 @@ export default function Register() {
               try {
                 const responseData = await register(values);
 
-                if (responseData.isSuccess) {
+                if (responseData.isSuccess && responseData.Data != null ) {
                   Toast.show({
                     type: 'success',
                     text1: 'Đăng ký thành công',
@@ -60,8 +60,10 @@ export default function Register() {
                   });
                   setErrorMessage(null);
                   navigation.navigate('Login');
-                } else {
+                } else if(responseData.isSuccess && responseData.Data == null) {
                   setErrorMessage(responseData.message);
+                }else{
+                  setErrorMessage("Không thể đăng kí");
                 }
               } catch (error) {
                 setErrorMessage(error.message);
