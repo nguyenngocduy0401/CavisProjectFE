@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userSelector } from '../store/selector';
 import { fetchUser } from '../store/features/authSlice';
 import Landing from '../screens/landing/Landing';
+import Payment from '../screens/payment/Payment';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -52,11 +53,12 @@ const StackNavigator = () => {
                     <Stack.Screen name="Products" component={Products} options={{ headerShown: false }} />
                     <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
                     <Stack.Screen name="Premium" component={Premium} options={{ headerShown: false }} />
+                    <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
                 </>
                 :
                 <>
-                    <Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }} />
                     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+                    <Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }} />
                     <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
                     <Stack.Screen name="Forget" component={Forget} options={{ headerShown: false }} />
                 </>}

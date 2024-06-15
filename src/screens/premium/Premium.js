@@ -24,12 +24,14 @@ const premiumPackages = [
     {
         id: 1,
         title: '5.000₫/5 ngày',
-        description: 'Chỉ 1.000₫/ngày'
+        description: 'Chỉ 1.000₫/ngày',
+        price: 5000,
     },
     {
         id: 2,
         title: '200.000₫/1 năm',
-        description: 'Tiết kiệm đến 165.000₫'
+        description: 'Tiết kiệm đến 165.000₫',
+        price: 200000,
     }
 ]
 
@@ -58,12 +60,12 @@ export default function Premium() {
                 ))}
                 <View style={{ marginTop: 20 }}>
                     {premiumPackages.map((prePackage, index) => (
-                        <TouchableOpacity key={index} onPress={() => setActivePremiumPackage(prePackage.id)} style={prePackage.id === activePremiumPackage ? styles.prePackageAcive : styles.prePackage}>
+                        <TouchableOpacity key={index} onPress={() => setActivePremiumPackage(prePackage)} style={prePackage === activePremiumPackage ? styles.prePackageAcive : styles.prePackage}>
                             <View>
                                 <TitleText title={prePackage.title} style={styles.packageTitle} />
                                 <NormalText text={prePackage.description} />
                             </View>
-                            {prePackage.id === activePremiumPackage ?
+                            {prePackage === activePremiumPackage ?
                                 <Image
                                     source={premiumCheckIcon}
                                     style={styles.prePackageActiveCheckImage}
@@ -76,7 +78,8 @@ export default function Premium() {
                 </View>
                 <GenericButton
                     title={'Đăng kí ngay'}
-                    onPress={() => console.log('Buy premium')}
+                    disabled={!activePremiumPackage}
+                    onPress={() => navigation.navigate('Payment', { premiumPackage: activePremiumPackage })}
                     buttonStyle={styles.buttonStyleButton}
                 />
             </View>

@@ -1,4 +1,4 @@
-API_URL_ENV = "https://6176-116-109-193-182.ngrok-free.app";
+API_URL_ENV = "https://cavisapp.loca.lt";
 
 
 export default API_URL_ENV;

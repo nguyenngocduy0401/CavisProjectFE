@@ -67,32 +67,32 @@ const categoryData = [
   {
     id: 1,
     icon: require('../../../assets/icons/lips-icon.png'),
-    title: "Lips"
+    title: "Môi"
   },
   {
     id: 2,
     icon: require('../../../assets/icons/firm-icon.png'),
-    title: "Firm"
+    title: "Da"
   },
   {
     id: 3,
     icon: require('../../../assets/icons/chin-icon.png'),
-    title: "Chin"
+    title: "Cằm"
   },
   {
     id: 4,
     icon: require('../../../assets/icons/acne-icon.png'),
-    title: "Acne"
+    title: "Mụn"
   },
   {
     id: 5,
     icon: require('../../../assets/icons/eyes-icon.png'),
-    title: "Eyes"
+    title: "Mắt"
   },
   {
     id: 6,
     icon: require('../../../assets/icons/eyes-icon-2.png'),
-    title: "Eyes"
+    title: "Mí"
   },
 ]
 export default function MakeUp() {
