@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, color } from "@rneui/base";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Dimensions, StyleSheet } from 'react-native';
 const screenWidth = Dimensions.get('window').width
 
@@ -15,7 +14,6 @@ export default function GenericWhiteButton({
     disabled,
 }) {
     return (
-
         <Button
             icon={icon}
             title={title}

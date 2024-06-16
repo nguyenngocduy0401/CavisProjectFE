@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button } from "@rneui/base";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Dimensions, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 const screenWidth = Dimensions.get('window').width
@@ -17,25 +16,25 @@ export default function GenericButton({
     disabled,
 }) {
     return (
-        
-            <Button
-                ViewComponent={LinearGradient}
-                linearGradientProps={{
-                    colors: ["#F27272", "#FBBD98"],
-                    start: { x: 0, y: 0.5 },
-                    end: { x: 1, y: 0.5 },
-                  }}
-                icon={icon}
-                title={title}
-                iconContainerStyle={{ style: iconContainerStyle }}
-                titleStyle={titleStyle}
-                buttonStyle={buttonStyle}
-                onPress={onPress}
-                containerStyle={[styles.container, containerStyle]}
-                iconRight={iconRight}
-                disabled={disabled}
-            />
-        
+
+        <Button
+            ViewComponent={LinearGradient}
+            linearGradientProps={{
+                colors: ["#F27272", "#FBBD98"],
+                start: { x: 0, y: 0.5 },
+                end: { x: 1, y: 0.5 },
+            }}
+            icon={icon}
+            title={title}
+            iconContainerStyle={{ style: iconContainerStyle }}
+            titleStyle={titleStyle}
+            buttonStyle={buttonStyle}
+            onPress={onPress}
+            containerStyle={[styles.container, containerStyle]}
+            iconRight={iconRight}
+            disabled={disabled}
+        />
+
     );
 }
 const styles = StyleSheet.create({

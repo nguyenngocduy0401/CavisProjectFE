@@ -89,7 +89,7 @@ export default function Questions({ route }) {
             <Image source={headerLogo} style={styles.topLogo} />
             <LinearProgress
                 style={styles.progress}
-                value={step === 1 ? Math.min(1 / 3, 1) : step === 2 ? Math.min(2 / 3, 1) : 1}
+                value={!type ? (step === 1 ? Math.min(1 / 3, 1) : step === 2 ? Math.min(2 / 3, 1) : 1) : (step === 2 ? 0.5 : 1)}
                 variant="determinate"
                 trackColor="#FBBD98"
                 color="#F27272"
@@ -129,17 +129,28 @@ export default function Questions({ route }) {
                         ))}
                     </View>
                     <View style={styles.buttonContainer}>
-                        <GenericWhiteButton
-                            title={'Quay lại'}
-                            onPress={() => setStep(1)}
-                            buttonStyle={[styles.whiteButtonStyleButton, { width: screenWidth / 2 - 40 }]}
-                        />
-                        <GenericButton
-                            title={'Tiếp theo'}
-                            onPress={() => setStep(3)}
-                            buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
-                            disabled={!skin}
-                        />
+                        {!type ?
+                            <>
+                                <GenericWhiteButton
+                                    title={'Quay lại'}
+                                    onPress={() => setStep(1)}
+                                    buttonStyle={[styles.whiteButtonStyleButton, { width: screenWidth / 2 - 40 }]}
+                                />
+                                <GenericButton
+                                    title={'Tiếp theo'}
+                                    onPress={() => setStep(3)}
+                                    buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
+                                    disabled={!skin}
+                                />
+                            </>
+                            :
+                            <GenericButton
+                                title={'Tiếp theo'}
+                                onPress={() => setStep(3)}
+                                buttonStyle={[styles.buttonStyleButton, { width: screenWidth - 40 }]}
+                                disabled={!skin}
+                            />
+                        }
                     </View>
                 </>
             }

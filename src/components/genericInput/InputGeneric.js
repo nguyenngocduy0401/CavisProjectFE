@@ -54,11 +54,11 @@ const styles = StyleSheet.create({
         borderColor: '#ccc', // Màu của đường viền
         borderRadius: 8, // Độ cong của góc
         paddingHorizontal: '2.6%', // Khoảng cách giữa đường viền và nội dung bên trong
-        paddingVertical: '1.7%',// Khoảng cách giữa đường viền và nội dung bên trong
         height: 50,
         width: 410,
     },
     inputStyle: {
+        height: '100%',
     },
     labelStyle: {
         fontSize: 13,

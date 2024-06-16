@@ -5,6 +5,7 @@ import GenericCarousel from '../../components/genericCarousel/GenericCarousel';
 import { Avatar } from '@rneui/themed';
 import TitleText from '../../components/text/TitleText';
 import HomeTopButton from '../../components/homeTopButton/HomeTopButton';
+import emptyAvatar from '../../../assets/images/empty-avatar.png';
 import skincareTopIcon from '../../../assets/icons/skincare-home-icon.png';
 import makeupTopIcon from '../../../assets/icons/makeup-home-icon.png';
 import { useNavigation } from '@react-navigation/native';
@@ -89,7 +90,7 @@ export default function Home() {
         <ScrollView style={styles.container}>
             <Header />
             <View style={styles.topGreeting}>
-                <Avatar size={70} rounded source={{ uri: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg" }} containerStyle={styles.avatar} />
+                <Avatar size={70} rounded source={user?.urlImage ? user.urlImage : emptyAvatar} containerStyle={styles.avatar} />
                 <View>
                     <TitleText
                         title={currentHour < 12

@@ -16,7 +16,7 @@ export default function ProductView({ image, title, price, description, onPress 
             />
             <View style={styles.descriptionView}>
                 <Text style={styles.title}>{truncateText(title, 25)}</Text>
-                <NormalText text={truncateText(description, 80)} />
+                <NormalText text={truncateText(description, 75)} />
                 <Text style={styles.price}>{price && price.toLocaleString()}₫</Text>
             </View>
         </TouchableOpacity>
