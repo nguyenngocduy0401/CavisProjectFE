@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';
 import { updateUser } from '../../services/UserService';
 import { addSkinAnalyst } from '../../services/PersonalAnalystService';
+import InsideHeader from '../../components/insideHeader/InsideHeader';
 
 const screenWidth = Dimensions.get('window').width
 
@@ -86,6 +87,7 @@ export default function Questions({ route }) {
     }
     return (
         <View style={styles.container}>
+            {type && <InsideHeader title={'Quay lại trang chủ'} />}
             <Image source={headerLogo} style={styles.topLogo} />
             <LinearProgress
                 style={styles.progress}

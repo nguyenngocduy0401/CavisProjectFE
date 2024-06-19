@@ -11,7 +11,7 @@ export default function Method({ image, title, type, onPress }) {
                 <View style={styles.tagContainer}>
                     <Text style={styles.tagText}>{type}</Text>
                 </View>
-                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.title} numberOfLines={2}>{title}</Text>
             </View>
         </TouchableOpacity>
     )

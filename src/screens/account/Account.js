@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, Dimensions, Image } from 'react-native'
 import React, { useState } from 'react'
-import GenericButton from '../../components/button/GenericButton'
 import { logout } from '../../services/UserService'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,7 +9,6 @@ import emptyAvatar from '../../../assets/images/empty-avatar.png';
 import { userSelector } from '../../store/selector'
 import TitleText from '../../components/text/TitleText'
 import NormalText from '../../components/text/NormalText'
-import Header from '../../components/header/Header'
 import GenericWhiteButton from '../../components/button/GenericWhiteButton'
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/MaterialIcons";

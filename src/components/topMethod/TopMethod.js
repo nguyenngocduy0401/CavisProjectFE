@@ -13,7 +13,7 @@ export default function TopMethod({ image, title, author, type, date, onPress })
             <View style={styles.tagContainer}>
                 <Text style={styles.tagText}>{type}</Text>
             </View>
-            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.title} numberOfLines={2}>{title}</Text>
             <View style={styles.detailContainer}>
                 <View style={styles.author}>
                     <Avatar rounded size={24} source={{ uri: author.avatar }} />

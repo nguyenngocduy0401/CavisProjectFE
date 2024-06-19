@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, Linking, Touchable, TouchableOpacity } from 'react-native';
-import Header from '../../components/header/Header';
+import { View, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import NormalText from '../../components/text/NormalText';

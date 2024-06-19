@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, FlatList } from 'react-native';
-import Header from '../../components/header/Header';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, Dimensions, FlatList, ScrollView, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ProductView from '../../components/productView/ProductView';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
@@ -11,20 +10,35 @@ const screenHeight = Dimensions.get('window').height;
 
 export default function Products() {
     const navigation = useNavigation()
+    const [refreshing, setRefreshing] = useState(false);
     const [products, setProducts] = useState([])
     async function getProducts() {
         try {
-          const data = await getAnalystProducts(null);
-          setProducts(data?.data?.items)
+            const data = await getAnalystProducts(null);
+            setProducts(data?.data?.items)
         } catch (error) {
-          console.log(error)
+            console.log(error)
         }
-      }
-      useEffect(() => {
+    }
+    useEffect(() => {
         getProducts()
-      }, [])
+    }, [])
+
+    const onRefresh = useCallback(() => {
+        try {
+            setRefreshing(true);
+            getProducts()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setRefreshing(false);
+        }
+    }, []);
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
             <InsideHeader title={'Products'} />
             <FlatList
                 style={styles.productView}
@@ -34,13 +48,14 @@ export default function Products() {
                     <ProductView key={item.id} image={item.urlImage} title={item.productName} description={item.description} price={item.price} onPress={() => navigation.navigate("ProductDetail", { id: item.id })} />
                 )}
             />
-        </View>
+        </ScrollView>
     )
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+        height: '100%',
     },
     productView: {
         paddingTop: 10,

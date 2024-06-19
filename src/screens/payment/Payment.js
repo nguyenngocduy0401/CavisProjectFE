@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Image, ScrollView, Linking } from 'react-native';
-import Header from '../../components/header/Header';
 import { useNavigation } from '@react-navigation/native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import NormalText from '../../components/text/NormalText';
 import TitleText from '../../components/text/TitleText';
 import GenericButton from '../../components/button/GenericButton';
-import { getProduct } from '../../services/ProductService';
-import { truncateText } from '../../utils/utils';
 import { QR_IMAGE } from '../../utils/constants';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';

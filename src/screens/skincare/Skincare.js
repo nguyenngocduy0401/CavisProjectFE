@@ -6,7 +6,7 @@ import TitleText from '../../components/text/TitleText';
 import HomeTopButton from '../../components/homeTopButton/HomeTopButton';
 import compareTopIcon from '../../../assets/icons/compare-skincare-icon.png';
 import filterTopIcon from '../../../assets/icons/filter-skincare-icon.png';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import PremiumBanner from '../../components/premiumBanner/PremiumBanner';
 import SeeAllButton from '../../components/button/SeeAllButton';
 import ProductReview from '../../components/productReview/ProductReview';
@@ -64,6 +64,7 @@ const methodData = [
   },
 ]
 export default function SkinCare() {
+  const isFocused = useIsFocused();
   const navigation = useNavigation()
 
   const [products, setProducts] = useState([])
@@ -77,8 +78,10 @@ export default function SkinCare() {
     }
   }
   useEffect(() => {
-    getProducts()
-  }, [])
+    if (isFocused) {
+      getProducts()
+    }
+  }, [isFocused])
   return (
     <ScrollView style={styles.container}>
       <Header />
@@ -135,9 +138,9 @@ export default function SkinCare() {
         </View>
         {methods.length > 0 &&
           <View style={{ paddingTop: 20 }}>
-            <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => console.log(methods[0].id)} />
+            <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => navigation.navigate("MethodDetail", { id: methods[0].id })} />
             {methods.length > 1 && methods.slice(1).map((method) => (
-              <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => console.log(method.id)} />
+              <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
             ))}
           </View>
         }

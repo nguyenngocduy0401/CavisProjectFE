@@ -15,6 +15,7 @@ import { userSelector } from '../store/selector';
 import { fetchUser } from '../store/features/authSlice';
 import Landing from '../screens/landing/Landing';
 import Payment from '../screens/payment/Payment';
+import MethodDetail from '../screens/methodDetail/MethodDetail';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -54,6 +55,7 @@ const StackNavigator = () => {
                     <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
                     <Stack.Screen name="Premium" component={Premium} options={{ headerShown: false }} />
                     <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
+                    <Stack.Screen name="MethodDetail" component={MethodDetail} options={{ headerShown: false }} />
                 </>
                 :
                 <>
