@@ -8,6 +8,7 @@ import GenericButton from '../../components/button/GenericButton';
 import { QR_IMAGE } from '../../utils/constants';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';
+import { registerPremium } from '../../services/UserService';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -16,6 +17,10 @@ export default function Payment({ route }) {
     const navigation = useNavigation()
     const { premiumPackage } = route.params;
     const user = useSelector(userSelector)
+    const handleSubmitPremium = async () => {
+        await registerPremium(premiumPackage.id)
+        navigation.navigate('Root')
+    }
     return (
         <ScrollView style={styles.container}>
             <InsideHeader title={'Premium'} />
@@ -28,10 +33,10 @@ export default function Payment({ route }) {
                     <TitleText title={premiumPackage.title} style={styles.title} />
                     <NormalText text={`Vui lòng chuyển khoản với cú pháp:`} />
                     <TitleText title={`CAVIS + ${user.phoneNumber}`} style={styles.price} color={'#DE8186'} />
-                    <NormalText text={`Chúng tôi sẽ xác nhận trong vòng 24h kể từ lúc thanh toán.`} />
+                    <NormalText text={`Vui lòng bấm hoàn tất sau khi chuyển khoản. Chúng tôi sẽ xác nhận trong vòng 24h kể từ lúc thanh toán.`} />
                     <GenericButton
-                        title={'Quay lại trang chủ'}
-                        onPress={() => navigation.navigate('Root')}
+                        title={'Hoàn tất'}
+                        onPress={handleSubmitPremium}
                         buttonStyle={styles.buttonStyleButton}
                     />
                 </View>

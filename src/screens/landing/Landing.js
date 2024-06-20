@@ -2,12 +2,22 @@ import { View, Text, StyleSheet, Image, ImageBackground } from 'react-native'
 import React, { useEffect } from 'react'
 import { useNavigation } from "@react-navigation/native"
 import logo from '../../../assets/images/cavis-landing-logo.png'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Landing() {
     const navigation = useNavigation();
-
+    const fetchToken = async () => {
+        try {
+            const accessToken = await AsyncStorage.getItem('accessToken');
+            if (!accessToken) {
+                navigation.replace('Login')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
-        setTimeout(() => navigation.replace('Login'), 2500)
+        fetchToken()
     }, [])
     return (
         <View style={styles.container}>

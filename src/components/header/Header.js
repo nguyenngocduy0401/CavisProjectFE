@@ -4,13 +4,18 @@ import { StyleSheet } from 'react-native';
 import { Avatar, Badge } from '@rneui/themed';
 import headerLogo from '../../../assets/images/cavis-horizontal-logo.png';
 import notificationIcon from '../../../assets/icons/notification-icon.png';
+import chatIcon from '../../../assets/icons/chat-icon.png';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../store/selector';
 
 const screenWidth = Dimensions.get('window').width
 
 export default function Header() {
     const navigation = useNavigation()
+    const user = useSelector(userSelector)
     const [notificationsNumber, setNotificationsNumber] = useState(null);
+    const [chatNumber, setChatNumber] = useState(null);
     async function getNotificationNumber() {
         try {
             // const data = await getSkins();
@@ -19,27 +24,53 @@ export default function Header() {
             console.log(error)
         }
     }
+    async function getChatNumber() {
+        try {
+            // const data = await getSkins();
+            setChatNumber(2)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         getNotificationNumber()
+        getChatNumber()
     }, [])
     return (
         <View style={styles.container}>
             <Image source={headerLogo} style={styles.topLogo} />
-            <TouchableOpacity onPress={() => console.log("navigate notification screen")}>
-                <Avatar
-                    size={45}
-                    rounded
-                    source={notificationIcon}
-                    containerStyle={styles.notificationContainer}
-                />
-                {notificationsNumber &&
-                    <Badge
-                        badgeStyle={styles.badgeStyle}
-                        containerStyle={styles.badgeContainer}
-                        value={notificationsNumber}
+            <View style={styles.interactContainer}>
+                <TouchableOpacity onPress={() => console.log("navigate notification screen")}>
+                    <Avatar
+                        size={45}
+                        rounded
+                        source={notificationIcon}
+                        containerStyle={styles.notificationContainer}
                     />
-                }
-            </TouchableOpacity>
+                    {notificationsNumber &&
+                        <Badge
+                            badgeStyle={styles.badgeStyle}
+                            containerStyle={styles.badgeContainer}
+                            value={notificationsNumber}
+                        />
+                    }
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate((user && user?.role?.toLowerCase()) === 'expert' ? 'ChatList' : 'Chat')}>
+                    <Avatar
+                        size={45}
+                        rounded
+                        source={chatIcon}
+                        containerStyle={styles.notificationContainer}
+                    />
+                    {chatNumber &&
+                        <Badge
+                            badgeStyle={styles.badgeStyle}
+                            containerStyle={styles.badgeContainer}
+                            value={chatNumber}
+                        />
+                    }
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -50,7 +81,7 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         justifyContent: "space-between",
         flexDirection: "row",
-        height:50,
+        height: 50,
         alignItems: "center",
     },
     topLogo: {
@@ -70,6 +101,10 @@ const styles = StyleSheet.create({
     },
     badgeStyle: {
         backgroundColor: '#F27272'
+    },
+    interactContainer: {
+        flexDirection: 'row',
+        gap: 10,
     }
 });
 

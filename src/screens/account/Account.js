@@ -22,6 +22,7 @@ export default function Account() {
   const navigation = useNavigation()
   const user = useSelector(userSelector)
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(false)
   const [skin, setSkin] = useState({
     skinsName: 'Da khô',
   })
@@ -35,8 +36,14 @@ export default function Account() {
     },
   ])
   const handleLogout = async () => {
-    await logout()
-      .then(dispatch(removeUser()))
+    try {
+      setLoading(true)
+      await logout()
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
   return (
     <ScrollView style={styles.container}>
@@ -54,7 +61,7 @@ export default function Account() {
         }}
       />
       <View style={styles.account}>
-        <Avatar size={130} rounded source={user?.urlImage ? user.urlImage : emptyAvatar} containerStyle={styles.avatar} />
+        <Avatar size={130} rounded source={user?.urlImage ? { uri: user.urlImage } : emptyAvatar} containerStyle={styles.avatar} />
         <TitleText
           title={user.fullName ? user.fullName : user.userName}
           style={{ marginTop: 0, marginBottom: 0, marginLeft: 0, textAlign: 'center' }}
@@ -70,58 +77,58 @@ export default function Account() {
           onPress={() => console.log('Edit profile')}
         />
       </View>
-      <>
-        <TitleText title={'Premium'} style={styles.title} />
-        <Button
-          ViewComponent={LinearGradient}
-          linearGradientProps={{
-            colors: ["#FFEEE9", "#FFEEE9", "#fcd4bc"],
-            locations: [0, 0.5, 1],
-            start: { x: 0, y: 0.7 },
-            end: { x: 1, y: 0.7 },
-          }}
-          containerStyle={styles.premiumBanner}
-          buttonStyle={styles.premiumButton}
-          onPress={() => navigation.navigate('Premium')}
-        >
-          <View style={{ flexDirection: 'row' }}>
-            <Image
-              source={premiumIcon}
-              style={styles.premiumIcon}
-            />
-            <View>
-              <TitleText title={'Mở khóa Cavis Premium'} style={{ marginLeft: 20, marginBottom: 0, marginTop: 0, fontSize: 18 }} />
-              <NormalText text={'Hãy bắt đầu với Cavis ngay hôm nay!'} style={{ marginLeft: 20 }} />
+      {user && user.role.toLowerCase() === "customer" &&
+        <>
+          <TitleText title={'Premium'} style={styles.title} />
+          <Button
+            ViewComponent={LinearGradient}
+            linearGradientProps={{
+              colors: ["#FFEEE9", "#FFEEE9", "#fcd4bc"],
+              locations: [0, 0.5, 1],
+              start: { x: 0, y: 0.7 },
+              end: { x: 1, y: 0.7 },
+            }}
+            containerStyle={styles.premiumBanner}
+            buttonStyle={styles.premiumButton}
+            onPress={() => navigation.navigate('Premium')}
+          >
+            <View style={{ flexDirection: 'row' }}>
+              <Image
+                source={premiumIcon}
+                style={styles.premiumIcon}
+              />
+              <View>
+                <TitleText title={'Mở khóa Cavis Premium'} style={{ marginLeft: 20, marginBottom: 0, marginTop: 0, fontSize: 18 }} />
+                <NormalText text={'Hãy bắt đầu với Cavis ngay hôm nay!'} style={{ marginLeft: 20 }} />
+              </View>
             </View>
+            <Icon name='chevron-right' size={24} color={'#6E6E6E'} />
+          </Button>
+          <TitleText title={'Làn da của tôi'} style={styles.title} />
+          <View style={styles.skinContainer}>
+            <ListItem containerStyle={styles.listItem}>
+              <ListItem.Content style={styles.listContent}>
+                <ListItem.Subtitle style={styles.listSubtitle}>Loại da</ListItem.Subtitle>
+                <ListItem.Title style={styles.listTitle}>{skin?.skinsName}</ListItem.Title>
+              </ListItem.Content>
+            </ListItem>
+            <Divider style={styles.divider} />
+            <ListItem containerStyle={styles.listItem}>
+              <ListItem.Content style={styles.listContent}>
+                <ListItem.Subtitle style={styles.listSubtitle}>Vấn đề da</ListItem.Subtitle>
+                <ListItem.Title style={styles.listTitle}>{concerns.length > 0 && concerns.length > 2 ? concerns.slice(0, 2).map(concern => concern.skinsName).join(' + ') + '...' : concerns.map(concern => concern.skinsName).join(' + ')}</ListItem.Title>
+              </ListItem.Content>
+            </ListItem>
+            <Divider style={styles.divider} />
+            <ListItem containerStyle={styles.listItem} onPress={() => navigation.navigate('Questions', { type: 'again' })}>
+              <ListItem.Content style={styles.listContent}>
+                <ListItem.Subtitle style={styles.listSubtitle}>Thực hiện kiểm tra loại da</ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
           </View>
-          <Icon name='chevron-right' size={24} color={'#6E6E6E'} />
-        </Button>
-      </>
-      <>
-        <TitleText title={'Làn da của tôi'} style={styles.title} />
-        <View style={styles.skinContainer}>
-          <ListItem containerStyle={styles.listItem}>
-            <ListItem.Content style={styles.listContent}>
-              <ListItem.Subtitle style={styles.listSubtitle}>Loại da</ListItem.Subtitle>
-              <ListItem.Title style={styles.listTitle}>{skin?.skinsName}</ListItem.Title>
-            </ListItem.Content>
-          </ListItem>
-          <Divider style={styles.divider} />
-          <ListItem containerStyle={styles.listItem}>
-            <ListItem.Content style={styles.listContent}>
-              <ListItem.Subtitle style={styles.listSubtitle}>Vấn đề da</ListItem.Subtitle>
-              <ListItem.Title style={styles.listTitle}>{concerns.length > 0 && concerns.length > 2 ? concerns.slice(0, 2).map(concern => concern.skinsName).join(' + ') + '...' : concerns.map(concern => concern.skinsName).join(' + ')}</ListItem.Title>
-            </ListItem.Content>
-          </ListItem>
-          <Divider style={styles.divider} />
-          <ListItem containerStyle={styles.listItem} onPress={() => navigation.navigate('Questions', { type: 'again' })}>
-            <ListItem.Content style={styles.listContent}>
-              <ListItem.Subtitle style={styles.listSubtitle}>Thực hiện kiểm tra loại da</ListItem.Subtitle>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
-        </View>
-      </>
+        </>
+      }
       <Button
         icon={<Icon2 name='logout' size={22} style={{ marginRight: 5, fontWeight: '300' }} color={'#6E6E6E'} />}
         title={'Đăng xuất'}
@@ -134,6 +141,7 @@ export default function Account() {
           marginLeft: 20,
           width: 150,
         }}
+        loading={loading}
       />
     </ScrollView>
   )

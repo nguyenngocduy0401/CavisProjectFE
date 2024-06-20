@@ -93,7 +93,7 @@ export default function Home() {
         <ScrollView style={styles.container}>
             <Header />
             <View style={styles.topGreeting}>
-                <Avatar size={70} rounded source={user?.urlImage ? user.urlImage : emptyAvatar} containerStyle={styles.avatar} />
+                <Avatar size={70} rounded source={user?.urlImage ? { uri: user.urlImage } : emptyAvatar} containerStyle={styles.avatar} />
                 <View>
                     <TitleText
                         title={currentHour < 12
