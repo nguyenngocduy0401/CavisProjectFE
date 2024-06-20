@@ -12,7 +12,7 @@ import ProductDetail from '../screens/productDetail/ProductDetail';
 import Premium from '../screens/premium/Premium';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSelector } from '../store/selector';
-import { fetchUser } from '../store/features/authSlice';
+import { fetchUser, removeUser } from '../store/features/authSlice';
 import Landing from '../screens/landing/Landing';
 import Payment from '../screens/payment/Payment';
 import MethodDetail from '../screens/methodDetail/MethodDetail';
@@ -39,6 +39,8 @@ const StackNavigator = () => {
     useEffect(() => {
         if (accessToken) {
             dispatch(fetchUser())
+        } else {
+            dispatch(removeUser())
         }
     }, [accessToken])
     return (
