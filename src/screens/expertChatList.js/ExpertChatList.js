@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, StyleSheet, FlatList, RefreshControl } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { firebase } from '@react-native-firebase/database';
 import { DATABASE_LINK } from '../../config/firebase/realtimedb';
@@ -28,28 +28,78 @@ const tabs = [
 export default function ExpertChatList() {
     const user = useSelector(userSelector);
     const navigation = useNavigation()
-    const [tab, setTab] = useState("answering");
+    const [tab, setTab] = useState(0);
+    const [chats, setChats] = useState([]);
+    const [chatList, setChatList] = useState([]);
+    const [chatsInit, setChatsInit] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
-    const [chatList, setchatList] = useState([]);
+    const getRooms = (usersData) => {
+        const chatRoomsRef = firebase
+            .app()
+            .database(DATABASE_LINK)
+            .ref('/chatrooms')
+        const onValueChange = chatRoomsRef.on('value', snapshot => {
+            const data = snapshot.val()
+            setChatsInit(snapshot.val())
+            const updateData = []
+            for (let id in data) {
+                const user = usersData[data[id].userId];
+                updateData.push({ id, user });
+            }
+            setChats(updateData);
+        });
+        return () => {
+            chatRoomsRef.off('value', onValueChange);
+        };
+    }
     useEffect(() => {
-        getChatlist();
-    }, [tab]);
+        fetchAllUsers().then((usersData) => getRooms(usersData))
+    }, [user.id]);
 
-    const getChatlist = async () => {
+    useEffect(() => {
+        let rooms = [];
         if (tab === 0) {
+            chats.map((chat) => {
+                if (chatsInit[chat.id].userId === user.id) {
+                    rooms.push(chat);
+                }
+            })
+        } else if (tab === 1) {
+            chats.map((chat) => {
+                if (chatsInit[chat.id].status === 'waiting') {
+                    rooms.push(chat);
+                }
+            })
+        } else {
 
-        } else if (tab === 1)
-            firebase
+        }
+        setChatList(rooms)
+    }, [tab, chats]);
+    const onRefresh = useCallback(() => {
+        try {
+            setRefreshing(true);
+            getRooms()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setRefreshing(false);
+        }
+    }, []);
+
+    const fetchAllUsers = async () => {
+        try {
+            const usersRef = firebase
                 .app()
                 .database(DATABASE_LINK)
-                .ref('/chatlist/' + user?.id)
-                .on('value', snapshot => {
-                    if (snapshot.val() != null) {
-                        setchatList(Object.values(snapshot.val()))
-                    }
-                });
-    }
-
+                .ref('/users');
+            const usersSnapshot = await usersRef.once('value');
+            const usersData = usersSnapshot.val();
+            return usersData
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
     return (
         <View style={styles.container}>
             <InsideHeader title={"Danh sách tin nhắn"} />
@@ -61,6 +111,7 @@ export default function ExpertChatList() {
             >
                 {tabs.map(tabDetail =>
                     <Tab.Item
+                        active={tab === tabDetail.value}
                         title={tabDetail.title}
                         buttonStyle={(active) => ({
                             backgroundColor: active ? "black" : "white",
@@ -85,7 +136,10 @@ export default function ExpertChatList() {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index}
                     data={chatList}
-                    renderItem={(item) => <ChatListView user={item} onPress={navigation.navigate('Chat', { receiverData: item })} />}
+                    renderItem={(item, index) => <ChatListView item={item.item} onPress={() => navigation.navigate('Chat', { receiverData: item })} />}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 />
                 :
                 <TitleText
@@ -105,7 +159,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     listView: {
-        paddingTop: 10,
+        paddingTop: 20,
         paddingBottom: 10,
     },
     tabs: {

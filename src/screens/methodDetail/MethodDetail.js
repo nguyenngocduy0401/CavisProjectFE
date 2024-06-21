@@ -14,7 +14,7 @@ const screenHeight = Dimensions.get('window').height;
 
 export default function MethodDetail({ route }) {
     const navigation = useNavigation()
-    const { id } =  route.params
+    const { id } = route.params
     const [method, setMethod] = useState(null)
     async function getMethodDetail(id) {
         try {
@@ -77,11 +77,11 @@ export default function MethodDetail({ route }) {
                         </View>
                     </View>
                     <View style={styles.detailContainer}>
-                        {method.contents.map(content =>
-                            <>
+                        {method.contents.map((content, index) =>
+                            <View key={index}>
                                 <TitleText title={content.content} style={styles.content} />
-                                {content.details.map(detail => <NormalText text={detail} style={styles.detail} />)}
-                            </>
+                                {content.details.map((detail, index) => <NormalText key={index} text={detail} style={styles.detail} />)}
+                            </View>
                         )}
                     </View>
                 </>

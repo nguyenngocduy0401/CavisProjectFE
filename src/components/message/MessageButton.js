@@ -8,11 +8,11 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const screenWidth = Dimensions.get('window').width
 
-export default function MessageButton({ messageData, onPress }) {
+export default function MessageButton({ message, onPress }) {
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
             <View style={styles.messageContainer}>
-                <Text style={styles.message}>{messageData.message}</Text>
+                <Text style={styles.message}>{message}</Text>
             </View>
         </TouchableOpacity >
     )

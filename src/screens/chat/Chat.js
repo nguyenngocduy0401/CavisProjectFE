@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, Linking } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, ScrollView, Linking, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import NormalText from '../../components/text/NormalText';
@@ -11,6 +11,10 @@ import UserMessage from '../../components/message/UserMessage';
 import SendButton from '../../components/button/SendButton';
 import InputGeneric from '../../components/genericInput/InputGeneric';
 import MessageButton from '../../components/message/MessageButton';
+import { firebase } from '@react-native-firebase/database';
+import { DATABASE_LINK } from '../../config/firebase/realtimedb';
+import Toast from 'react-native-toast-message';
+import { BOT } from '../../config/firebase/bot';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -19,27 +23,116 @@ export default function Chat() {
     const navigation = useNavigation()
     const user = useSelector(userSelector)
     const [loading, setLoading] = useState(false)
-    const [chat, setChat] = useState(null)
+    const [chat, setChat] = useState([])
     const [message, setMessage] = useState(null)
-    const bot =
-    {
-        "id": "da8a7be0-e888-4201-8500-3c5b2dba7776",
-        "fullName": "Cavis",
-        "urlImage": "https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/cavis-logo.png?alt=media&token=ec5a2f56-7adc-4abb-b5a8-b478b9d9cb78",
-    }
-    const item = {
-        message: "Cuộc trò chuyện đã được tạo thành công. Chúng tôi sẽ kết nối bạn với chuyên gia trong thời gian sớm nhất",
-        from: bot.id,
-        // to: user.id,
-        sendTime: "2011-10-05T14:48:00.000Z",
-        msgType: "text",
-    }
+    const [roomId, setRoomId] = useState(null);
+    const [users, setUsers] = useState([])
+
+    const fetchRoomId = async () => {
+        const userRef = firebase
+            .app()
+            .database(DATABASE_LINK)
+            .ref(`/users/${user.id}`);
+        const userSnapshot = await userRef.once('value');
+        const userData = userSnapshot.val();
+
+        if (userData && userData.roomId) {
+            setRoomId(userData.roomId);
+        } else {
+            const newRoomRef = firebase
+                .app()
+                .database(DATABASE_LINK)
+                .ref('/chatrooms').push();
+            const newRoomId = newRoomRef.key;
+            await newRoomRef.set({
+                userId: user.id,
+                status: 'waiting',
+            });
+            await userRef.update({ roomId: newRoomId });
+            setRoomId(newRoomId);
+        }
+    };
+    useEffect(() => {
+        fetchAllUsers().then(() => fetchRoomId())
+    }, [user.id]);
+
+    const fetchAllUsers = async () => {
+        try {
+            const usersRef = firebase
+                .app()
+                .database(DATABASE_LINK)
+                .ref('/users');
+            const usersSnapshot = await usersRef.once('value');
+            const usersData = usersSnapshot.val();
+            return usersData
+            if (usersData) {
+                setUsers(usersData);
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (!roomId) return;
+
+        const chatRef = firebase
+            .app()
+            .database(DATABASE_LINK)
+            .ref(`/chatrooms/${roomId}/messages`);
+        const onChildAdded = chatRef.on('child_added', snapshot => {
+            const messageData = snapshot.val();
+            const sender = users[messageData.senderId];
+            setChat(prevMessages => [
+                {
+                    ...messageData,
+                    sender
+                },
+                ...prevMessages])
+        });
+
+        return () => {
+            chatRef.off('child_added', onChildAdded);
+        };
+    }, [roomId]);
+
+    const sendMessage = (roomId, messageText, sender) => {
+        if (!messageText.trim()) return;
+
+        setLoading(true);
+        const newMessageRef = firebase
+            .app()
+            .database(DATABASE_LINK)
+            .ref(`/chatrooms/${roomId}/messages`).push();
+        newMessageRef.set({
+            message: messageText,
+            senderId: sender.id,
+            timestamp: new Date().toISOString(),
+        });
+        setLoading(false)
+        setMessage('');
+    };
     return (
         <View style={styles.container}>
             <InsideHeader title={'Trò chuyện cùng chuyên gia'} />
-            <ReceiverMessage user={bot} messageData={item} />
-            <MessageButton messageData={item} />
-            <UserMessage messageData={item} />
+            {/* <MessageButton message={'Bắt đầu trò chuyện'} onPress={() => {
+                sendMessage(roomId, "Bắt đầu trò chuyện", user)
+                sendMessage(roomId, "Cuộc trò chuyện đã được tạo thành công. Chúng tôi sẽ kết nối bạn với chuyên gia trong thời gian sớm nhất", BOT)
+            }} /> */}
+            <FlatList
+                style={{ flex: 1 }}
+                data={chat}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item, index) => index}
+                inverted
+                renderItem={({ item }) => {
+                    if (item.senderId == user.id) {
+                        return <UserMessage messageData={item} />
+                    } else {
+                        return <ReceiverMessage user={item.sender} messageData={item} />
+                    }
+                }}
+            />
             <View style={styles.inputContainer}>
                 <InputGeneric
                     placeholder={"Nhập tin nhắn..."}
@@ -48,7 +141,7 @@ export default function Chat() {
                     inputContainerStyle={styles.input}
                     containerStyle={styles.containerStyle}
                 />
-                <SendButton disabled={loading} onPress={() => console.log("send message")} />
+                <SendButton disabled={loading} onPress={() => sendMessage(roomId, message, user)} />
             </View>
         </View>
     )

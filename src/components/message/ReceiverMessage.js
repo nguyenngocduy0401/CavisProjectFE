@@ -10,12 +10,12 @@ const screenWidth = Dimensions.get('window').width
 export default function ReceiverMessage({ user, messageData }) {
     return (
         <View style={styles.container}>
-            <Text style={styles.fullName}>{user.fullName}</Text>
+            <Text style={styles.fullName}>{user?.fullName}</Text>
             <View style={styles.detailContainer}>
                 <Avatar size={40} rounded source={user?.urlImage ? { uri: user.urlImage } : emptyAvatar} containerStyle={styles.avatar} />
                 <View style={styles.messageContainer}>
                     <Text style={styles.message}>{messageData.message}</Text>
-                    <Text style={styles.date}>{messageData.sendTime && format(new Date(messageData.sendTime), 'HH:mm d, MMM yyyy', { locale: vi })}</Text>
+                    <Text style={styles.date}>{messageData.timestamp && format(new Date(messageData.timestamp), 'HH:mm d, MMM yyyy', { locale: vi })}</Text>
                 </View>
             </View>
 

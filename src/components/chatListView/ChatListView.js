@@ -3,29 +3,23 @@ import React from 'react'
 import { Avatar, Image } from '@rneui/themed'
 import NormalText from '../text/NormalText'
 import { Dimensions } from 'react-native'
+import emptyAvatar from '../../../assets/images/empty-avatar.png';
 
 const screenWidth = Dimensions.get('window').width
 
-export default function ChatListView({ user, onPress }) {
+export default function ChatListView({ item, onPress }) {
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
             <Avatar
                 rounded
-                size={40}
-                source={{ uri: user.urlImage }}
+                size={60}
+                source={item?.user?.urlImage ? { uri: item.user.urlImage } : emptyAvatar}
                 containerStyle={styles.image}
             />
-            {user.seen ?
-                <View style={styles.descriptionView}>
-                    <Text style={styles.title} numberOfLines={1}>{user.fullName}</Text>
-                    <NormalText text={user.lastMsg} numberOfLines={1} />
-                </View>
-                :
-                <View style={styles.descriptionView}>
-                    <Text style={styles.unseenTitle} numberOfLines={1}>{user.fullName}</Text>
-                    <NormalText text={user.lastMsg} numberOfLines={1} style={styles.unseenMessage} />
-                </View>}
-
+            <View style={styles.descriptionView}>
+                <Text style={styles.title} numberOfLines={1}>{item?.user?.fullName}</Text>
+                {/* <NormalText text={item?.user?.lastMessage} numberOfLines={1} /> */}
+            </View>
         </TouchableOpacity>
     )
 }
@@ -53,14 +47,14 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         width: '70%',
     },
-    unseenTitle:{
+    unseenTitle: {
         color: "black",
         textAlign: "left",
         fontSize: 20,
         marginBottom: 5,
         fontWeight: 'bold'
     },
-    unseenMessage:{
+    unseenMessage: {
         fontWeight: 'bold'
     },
 })

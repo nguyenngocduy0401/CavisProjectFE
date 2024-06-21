@@ -17,7 +17,7 @@ export const fetchUser = createAsyncThunk(
                     .app()
                     .database(DATABASE_LINK)
                     .ref('/users/' + data.data.id)
-                    .set(data.data)
+                    .update(data.data)
             }
             return data.data
         } catch (error) {

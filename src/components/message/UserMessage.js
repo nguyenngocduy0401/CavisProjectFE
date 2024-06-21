@@ -18,7 +18,7 @@ export default function UserMessage({ messageData }) {
         style={styles.messageContainer}
       >
         <Text style={styles.message}>{messageData.message}</Text>
-        <Text style={styles.date}>{messageData.sendTime && format(new Date(messageData.sendTime), 'HH:mm d, MMM yyyy', { locale: vi })}</Text>
+        <Text style={styles.date}>{messageData.timestamp && format(new Date(messageData.timestamp), 'HH:mm d, MMM yyyy', { locale: vi })}</Text>
       </LinearGradient>
     </View >
   )

@@ -35,10 +35,7 @@ export default function Products() {
         }
     }, []);
     return (
-        <ScrollView style={styles.container}
-            refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }>
+        <View style={styles.container}>
             <InsideHeader title={'Products'} />
             <FlatList
                 style={styles.productView}
@@ -47,15 +44,17 @@ export default function Products() {
                 renderItem={({ item }) => (
                     <ProductView key={item.id} image={item.urlImage} title={item.productName} description={item.description} price={item.price} onPress={() => navigation.navigate("ProductDetail", { id: item.id })} />
                 )}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
             />
-        </ScrollView>
+        </View>
     )
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        height: '100%',
     },
     productView: {
         paddingTop: 10,
