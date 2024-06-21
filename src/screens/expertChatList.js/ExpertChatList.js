@@ -136,7 +136,7 @@ export default function ExpertChatList() {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index}
                     data={chatList}
-                    renderItem={(item, index) => <ChatListView item={item.item} onPress={() => navigation.navigate('Chat', { receiverData: item })} />}
+                    renderItem={(item, index) => <ChatListView item={item.item} onPress={() => navigation.navigate('Chat', { room: item.item })} />}
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
