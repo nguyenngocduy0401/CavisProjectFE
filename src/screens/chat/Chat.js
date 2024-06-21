@@ -64,7 +64,6 @@ export default function Chat() {
                 .ref('/users');
             const usersSnapshot = await usersRef.once('value');
             const usersData = usersSnapshot.val();
-            return usersData
             if (usersData) {
                 setUsers(usersData);
             }
