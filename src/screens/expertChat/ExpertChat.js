@@ -26,11 +26,6 @@ export default function Chat({ route }) {
   const [loading, setLoading] = useState(false)
   const [chat, setChat] = useState([])
   const [message, setMessage] = useState(null)
-  const [users, setUsers] = useState([])
-
-  useEffect(() => {
-    fetchAllUsers()
-  }, [user.id]);
 
   const fetchAllUsers = async () => {
     try {
@@ -40,35 +35,35 @@ export default function Chat({ route }) {
         .ref('/users');
       const usersSnapshot = await usersRef.once('value');
       const usersData = usersSnapshot.val();
-      if (usersData) {
-        setUsers(usersData);
-      }
+      return usersData;
     } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
 
   useEffect(() => {
-    if (!room.id) return;
+    fetchAllUsers().then(users => {
+      if (!room.id) return;
 
-    const chatRef = firebase
-      .app()
-      .database(DATABASE_LINK)
-      .ref(`/chatrooms/${room.id}/messages`);
-    const onChildAdded = chatRef.on('child_added', snapshot => {
-      const messageData = snapshot.val();
-      const sender = users[messageData.senderId];
-      setChat(prevMessages => [
-        {
-          ...messageData,
-          sender
-        },
-        ...prevMessages])
-    });
+      const chatRef = firebase
+        .app()
+        .database(DATABASE_LINK)
+        .ref(`/chatrooms/${room.id}/messages`);
+      const onChildAdded = chatRef.on('child_added', snapshot => {
+        const messageData = snapshot.val();
+        const sender = users[messageData.senderId];
+        setChat(prevMessages => [
+          {
+            ...messageData,
+            sender
+          },
+          ...prevMessages])
+      });
 
-    return () => {
-      chatRef.off('child_added', onChildAdded);
-    };
+      return () => {
+        chatRef.off('child_added', onChildAdded);
+      };
+    })
   }, [room.id]);
 
   const sendMessage = (roomId, messageText, sender) => {

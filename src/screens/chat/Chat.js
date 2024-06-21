@@ -53,7 +53,7 @@ export default function Chat() {
         }
     };
     useEffect(() => {
-        fetchAllUsers().then(() => fetchRoomId())
+        fetchRoomId()
     }, [user.id]);
 
     const fetchAllUsers = async () => {
@@ -64,35 +64,35 @@ export default function Chat() {
                 .ref('/users');
             const usersSnapshot = await usersRef.once('value');
             const usersData = usersSnapshot.val();
-            if (usersData) {
-                setUsers(usersData);
-            }
+            return usersData;
         } catch (error) {
             console.error('Error fetching users:', error);
         }
     };
 
     useEffect(() => {
-        if (!roomId) return;
+        fetchAllUsers().then(users => {
+            if (!roomId) return;
 
-        const chatRef = firebase
-            .app()
-            .database(DATABASE_LINK)
-            .ref(`/chatrooms/${roomId}/messages`);
-        const onChildAdded = chatRef.on('child_added', snapshot => {
-            const messageData = snapshot.val();
-            const sender = users[messageData.senderId];
-            setChat(prevMessages => [
-                {
-                    ...messageData,
-                    sender
-                },
-                ...prevMessages])
-        });
+            const chatRef = firebase
+                .app()
+                .database(DATABASE_LINK)
+                .ref(`/chatrooms/${roomId}/messages`);
+            const onChildAdded = chatRef.on('child_added', snapshot => {
+                const messageData = snapshot.val();
+                const sender = users[messageData.senderId];
+                setChat(prevMessages => [
+                    {
+                        ...messageData,
+                        sender
+                    },
+                    ...prevMessages])
+            });
 
-        return () => {
-            chatRef.off('child_added', onChildAdded);
-        };
+            return () => {
+                chatRef.off('child_added', onChildAdded);
+            };
+        })
     }, [roomId]);
 
     const sendMessage = (roomId, messageText, sender) => {
