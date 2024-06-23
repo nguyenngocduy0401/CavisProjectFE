@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Dimensions, FlatList, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, Dimensions, FlatList, RefreshControl, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ProductView from '../../components/productView/ProductView';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
