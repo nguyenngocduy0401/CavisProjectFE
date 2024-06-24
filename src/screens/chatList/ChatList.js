@@ -61,9 +61,9 @@ export default function ChatList() {
                 let chatList = []
                 if (snapshot.val()) {
                     const data = Object.values(snapshot.val())
-                    chatList = usersData.filter(userData => (!data.some(chat => chat.id === userData.id) && userData.id !== user.id))
+                    chatList = usersData.filter(userData => (!data.some(chat => chat.id === userData.id) && userData.role.toLowerCase().includes('expert') && userData.id !== user.id))
                 } else {
-                    chatList = usersData.filter(userData => userData.id !== user.id)
+                    chatList = usersData.filter(userData => userData.id !== user.id && userData.role.toLowerCase().includes('expert'))
                 }
                 setChatList(chatList)
             }
@@ -138,6 +138,7 @@ export default function ChatList() {
                 >
                     {tabs.map(tabDetail =>
                         <Tab.Item
+                            key={tabDetail.value}
                             active={tab === tabDetail.value}
                             title={tabDetail.title}
                             buttonStyle={(active) => ({

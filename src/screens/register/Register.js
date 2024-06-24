@@ -17,6 +17,7 @@ export default function Register() {
 
   const navigation = useNavigation();
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const schema = yup.object().shape({
     userName: yup.string().required("Tài khoản là trường bắt buộc"),
     fullName: yup.string().required("Tên là trường bắt buộc"),
@@ -50,6 +51,7 @@ export default function Register() {
             }}
             onSubmit={async (values) => {
               try {
+                setLoading(true);
                 const responseData = await register(values);
 
                 if (responseData.isSuccess) {
@@ -65,6 +67,8 @@ export default function Register() {
                 }
               } catch (error) {
                 setErrorMessage(error.message);
+              } finally {
+                setLoading(false)
               }
             }}
             validationSchema={schema}
@@ -77,6 +81,7 @@ export default function Register() {
                   value={values.userName}
                   onChangeText={handleChange('userName')}
                   errorMessage={touched.userName && errors.userName}
+                  disabled={loading}
                 />
                 <GenericInput
                   label="Tên"
@@ -84,6 +89,7 @@ export default function Register() {
                   value={values.fullName}
                   onChangeText={handleChange('fullName')}
                   errorMessage={touched.fullName && errors.fullName}
+                  disabled={loading}
                 />
                 <GenericInput
                   label="Email"
@@ -91,6 +97,7 @@ export default function Register() {
                   value={values.email}
                   onChangeText={handleChange('email')}
                   errorMessage={touched.email && errors.email}
+                  disabled={loading}
                 />
                 <GenericInput
                   label="Số điện thoại"
@@ -98,6 +105,7 @@ export default function Register() {
                   value={values.phoneNumber}
                   onChangeText={handleChange('phoneNumber')}
                   errorMessage={touched.phoneNumber && errors.phoneNumber}
+                  disabled={loading}
                 />
                 <GenericInput
                   secureTextEntry={true}
@@ -107,6 +115,7 @@ export default function Register() {
                   onChangeText={handleChange('password')}
                   rightIconName='eye-outline'
                   errorMessage={touched.password && errors.password}
+                  disabled={loading}
                 />
                 <GenericInput
                   secureTextEntry={true}
@@ -116,6 +125,7 @@ export default function Register() {
                   onChangeText={handleChange('passwordConfirm')}
                   rightIconName='eye-outline'
                   errorMessage={touched.passwordConfirm && errors.passwordConfirm}
+                  disabled={loading}
                 />
                 {errorMessage ? ( // Hiển thị thông báo lỗi dưới trường mật khẩu nếu có lỗi
                   <Text style={styles.errorMessage}>{errorMessage}</Text>
@@ -126,6 +136,7 @@ export default function Register() {
                     titleStyle={styles.titleStyleButton}
                     buttonStyle={styles.buttonStyleButton}
                     onPress={handleSubmit}
+                    loading={loading}
                   />
                 </View>
               </>
@@ -145,7 +156,7 @@ export default function Register() {
           </View>
           <View style={styles.optionsSignUp}>
             <Text >Đã có tài khoản? </Text>
-            <TouchableOpacity onPress={()=>navigation.navigate('Login') && setErrorMessage(null)} >
+            <TouchableOpacity onPress={() => navigation.navigate('Login') && setErrorMessage(null)} >
               <Text style={styles.signup}>Đăng nhập tại đây!</Text>
             </TouchableOpacity>
           </View>

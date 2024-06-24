@@ -85,6 +85,7 @@ export default function Chat({ route }) {
                 roomId,
                 id: user.id,
                 lastMessage: '',
+                lastMessageFrom: '',
                 timestamp: timestamp,
             };
             firebase
@@ -96,6 +97,7 @@ export default function Chat({ route }) {
                 roomId,
                 id: receiver.id,
                 lastMessage: '',
+                lastMessageFrom: '',
                 timestamp: timestamp,
             };
             firebase
@@ -118,6 +120,7 @@ export default function Chat({ route }) {
             }).then(() => {
                 let chatListupdate = {
                     lastMessage: message,
+                    lastMessageFrom: user.id,
                     timestamp: timestamp,
                 };
                 firebase
@@ -148,6 +151,7 @@ export default function Chat({ route }) {
             }).then(() => {
                 let chatListupdate = {
                     lastMessage: message,
+                    lastMessageFrom: user.id,
                     timestamp: timestamp,
                 };
                 firebase
@@ -182,6 +186,7 @@ export default function Chat({ route }) {
                 roomId,
                 id: user.id,
                 lastMessage: '',
+                lastMessageFrom: '',
                 timestamp: timestamp,
             };
             firebase
@@ -193,6 +198,7 @@ export default function Chat({ route }) {
                 roomId,
                 id: receiver.id,
                 lastMessage: '',
+                lastMessageFrom: '',
                 timestamp: timestamp,
             };
             firebase
@@ -215,6 +221,7 @@ export default function Chat({ route }) {
             }).then(() => {
                 let chatListupdate = {
                     lastMessage: message,
+                    lastMessageFrom: user.id,
                     timestamp: message.sendTime,
                 };
                 firebase
@@ -245,6 +252,7 @@ export default function Chat({ route }) {
             }).then(() => {
                 let chatListupdate = {
                     lastMessage: message,
+                    lastMessageFrom: user.id,
                     timestamp: timestamp,
                 };
                 firebase

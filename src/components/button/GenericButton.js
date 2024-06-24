@@ -14,6 +14,7 @@ export default function GenericButton({
     onPress,
     iconRight,
     disabled,
+    loading,
 }) {
     return (
 
@@ -33,6 +34,7 @@ export default function GenericButton({
             containerStyle={[styles.container, containerStyle]}
             iconRight={iconRight}
             disabled={disabled}
+            loading={loading}
         />
 
     );
