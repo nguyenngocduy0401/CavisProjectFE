@@ -78,7 +78,9 @@ export default function Home() {
     const [methods, setMethods] = useState(methodData)
     async function getProducts() {
         try {
-            const data = await getAnalystProducts(null);
+            const data = await getAnalystProducts({
+                CompatibleProducts: "Extremely"
+            });
             setProducts(data?.data?.items)
         } catch (error) {
             console.log(error)

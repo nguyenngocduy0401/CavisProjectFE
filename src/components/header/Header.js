@@ -55,7 +55,7 @@ export default function Header() {
                         />
                     }
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate((user && user?.role?.toLowerCase()) === 'expert' ? 'ChatList' : 'Chat')}>
+                <TouchableOpacity onPress={() => navigation.navigate('ChatList')}>
                     <Avatar
                         size={45}
                         rounded

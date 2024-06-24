@@ -71,7 +71,10 @@ export default function SkinCare() {
   const [methods, setMethods] = useState(methodData)
   async function getProducts() {
     try {
-      const data = await getAnalystProducts(null);
+      const data = await getAnalystProducts({
+        CompatibleProducts: "Extremely",
+        Category: "Skincare"
+      });
       setProducts(data?.data?.items)
     } catch (error) {
       console.log(error)
@@ -117,7 +120,7 @@ export default function SkinCare() {
           <View style={{ width: "80%" }}>
             <TitleText title={'Sản phẩm gợi ý'} style={styles.title} />
           </View>
-          <SeeAllButton onPress={() => navigation.navigate('Products')} />
+          <SeeAllButton onPress={() => navigation.navigate('Products', { type: "Skincare" })} />
         </View>
         <FlatList
           style={styles.productReview}

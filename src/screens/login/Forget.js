@@ -102,7 +102,6 @@ export default function Forget() {
                             confirmPassword: '',
                         }}
                         onSubmit={async (values) => {
-                                 console.log("halo");
                             try {
                                 const responseData = await resetPassword(values);
                                 

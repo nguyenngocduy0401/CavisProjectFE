@@ -13,12 +13,12 @@ export default function ChatListView({ item, onPress }) {
             <Avatar
                 rounded
                 size={60}
-                source={item?.user?.urlImage ? { uri: item.user.urlImage } : emptyAvatar}
+                source={item?.urlImage ? { uri: item.urlImage } : emptyAvatar}
                 containerStyle={styles.image}
             />
             <View style={styles.descriptionView}>
-                <Text style={styles.title} numberOfLines={1}>{item?.user?.fullName}</Text>
-                {/* <NormalText text={item?.user?.lastMessage} numberOfLines={1} /> */}
+                <Text style={styles.title} numberOfLines={1}>{item?.fullName}</Text>
+                {item?.lastMessage && <NormalText text={item?.lastMessage} numberOfLines={1} />}
             </View>
         </TouchableOpacity>
     )

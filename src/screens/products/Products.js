@@ -4,17 +4,28 @@ import { useNavigation } from '@react-navigation/native';
 import ProductView from '../../components/productView/ProductView';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import { getAnalystProducts } from '../../services/PersonalAnalystService';
+import InputGeneric from '../../components/genericInput/InputGeneric';
+import SendButton from '../../components/button/SendButton';
+import searchIcon from '../../../assets/icons/search-icon.png';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-export default function Products() {
+export default function Products({ route }) {
+    const type = route.params?.type
     const navigation = useNavigation()
     const [refreshing, setRefreshing] = useState(false);
     const [products, setProducts] = useState([])
     async function getProducts() {
         try {
-            const data = await getAnalystProducts(null);
+            let data = []
+            if (type) {
+                data = await getAnalystProducts({
+                    Category: type
+                })
+            } else {
+                data = await getAnalystProducts();
+            }
             setProducts(data?.data?.items)
         } catch (error) {
             console.log(error)
@@ -59,5 +70,6 @@ const styles = StyleSheet.create({
     productView: {
         paddingTop: 10,
         paddingBottom: 10,
+        flex: 1,
     },
 })

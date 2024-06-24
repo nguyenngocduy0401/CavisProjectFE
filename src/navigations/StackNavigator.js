@@ -20,6 +20,7 @@ import Chat from '../screens/chat/Chat';
 import ExpertBottomTabNavigator from './ExpertBottomTabNavigator';
 import ExpertChat from '../screens/expertChat/ExpertChat';
 import ExpertChatList from '../screens/expertChatList.js/ExpertChatList';
+import ChatList from '../screens/chatList/ChatList';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -62,17 +63,18 @@ const StackNavigator = () => {
                         <Stack.Screen name="Premium" component={Premium} options={{ headerShown: false }} />
                         <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
                         <Stack.Screen name="MethodDetail" component={MethodDetail} options={{ headerShown: false }} />
+                        <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: false }} />
                         <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
                     </>
-                    : user.role.toLowerCase() === 'expert' &&
+                    : user.role.toLowerCase().includes('expert') &&
                     <>
                         <Stack.Screen
                             name="Root"
                             component={ExpertBottomTabNavigator}
                             options={{ headerShown: false }}
                         />
-                        <Stack.Screen name="ChatList" component={ExpertChatList} options={{ headerShown: false }} />
-                        <Stack.Screen name="Chat" component={ExpertChat} options={{ headerShown: false }} />
+                        <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: false }} />
+                        <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
                     </>
                 )
                 :
