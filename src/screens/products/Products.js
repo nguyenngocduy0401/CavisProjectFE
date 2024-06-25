@@ -9,6 +9,7 @@ import SendButton from '../../components/button/SendButton';
 import searchIcon from '../../../assets/icons/search-icon.png';
 import { Slider } from '@rneui/themed';
 import NormalText from '../../components/text/NormalText';
+import TitleText from '../../components/text/TitleText';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -18,78 +19,75 @@ export default function Products({ route }) {
     const navigation = useNavigation()
     const [refreshing, setRefreshing] = useState(false);
     const [products, setProducts] = useState([])
-    const [compatible, setCompatible] = useState("Extremely")
+    const [compatible, setCompatible] = useState("Low")
     const convertCompatible = (value) => {
-        if (value === 1) {
+        if (value == 1) {
             return "Low"
         }
-        if (value === 2) {
+        if (value == 2) {
             return "Medium"
         }
-        if (value === 3) {
+        if (value == 3) {
             return "High"
         }
-        if (value === 4) {
+        if (value == 4) {
             return "Extremely"
         }
-        if (value === "Low") {
+        if (value == "Low") {
             return 1
         }
-        if (value === "Medium") {
+        if (value == "Medium") {
             return 2
         }
-        if (value === "High") {
+        if (value == "High") {
             return 3
         }
-        if (value === "Extremely") {
+        if (value == "Extremely") {
             return 4
         }
     }
     async function getProducts() {
         try {
-            let data = []
-            const credential = null
+            setRefreshing(true);
+            const credential = {}
             if (type) {
                 credential.Category = type
             }
             if (compatible) {
                 credential.CompatibleProducts = compatible
             }
-            data = await getAnalystProducts(credential);
+            const data = await getAnalystProducts(credential);
             setProducts(data?.data?.items)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const color = () => {
-        let r = interpolate(255, 0);
-        let g = interpolate(0, 255);
-        let b = interpolate(0, 0);
-        return `rgb(${r},${g},${b})`;
-    };
-    useEffect(() => {
-        getProducts()
-    }, [])
-
-    const onRefresh = useCallback(() => {
-        try {
-            setRefreshing(true);
-            getProducts()
         } catch (error) {
             console.log(error)
         } finally {
             setRefreshing(false);
         }
+    }
+    useEffect(() => {
+        getProducts()
+    }, [compatible])
+
+    const onRefresh = useCallback(() => {
+        getProducts()
     }, []);
     return (
         <View style={styles.container}>
             <InsideHeader title={'Products'} />
+            <TitleText title={'Mức độ phù hợp'}
+                style={{
+                    marginLeft: 25,
+                    marginBottom: -5,
+                    marginTop: 10,
+                    fontSize: 20
+                }} />
             <View style={styles.sliderContainer}>
                 <Slider
                     value={convertCompatible(compatible)}
                     onValueChange={(value) => setCompatible(convertCompatible(value))}
                     maximumValue={4}
                     minimumValue={1}
+                    step={1}
                     allowTouchTrack
                     minimumTrackTintColor={"#F27272"}
                     maximumTrackTintColor={"#FBBD98"}
@@ -119,6 +117,15 @@ export default function Products({ route }) {
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
+                ListEmptyComponent={
+                    <TitleText
+                        style={{
+                            textAlign: 'center',
+                            marginLeft: 0
+                        }}
+                        title={'Danh sách sản phẩm trống'}
+                    />
+                }
             />
         </View>
     )
@@ -134,6 +141,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     sliderContainer: {
-        padding: 20,
+        paddingHorizontal: 25,
+        marginBottom: 5,
     }
 })
