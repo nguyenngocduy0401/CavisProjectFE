@@ -8,7 +8,7 @@ import HomeTopButton from '../../components/homeTopButton/HomeTopButton';
 import emptyAvatar from '../../../assets/images/empty-avatar.png';
 import skincareTopIcon from '../../../assets/icons/skincare-home-icon.png';
 import makeupTopIcon from '../../../assets/icons/makeup-home-icon.png';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import PremiumBanner from '../../components/premiumBanner/PremiumBanner';
 import SeeAllButton from '../../components/button/SeeAllButton';
 import ProductReview from '../../components/productReview/ProductReview';
@@ -69,6 +69,7 @@ const methodData = [
 ]
 
 export default function Home() {
+    const isFocused = useIsFocused();
     const navigation = useNavigation()
     const user = useSelector(userSelector)
     const currentHour = new Date().getHours();
@@ -77,20 +78,24 @@ export default function Home() {
     const [methods, setMethods] = useState(methodData)
     async function getProducts() {
         try {
-            const data = await getAnalystProducts(null);
+            const data = await getAnalystProducts({
+                CompatibleProducts: "Extremely"
+            });
             setProducts(data?.data?.items)
         } catch (error) {
             console.log(error)
         }
     }
     useEffect(() => {
-        getProducts()
-    }, [])
+        if (isFocused) {
+            getProducts()
+        }
+    }, [isFocused])
     return (
         <ScrollView style={styles.container}>
             <Header />
             <View style={styles.topGreeting}>
-                <Avatar size={70} rounded source={user?.urlImage ? user.urlImage : emptyAvatar} containerStyle={styles.avatar} />
+                <Avatar size={70} rounded source={user?.urlImage ? { uri: user.urlImage } : emptyAvatar} containerStyle={styles.avatar} />
                 <View>
                     <TitleText
                         title={currentHour < 12
@@ -143,9 +148,9 @@ export default function Home() {
                 </View>
                 {methods.length > 0 &&
                     <View style={{ paddingTop: 20 }}>
-                        <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => console.log(methods[0].id)} />
+                        <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => navigation.navigate("MethodDetail", { id: methods[0].id })} />
                         {methods.length > 1 && methods.slice(1).map((method) => (
-                            <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => console.log(method.id)} />
+                            <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
                         ))}
                     </View>
                 }

@@ -15,6 +15,7 @@ const screenHeight = Dimensions.get('window').height;
 export default function Forget() {
 
     const navigation = useNavigation();
+    const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
@@ -46,6 +47,7 @@ export default function Forget() {
                         }}
                         onSubmit={async (values) => {
                             try {
+                                setLoading(true)
                                 const responseData = await sendOTP(values);
                                 if (responseData.isSuccess && responseData.data) {
                                     setEmail(values.email);
@@ -59,6 +61,8 @@ export default function Forget() {
                             } catch (error) {
                                 console.log(error.message);
                                 setErrorMessage("Không thể gửi OTP! Xin vui lòng thử lại sau.");
+                            } finally {
+                                setLoading(false)
                             }
                         }}
                         validationSchema={schemaStep1}
@@ -71,6 +75,7 @@ export default function Forget() {
                                     value={values.email}
                                     onChangeText={handleChange('email')}
                                     errorMessage={touched.email && errors.email}
+                                    disabled={loading}
                                 />
 
 
@@ -79,7 +84,7 @@ export default function Forget() {
                                 ) : null}
 
                                 <View style={styles.optionsSignUp}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('Login')&& setErrorMessage(null)}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('Login') && setErrorMessage(null)} disabled={loading}>
                                         <Text style={styles.forgotPassword}><Icon name='arrow-left' />Quay trở lại</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -89,6 +94,7 @@ export default function Forget() {
                                         titleStyle={styles.titleStyleButton}
                                         buttonStyle={styles.buttonStyleButton}
                                         onPress={handleSubmit}
+                                        loading={loading}
                                     />
                                 </View>
                             </>
@@ -102,16 +108,16 @@ export default function Forget() {
                             confirmPassword: '',
                         }}
                         onSubmit={async (values) => {
-                                 console.log("halo");
                             try {
+                                setLoading(true)
                                 const responseData = await resetPassword(values);
-                                
+
                                 if (responseData.isSuccess && responseData.data) {
                                     Toast.show({
                                         type: 'success',
                                         text1: 'Đổi mật khẩu thành công',
                                         text2: 'Bạn đã thay đổi mật khẩu thành công. Hãy đăng nhập!',
-                                      });
+                                    });
                                     setErrorMessage(null);
                                     navigation.navigate('Login');
                                 } else if (responseData.isSuccess && !responseData.data) {
@@ -122,6 +128,8 @@ export default function Forget() {
                             } catch (error) {
                                 console.log(error.message);
                                 setErrorMessage("Không thể đổi mật khẩu vui lòng thử lại sau!");
+                            } finally {
+                                setLoading(false)
                             }
                         }}
                         validationSchema={schemaStep2}
@@ -134,6 +142,7 @@ export default function Forget() {
                                     value={values.otp}
                                     onChangeText={handleChange('otp')}
                                     errorMessage={touched.otp && errors.otp}
+                                    disabled={loading}
                                 />
                                 <GenericInput
                                     secureTextEntry={true}
@@ -143,6 +152,7 @@ export default function Forget() {
                                     value={values.newPassword}
                                     onChangeText={handleChange('newPassword')}
                                     errorMessage={touched.newPassword && errors.newPassword}
+                                    disabled={loading}
                                 />
                                 <GenericInput
                                     secureTextEntry={true}
@@ -152,6 +162,7 @@ export default function Forget() {
                                     onChangeText={handleChange('confirmPassword')}
                                     rightIconName='eye-outline'
                                     errorMessage={touched.confirmPassword && errors.confirmPassword}
+                                    disabled={loading}
                                 />
 
 
@@ -160,7 +171,7 @@ export default function Forget() {
                                 ) : null}
 
                                 <View style={styles.optionsSignUp}>
-                                    <TouchableOpacity onPress={() => setStep(1) && setErrorMessage(null)}>
+                                    <TouchableOpacity onPress={() => setStep(1) && setErrorMessage(null)} disabled={loading}>
                                         <Text style={styles.forgotPassword}><Icon name='arrow-left' />Quay trở lại</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -169,7 +180,8 @@ export default function Forget() {
                                         title='Xác nhận'
                                         titleStyle={styles.titleStyleButton}
                                         buttonStyle={styles.buttonStyleButton}
-                                        onPress={handleSubmit }
+                                        onPress={handleSubmit}
+                                        loading={loading}
                                     />
                                 </View>
                             </>

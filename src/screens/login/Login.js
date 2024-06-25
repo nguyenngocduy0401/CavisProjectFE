@@ -6,15 +6,15 @@ import GenericInput from '../../components/genericInput/InputGeneric';
 import GenericCheckbox from '../../components/checkbox/GenericCheckbox';
 import GenericButton from '../../components/button/GenericButton';
 import ButtonLoginGoogle from '../../components/button/ButtonLoginGoogle';
-import {login} from '../../services/AuthService';
+import { login } from '../../services/AuthService';
 import Toast from "react-native-toast-message";
 import { useNavigation } from '@react-navigation/native';
 import { fetchUser } from '../../store/features/authSlice';
 import { useDispatch } from 'react-redux';
- 
+
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const registerSceen ='Register';
+const registerSceen = 'Register';
 export default function Login() {
   const navigation = useNavigation();
   const dispatch = useDispatch()
@@ -22,22 +22,29 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    const responseData = await login({userName, password});
-    
-    if (responseData.isSuccess) {
-      // Navigate to the next screen or home screen
-      // navigation.navigate('Questions');
-      dispatch(fetchUser())
-      setErrorMessage(null);
-    }else
-    {
-      setErrorMessage("Username or password is incorrect!");
+    try {
+      setLoading(true)
+      const responseData = await login({ userName, password });
+
+      if (responseData.isSuccess) {
+        // Navigate to the next screen or home screen
+        // navigation.navigate('Questions');
+        dispatch(fetchUser())
+        setErrorMessage(null);
+      } else {
+        setErrorMessage("Username or password is incorrect!");
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
     }
   };
-  const handleRegister= async () => {
-      navigation.navigate(Register);
+  const handleRegister = async () => {
+    navigation.navigate(Register);
   };
   const handleForgotPassword = () => {
     // Handle forgot password logic
@@ -55,14 +62,15 @@ export default function Login() {
           </View>
         </ImageBackground>
       </View>
-      
+
       <View style={styles.bottomHalf}>
-      
+
         <GenericInput
           label="Tài khoản"
           placeholder="Tài khoản"
           value={userName}
           onChangeText={setUsername}
+          disabled={loading}
         />
         <GenericInput
           secureTextEntry={true}
@@ -71,9 +79,10 @@ export default function Login() {
           value={password}
           onChangeText={setPassword}
           rightIconName='eye-outline'
+          disabled={loading}
         />
-        
-        
+
+
         {errorMessage ? ( // Hiển thị thông báo lỗi dưới trường mật khẩu nếu có lỗi
           <Text style={styles.errorMessage}>{errorMessage}</Text>
         ) : null}
@@ -89,8 +98,8 @@ export default function Login() {
             checkedColor='#DE8186'
             titleProps={styles.titleProps}
           /> */}
-            
-          <TouchableOpacity onPress={()=>navigation.navigate('Forget') && setErrorMessage(null)}>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Forget') && setErrorMessage(null)}>
             <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
           </TouchableOpacity>
 
@@ -103,6 +112,7 @@ export default function Login() {
             titleStyle={styles.titleStyleButton}
             buttonStyle={styles.buttonStyleButton}
             onPress={handleLogin}
+            loading={loading}
           />
         </View>
 
@@ -117,8 +127,8 @@ export default function Login() {
           />
         </View>
         <View style={styles.optionsSignUp}>
-        <Text >Chưa có tài khoản? </Text>
-          <TouchableOpacity onPress={()=>navigation.navigate('Register') && setErrorMessage(null)} >
+          <Text >Chưa có tài khoản? </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register') && setErrorMessage(null)} >
             <Text style={styles.signup}>Đăng kí tại đây!</Text>
           </TouchableOpacity>
         </View>
@@ -211,17 +221,17 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.43)',
     marginHorizontal: 7
   },
-  optionsSignUp:{
+  optionsSignUp: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
   },
-  signup:{
-    color:'#F27272'
+  signup: {
+    color: '#F27272'
   },
   errorMessage: {
     color: 'red',
     marginLeft: 20,
-},
+  },
 });

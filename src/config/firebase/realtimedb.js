@@ -1,0 +1,1 @@
+export const DATABASE_LINK = 'https://cavisproject-default-rtdb.asia-southeast1.firebasedatabase.app/';

@@ -13,7 +13,9 @@ export default function InputGeneric({
     disabled,
     leftIconName,
     rightIconName,
-    secureTextEntry
+    secureTextEntry,
+    inputContainerStyle,
+    containerStyle,
 }) {const [passwordVisible, setPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -36,8 +38,8 @@ export default function InputGeneric({
                     />
                 </TouchableOpacity>
             )}
-            containerStyle={styles.container}
-            inputContainerStyle={styles.inputContainerStyle}
+            containerStyle={[styles.container, containerStyle]}
+            inputContainerStyle={[styles.inputContainerStyle, inputContainerStyle]}
             inputStyle={styles.inputStyle}
             labelStyle={styles.labelStyle}
             disabledInputStyle={styles.disabledStyle}
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
         borderRadius: 8, // Độ cong của góc
         paddingHorizontal: '2.6%', // Khoảng cách giữa đường viền và nội dung bên trong
         height: 50,
-        width: 410,
+        width: screenWidth - 40,
     },
     inputStyle: {
         height: '100%',

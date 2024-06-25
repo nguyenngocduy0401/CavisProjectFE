@@ -37,6 +37,7 @@ instance.interceptors.response.use(
                 originalConfig._retry = true;
 
                 try {
+                    console.log("refreshing")
                     const oldRefreshToken = await AsyncStorage.getItem("refreshToken");
                     const oldAccessToken = await AsyncStorage.getItem("accessToken");
                     const data = await refresh(oldRefreshToken, oldAccessToken)

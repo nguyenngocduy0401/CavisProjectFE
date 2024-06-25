@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from './ApiService';
+import { store } from '../store/store';
+import { removeUser } from '../store/features/authSlice';
 
 const API_URL = "/api/v1/users";
 export const getCurrentUser = async () => {
@@ -20,5 +22,11 @@ export const logout = async () => {
     });
     await AsyncStorage.removeItem("refreshToken");
     await AsyncStorage.removeItem("accessToken");
+    store.dispatch(removeUser())
+    return response.data;
+};
+
+export const registerPremium = async (id) => {
+    const response = await api.post(API_URL + `/mine/premium-packages/${id}`);
     return response.data;
 };

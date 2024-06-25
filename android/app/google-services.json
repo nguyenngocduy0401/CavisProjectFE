@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "536926797151",
+    "project_id": "cavisproject",
+    "storage_bucket": "cavisproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:536926797151:android:a0f0853e3ee469cc404aea",
+        "android_client_info": {
+          "package_name": "com.cavisprojectfe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsQsBLi0OCDn6Lvrgno_EETqohCH0oWos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

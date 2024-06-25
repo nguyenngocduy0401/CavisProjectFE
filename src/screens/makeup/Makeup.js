@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, Dimensions, ImageBackground, TouchableOpacity, ScrollView, FlatList, SafeAreaView } from 'react-native';
+import { View, StyleSheet, Dimensions, ScrollView, FlatList } from 'react-native';
 import Header from '../../components/header/Header';
 import GenericCarousel from '../../components/genericCarousel/GenericCarousel';
 import TitleText from '../../components/text/TitleText';
-import HomeTopButton from '../../components/homeTopButton/HomeTopButton';
-import compareTopIcon from '../../../assets/icons/compare-skincare-icon.png';
-import filterTopIcon from '../../../assets/icons/filter-skincare-icon.png';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import PremiumBanner from '../../components/premiumBanner/PremiumBanner';
 import SeeAllButton from '../../components/button/SeeAllButton';
 import ProductReview from '../../components/productReview/ProductReview';
@@ -96,6 +93,7 @@ const categoryData = [
   },
 ]
 export default function MakeUp() {
+  const isFocused = useIsFocused();
   const navigation = useNavigation()
 
   const [category, setCategory] = useState(categoryData)
@@ -103,15 +101,20 @@ export default function MakeUp() {
   const [methods, setMethods] = useState(methodData)
   async function getProducts() {
     try {
-      const data = await getAnalystProducts(null);
+      const data = await getAnalystProducts({
+        CompatibleProducts: "Extremely",
+        Category: "Makeup"
+      });
       setProducts(data?.data?.items)
     } catch (error) {
       console.log(error)
     }
   }
   useEffect(() => {
-    getProducts()
-  }, [])
+    if (isFocused) {
+      getProducts()
+    }
+  }, [isFocused])
   return (
     <ScrollView style={styles.container}>
       <Header />
@@ -132,7 +135,7 @@ export default function MakeUp() {
           <View style={{ width: "80%" }}>
             <TitleText title={'Sản phẩm gợi ý'} style={styles.title} />
           </View>
-          <SeeAllButton onPress={() => navigation.navigate('Products')} />
+          <SeeAllButton onPress={() => navigation.navigate('Products', { type: "Makeup" })} />
         </View>
         <FlatList
           style={styles.productReview}
@@ -153,9 +156,9 @@ export default function MakeUp() {
         </View>
         {methods.length > 0 &&
           <View style={{ paddingTop: 20 }}>
-            <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => console.log(methods[0].id)} />
+            <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => navigation.navigate("MethodDetail", { id: methods[0].id })} />
             {methods.length > 1 && methods.slice(1).map((method) => (
-              <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => console.log(method.id)} />
+              <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
             ))}
           </View>
         }

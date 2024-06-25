@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, Linking, Touchable, TouchableOpacity } from 'react-native';
-import Header from '../../components/header/Header';
+import { View, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import NormalText from '../../components/text/NormalText';
@@ -22,13 +21,13 @@ const premiumFunctions = [
 ];
 const premiumPackages = [
     {
-        id: 1,
+        id: "623a23ff-4ee9-409a-bf30-2e764e8bd754",
         title: '5.000₫/5 ngày',
         description: 'Chỉ 1.000₫/ngày',
         price: 5000,
     },
     {
-        id: 2,
+        id: "56866515-9d42-4209-a3f9-62e166cb322a",
         title: '200.000₫/1 năm',
         description: 'Tiết kiệm đến 165.000₫',
         price: 200000,

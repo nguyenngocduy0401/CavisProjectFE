@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
 import { getCurrentUser } from '../../services/UserService';
+import { firebase } from '@react-native-firebase/database';
+import { DATABASE_LINK } from '../../config/firebase/realtimedb';
 const initialState = {
     user: null,
     loading: true,
@@ -10,6 +12,13 @@ export const fetchUser = createAsyncThunk(
     async () => {
         try {
             const data = await getCurrentUser()
+            if (data.isSuccess) {
+                firebase
+                    .app()
+                    .database(DATABASE_LINK)
+                    .ref('/users/' + data.data.id)
+                    .update(data.data)
+            }
             return data.data
         } catch (error) {
             return thunkAPI.rejectWithValue({ message: error.message });

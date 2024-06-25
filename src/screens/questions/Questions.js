@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';
 import { updateUser } from '../../services/UserService';
 import { addSkinAnalyst } from '../../services/PersonalAnalystService';
+import InsideHeader from '../../components/insideHeader/InsideHeader';
 
 const screenWidth = Dimensions.get('window').width
 
@@ -41,6 +42,7 @@ export default function Questions({ route }) {
 
     const [concerns, setConcerns] = useState([]);
     const [concernList, setConcernList] = useState([]);
+    const [loading, setLoading] = useState(false);
     async function getAllSkins() {
         try {
             const data = await getSkinTypes();
@@ -74,6 +76,7 @@ export default function Questions({ route }) {
     };
     const handleSubmit = async () => {
         try {
+            setLoading(true);
             if (!user.checkExistPersonal) {
                 await updateUser({ dateOfBirth, gender })
             }
@@ -82,10 +85,13 @@ export default function Questions({ route }) {
                 .then(() => navigation.navigate('Root'))
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
     return (
         <View style={styles.container}>
+            {type && <InsideHeader title={'Quay lại trang chủ'} />}
             <Image source={headerLogo} style={styles.topLogo} />
             <LinearProgress
                 style={styles.progress}
@@ -170,6 +176,7 @@ export default function Questions({ route }) {
                     <View style={styles.buttonContainer}>
                         <GenericWhiteButton
                             title={'Quay lại'}
+                            disabled={loading}
                             onPress={() => setStep(2)}
                             buttonStyle={[styles.whiteButtonStyleButton, { width: screenWidth / 2 - 40 }]}
                         />
@@ -177,7 +184,7 @@ export default function Questions({ route }) {
                             title={'Tiếp theo'}
                             onPress={handleSubmit}
                             buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
-                            disabled={!(concernList.length > 0)}
+                            disabled={(!(concernList.length > 0)) || loading}
                         />
                     </View>
                 </>

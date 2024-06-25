@@ -12,9 +12,15 @@ import ProductDetail from '../screens/productDetail/ProductDetail';
 import Premium from '../screens/premium/Premium';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSelector } from '../store/selector';
-import { fetchUser } from '../store/features/authSlice';
+import { fetchUser, removeUser } from '../store/features/authSlice';
 import Landing from '../screens/landing/Landing';
 import Payment from '../screens/payment/Payment';
+import MethodDetail from '../screens/methodDetail/MethodDetail';
+import Chat from '../screens/chat/Chat';
+import ExpertBottomTabNavigator from './ExpertBottomTabNavigator';
+import ExpertChat from '../screens/expertChat/ExpertChat';
+import ExpertChatList from '../screens/expertChatList.js/ExpertChatList';
+import ChatList from '../screens/chatList/ChatList';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -24,7 +30,6 @@ const StackNavigator = () => {
     const fetchToken = async () => {
         try {
             const accessToken = await AsyncStorage.getItem('accessToken');
-            console.log(accessToken)
             if (accessToken) {
                 setAccessToken(accessToken)
             }
@@ -38,30 +43,48 @@ const StackNavigator = () => {
     useEffect(() => {
         if (accessToken) {
             dispatch(fetchUser())
+        } else {
+            dispatch(removeUser())
         }
     }, [accessToken])
     return (
         <Stack.Navigator initialRouteName={'Landing'}>
             {user?.id ?
-                <>
-                    <Stack.Screen name="Questions" component={Questions} options={{ headerShown: false }} />
-                    <Stack.Screen
-                        name="Root"
-                        component={BottomTabNavigator}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen name="Products" component={Products} options={{ headerShown: false }} />
-                    <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
-                    <Stack.Screen name="Premium" component={Premium} options={{ headerShown: false }} />
-                    <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
-                </>
+                (user.role.toLowerCase() === 'customer' ?
+                    <>
+                        <Stack.Screen name="Questions" component={Questions} options={{ headerShown: false }} />
+                        <Stack.Screen
+                            name="Root"
+                            component={BottomTabNavigator}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen name="Products" component={Products} options={{ headerShown: false }} />
+                        <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
+                        <Stack.Screen name="Premium" component={Premium} options={{ headerShown: false }} />
+                        <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
+                        <Stack.Screen name="MethodDetail" component={MethodDetail} options={{ headerShown: false }} />
+                        <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: false }} />
+                        <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
+                    </>
+                    : user.role.toLowerCase().includes('expert') &&
+                    <>
+                        <Stack.Screen
+                            name="Root"
+                            component={ExpertBottomTabNavigator}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: false }} />
+                        <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
+                    </>
+                )
                 :
                 <>
-                    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                     <Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }} />
+                    <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                     <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
                     <Stack.Screen name="Forget" component={Forget} options={{ headerShown: false }} />
-                </>}
+                </>
+            }
         </Stack.Navigator >
     )
 }

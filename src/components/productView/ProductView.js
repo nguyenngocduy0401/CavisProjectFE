@@ -3,7 +3,6 @@ import React from 'react'
 import { Image } from '@rneui/themed'
 import NormalText from '../text/NormalText'
 import { Dimensions } from 'react-native'
-import { truncateText } from '../../utils/utils'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -15,8 +14,8 @@ export default function ProductView({ image, title, price, description, onPress 
                 containerStyle={styles.image}
             />
             <View style={styles.descriptionView}>
-                <Text style={styles.title}>{truncateText(title, 25)}</Text>
-                <NormalText text={truncateText(description, 75)} />
+                <Text style={styles.title} numberOfLines={1}>{title}</Text>
+                <NormalText text={description} numberOfLines={2} />
                 <Text style={styles.price}>{price && price.toLocaleString()}₫</Text>
             </View>
         </TouchableOpacity>
