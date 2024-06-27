@@ -21,52 +21,6 @@ import { userSelector } from '../../store/selector';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const methodData = [
-    {
-        id: 1,
-        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
-        title: "New VR Headsets That Will Shape the Metaverse",
-        author: {
-            fullName: "Mason Eduard",
-            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
-        },
-        type: "Skincare",
-        date: "2024-01-03T14:48:00.000Z"
-    },
-    {
-        id: 2,
-        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
-        title: "New VR Headsets That Will Shape the Metaverse",
-        author: {
-            fullName: "Mason Eduard",
-            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
-        },
-        type: "Skincare",
-        date: "2024-01-03T14:48:00.000Z"
-    },
-    {
-        id: 3,
-        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
-        title: "New VR Headsets That Will Shape the Metaverse",
-        author: {
-            fullName: "Mason Eduard",
-            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
-        },
-        type: "Skincare",
-        date: "2024-01-03T14:48:00.000Z"
-    },
-    {
-        id: 4,
-        image: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
-        title: "New VR Headsets That Will Shape the Metaverse",
-        author: {
-            fullName: "Mason Eduard",
-            avatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg"
-        },
-        type: "Skincare",
-        date: "2024-01-03T14:48:00.000Z"
-    },
-]
 
 export default function Home() {
     const isFocused = useIsFocused();
@@ -75,7 +29,7 @@ export default function Home() {
     const currentHour = new Date().getHours();
     const [checklist, setChecklist] = useState([])
     const [products, setProducts] = useState([])
-    const [methods, setMethods] = useState(methodData)
+    const [methods, setMethods] = useState([])
     async function getProducts() {
         try {
             const data = await getAnalystProducts({
@@ -88,9 +42,8 @@ export default function Home() {
     }
     async function getMethods() {
         try {
-            const data = await getAnalystMethods();
-            console.log(data.data)
-            // setProducts(data?.data?.items)
+            const data = await getAnalystMethods(null);
+            setMethods(data?.data?.items)
         } catch (error) {
             console.log(error)
         }
@@ -156,11 +109,11 @@ export default function Home() {
                     </View>
                     <SeeAllButton onPress={() => navigation.navigate('Methods')} />
                 </View>
-                {methods.length > 0 &&
+                {methods?.length > 0 &&
                     <View style={{ paddingTop: 20 }}>
-                        <TopMethod image={methods[0].image} title={methods[0].title} author={methods[0].author} type={methods[0].type} date={methods[0].date} onPress={() => navigation.navigate("MethodDetail", { id: methods[0].id })} />
+                        <TopMethod method={methods[0]} onPress={() => navigation.navigate("MethodDetail", { id: methods[0].id })} />
                         {methods.length > 1 && methods.slice(1).map((method) => (
-                            <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
+                            <Method method={method} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
                         ))}
                     </View>
                 }

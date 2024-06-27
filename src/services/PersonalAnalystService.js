@@ -16,6 +16,5 @@ export const getAnalystMethods = async (credentials) => {
     const response = await api.get(API_URL + "/methods", {
         params: credentials
     });
-    console.log(response.data.data)
     return response.data;
 }

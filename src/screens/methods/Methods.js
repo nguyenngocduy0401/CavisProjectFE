@@ -45,13 +45,13 @@ export default function Methods({ route }) {
     }, []);
     return (
         <View style={styles.container}>
-            <InsideHeader title={'Phương pháp làm đẹp'} />
+            <InsideHeader title={'Phương pháp hữu ích'} />
             <FlatList
                 style={styles.methodView}
                 data={methods}
                 keyExtractor={(item) => item.id}
                 renderItem={({ method }) => (
-                    <Method key={method.id} image={method.image} title={method.title} type={method.type} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
+                    <Method method={method} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
                 )}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

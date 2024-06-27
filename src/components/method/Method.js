@@ -3,15 +3,15 @@ import React from 'react'
 
 const screenWidth = Dimensions.get('window').width
 
-export default function Method({ image, title, type, onPress }) {
+export default function Method({ method, onPress }) {
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
-            <Image source={{ uri: image }} style={styles.image} />
-            <View style={{margin: 10}}>
+            <Image source={{ uri: method?.urlImage }} style={styles.image} />
+            <View style={{ margin: 10 }}>
                 <View style={styles.tagContainer}>
-                    <Text style={styles.tagText}>{type}</Text>
+                    <Text style={styles.tagText}>{method?.category}</Text>
                 </View>
-                <Text style={styles.title} numberOfLines={2}>{title}</Text>
+                <Text style={styles.title} numberOfLines={2}>{method?.methodName}</Text>
             </View>
         </TouchableOpacity>
     )
