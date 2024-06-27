@@ -15,7 +15,7 @@ import ProductReview from '../../components/productReview/ProductReview';
 import TopMethod from '../../components/topMethod/TopMethod';
 import Method from '../../components/method/Method';
 import HomeCheckList from '../../components/homeCheckList/HomeCheckList';
-import { getAnalystProducts } from '../../services/PersonalAnalystService';
+import { getAnalystMethods, getAnalystProducts } from '../../services/PersonalAnalystService';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';
 
@@ -79,9 +79,18 @@ export default function Home() {
     async function getProducts() {
         try {
             const data = await getAnalystProducts({
-                CompatibleProducts: "Extremely"
+                CompatibleProducts: "Low"
             });
             setProducts(data?.data?.items)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function getMethods() {
+        try {
+            const data = await getAnalystMethods();
+            console.log(data.data)
+            // setProducts(data?.data?.items)
         } catch (error) {
             console.log(error)
         }
@@ -89,6 +98,7 @@ export default function Home() {
     useEffect(() => {
         if (isFocused) {
             getProducts()
+            getMethods()
         }
     }, [isFocused])
     return (
@@ -144,7 +154,7 @@ export default function Home() {
                     <View style={{ width: "80%" }}>
                         <TitleText title={'Phương pháp hữu ích'} style={styles.title} />
                     </View>
-                    <SeeAllButton onPress={() => console.log('See all tips')} />
+                    <SeeAllButton onPress={() => navigation.navigate('Methods')} />
                 </View>
                 {methods.length > 0 &&
                     <View style={{ paddingTop: 20 }}>

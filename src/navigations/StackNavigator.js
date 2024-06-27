@@ -18,9 +18,8 @@ import Payment from '../screens/payment/Payment';
 import MethodDetail from '../screens/methodDetail/MethodDetail';
 import Chat from '../screens/chat/Chat';
 import ExpertBottomTabNavigator from './ExpertBottomTabNavigator';
-import ExpertChat from '../screens/expertChat/ExpertChat';
-import ExpertChatList from '../screens/expertChatList.js/ExpertChatList';
 import ChatList from '../screens/chatList/ChatList';
+import Methods from '../screens/methods/Methods';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -30,6 +29,7 @@ const StackNavigator = () => {
     const fetchToken = async () => {
         try {
             const accessToken = await AsyncStorage.getItem('accessToken');
+            console.log('Access token: ' + accessToken)
             if (accessToken) {
                 setAccessToken(accessToken)
             }
@@ -62,6 +62,7 @@ const StackNavigator = () => {
                         <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerShown: false }} />
                         <Stack.Screen name="Premium" component={Premium} options={{ headerShown: false }} />
                         <Stack.Screen name="Payment" component={Payment} options={{ headerShown: false }} />
+                        <Stack.Screen name="Methods" component={Methods} options={{ headerShown: false }} />
                         <Stack.Screen name="MethodDetail" component={MethodDetail} options={{ headerShown: false }} />
                         <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: false }} />
                         <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />

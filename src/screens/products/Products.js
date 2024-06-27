@@ -73,7 +73,7 @@ export default function Products({ route }) {
     }, []);
     return (
         <View style={styles.container}>
-            <InsideHeader title={'Products'} />
+            <InsideHeader title={'Gợi ý sản phẩm'} />
             <TitleText title={'Mức độ phù hợp'}
                 style={{
                     marginLeft: 25,

@@ -72,7 +72,7 @@ export default function SkinCare() {
   async function getProducts() {
     try {
       const data = await getAnalystProducts({
-        CompatibleProducts: "Extremely",
+        CompatibleProducts: "Low",
         Category: "Skincare"
       });
       setProducts(data?.data?.items)
@@ -137,7 +137,7 @@ export default function SkinCare() {
           <View style={{ width: "80%" }}>
             <TitleText title={'Phương pháp hữu ích'} style={styles.title} />
           </View>
-          <SeeAllButton onPress={() => console.log('See all tips')} />
+          <SeeAllButton onPress={() => navigation.navigate('Methods', { type: "Skincare" })} />
         </View>
         {methods.length > 0 &&
           <View style={{ paddingTop: 20 }}>

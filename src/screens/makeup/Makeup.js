@@ -102,7 +102,7 @@ export default function MakeUp() {
   async function getProducts() {
     try {
       const data = await getAnalystProducts({
-        CompatibleProducts: "Extremely",
+        CompatibleProducts: "Low",
         Category: "Makeup"
       });
       setProducts(data?.data?.items)
@@ -152,7 +152,7 @@ export default function MakeUp() {
           <View style={{ width: "80%" }}>
             <TitleText title={'Phương pháp hữu ích'} style={styles.title} />
           </View>
-          <SeeAllButton onPress={() => console.log('See all tips')} />
+          <SeeAllButton onPress={() => navigation.navigate('Methods', { type: "Makeup" })} />
         </View>
         {methods.length > 0 &&
           <View style={{ paddingTop: 20 }}>
