@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
   },
   productReview: {
     paddingTop: 10,
-    paddingBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
   },
   category: {
     paddingLeft: 20,

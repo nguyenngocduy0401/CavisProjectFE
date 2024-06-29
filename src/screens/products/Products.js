@@ -10,6 +10,7 @@ import searchIcon from '../../../assets/icons/search-icon.png';
 import { Slider } from '@rneui/themed';
 import NormalText from '../../components/text/NormalText';
 import TitleText from '../../components/text/TitleText';
+import usePremium from '../../hooks/usePremium';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -17,6 +18,7 @@ const screenHeight = Dimensions.get('window').height;
 export default function Products({ route }) {
     const type = route.params?.type
     const navigation = useNavigation()
+    const isPremiumValid = usePremium()
     const [refreshing, setRefreshing] = useState(false);
     const [products, setProducts] = useState([])
     const [compatible, setCompatible] = useState("Low")
@@ -74,39 +76,43 @@ export default function Products({ route }) {
     return (
         <View style={styles.container}>
             <InsideHeader title={'Gợi ý sản phẩm'} />
-            <TitleText title={'Mức độ phù hợp'}
-                style={{
-                    marginLeft: 25,
-                    marginBottom: -5,
-                    marginTop: 10,
-                    fontSize: 20
-                }} />
-            <View style={styles.sliderContainer}>
-                <Slider
-                    value={convertCompatible(compatible)}
-                    onValueChange={(value) => setCompatible(convertCompatible(value))}
-                    maximumValue={4}
-                    minimumValue={1}
-                    step={1}
-                    allowTouchTrack
-                    minimumTrackTintColor={"#F27272"}
-                    maximumTrackTintColor={"#FBBD98"}
-                    trackStyle={{ height: 5, borderRadius: 20 }}
-                    thumbStyle={{ height: 20, width: 20, backgroundColor: '#F27272' }}
-                    thumbTintColor={"#F27272"}
-                    thumbProps={{
-                        children: (
-                            <NormalText style={{
-                                width: 80,
-                                position: "absolute",
-                                left: -30,
-                                bottom: -20,
-                                textAlign: "center"
-                            }} text={compatible} />
-                        ),
-                    }}
-                />
-            </View>
+            {isPremiumValid &&
+                <>
+                    <TitleText title={'Mức độ phù hợp'}
+                        style={{
+                            marginLeft: 25,
+                            marginBottom: -5,
+                            marginTop: 10,
+                            fontSize: 20
+                        }} />
+                    <View style={styles.sliderContainer}>
+                        <Slider
+                            value={convertCompatible(compatible)}
+                            onValueChange={(value) => setCompatible(convertCompatible(value))}
+                            maximumValue={4}
+                            minimumValue={1}
+                            step={1}
+                            allowTouchTrack
+                            minimumTrackTintColor={"#F27272"}
+                            maximumTrackTintColor={"#FBBD98"}
+                            trackStyle={{ height: 5, borderRadius: 20 }}
+                            thumbStyle={{ height: 20, width: 20, backgroundColor: '#F27272' }}
+                            thumbTintColor={"#F27272"}
+                            thumbProps={{
+                                children: (
+                                    <NormalText style={{
+                                        width: 80,
+                                        position: "absolute",
+                                        left: -30,
+                                        bottom: -20,
+                                        textAlign: "center"
+                                    }} text={compatible} />
+                                ),
+                            }}
+                        />
+                    </View>
+                </>
+            }
             <FlatList
                 style={styles.productView}
                 data={products}

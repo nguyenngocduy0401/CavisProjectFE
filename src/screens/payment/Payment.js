@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, Linking } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, ScrollView, Linking, TouchableOpacity, Clipboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import NormalText from '../../components/text/NormalText';
@@ -32,7 +32,9 @@ export default function Payment({ route }) {
                     />
                     <TitleText title={premiumPackage.title} style={styles.title} />
                     <NormalText text={`Vui lòng chuyển khoản với cú pháp:`} />
-                    <TitleText title={`CAVIS + ${user.phoneNumber}`} style={styles.price} color={'#DE8186'} />
+                    <TouchableOpacity onPress={async () => await Clipboard.setString(`CAVIS + ${user.phoneNumber}`)}>
+                        <TitleText title={`CAVIS + ${user.phoneNumber}`} style={styles.price} color={'#DE8186'} />
+                    </TouchableOpacity>
                     <NormalText text={`Vui lòng bấm hoàn tất sau khi chuyển khoản. Chúng tôi sẽ xác nhận trong vòng 24h kể từ lúc thanh toán.`} />
                     <GenericButton
                         title={'Hoàn tất'}

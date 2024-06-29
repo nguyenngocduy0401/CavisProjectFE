@@ -23,8 +23,9 @@ const styles = StyleSheet.create({
         width: screenWidth / 3 - 20,
         height: screenWidth / 3 - 10,
         borderRadius: 19,
-        marginRight: 10,
-        paddingLeft: 10,
+        marginRight: 5,
+        marginLeft: 5,
+        paddingHorizontal: 10,
     },
     title: {
         textAlign: "left",

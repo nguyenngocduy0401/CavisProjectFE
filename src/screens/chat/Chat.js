@@ -112,7 +112,7 @@ export default function Chat({ route }) {
                 .push();
             newMessageRef.set({
                 roomId: roomId,
-                message: messageText,
+                message: message,
                 from: user.id,
                 to: receiver.id,
                 timestamp: timestamp,
@@ -244,7 +244,7 @@ export default function Chat({ route }) {
                 .push();
             newMessageRef.set({
                 roomId: receiver.roomId,
-                message: messageText,
+                message: message,
                 from: user.id,
                 to: receiver.id,
                 timestamp: timestamp,
