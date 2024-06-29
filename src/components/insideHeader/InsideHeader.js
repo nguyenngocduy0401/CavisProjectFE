@@ -16,7 +16,7 @@ export default function InsideHeader({ title, onPress }) {
                 color='black'
                 onPress={() => navigation.goBack()}
             />
-            <Text style={styles.title} >{title}</Text>
+            <Text style={styles.title} numberOfLines={1}>{title}</Text>
         </View>
     )
 }

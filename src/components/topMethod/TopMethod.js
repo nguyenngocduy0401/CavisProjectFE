@@ -6,20 +6,20 @@ import { vi } from 'date-fns/locale';
 
 const screenWidth = Dimensions.get('window').width
 
-export default function TopMethod({ image, title, author, type, date, onPress }) {
+export default function TopMethod({ method, onPress }) {
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
-            <Image source={{ uri: image }} style={styles.image} />
+            <Image source={{ uri: method?.urlImage }} style={styles.image} />
             <View style={styles.tagContainer}>
-                <Text style={styles.tagText}>{type}</Text>
+                <Text style={styles.tagText}>{method?.category}</Text>
             </View>
-            <Text style={styles.title} numberOfLines={2}>{title}</Text>
+            <Text style={styles.title} numberOfLines={2}>{method?.methodName}</Text>
             <View style={styles.detailContainer}>
                 <View style={styles.author}>
-                    <Avatar rounded size={24} source={{ uri: author.avatar }} />
-                    <Text style={styles.authorText}>Tác giả: <Text style={{ fontWeight: '600', color: 'black' }}>{author.fullName}</Text> </Text>
+                    <Avatar rounded size={24} source={{ uri: method?.userAvatar }} />
+                    <Text style={styles.authorText}>Tác giả: <Text style={{ fontWeight: '600', color: 'black' }}>{method?.fullName}</Text> </Text>
                 </View>
-                {date && <Text style={styles.viewText}>{format(new Date(date), 'd, MMM yyyy', { locale: vi })}</Text>}
+                {method?.creationDate && <Text style={styles.viewText}>{format(new Date(method.creationDate), 'd, MMM yyyy', { locale: vi })}</Text>}
             </View>
         </TouchableOpacity>
     )

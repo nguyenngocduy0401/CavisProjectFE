@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 16,
         paddingBottom: 15,
-        marginLeft: 20,
+        marginLeft: 10,
+        marginRight: 10,
     },
     image: {
         aspectRatio: 1,

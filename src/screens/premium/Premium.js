@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
@@ -7,6 +7,10 @@ import TitleText from '../../components/text/TitleText';
 import GenericButton from '../../components/button/GenericButton';
 import premiumIcon from '../../../assets/icons/premium-icon.png';
 import premiumCheckIcon from '../../../assets/icons/premium-check-icon.png';
+import usePremium from '../../hooks/usePremium';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../store/selector';
+import { format } from 'date-fns';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -36,7 +40,18 @@ const premiumPackages = [
 
 export default function Premium() {
     const navigation = useNavigation()
+    const user = useSelector(userSelector)
     const [activePremiumPackage, setActivePremiumPackage] = useState(null)
+    const isPremiumValid = usePremium()
+    const [userPremiumPackage, setUserPremiumPackage] = useState(null)
+    useEffect(() => {
+        if (isPremiumValid) {
+            const userPremiumPackage = premiumPackages.find(prePackage => user?.packageDetail?.id === prePackage.id)
+            userPremiumPackage.startTime = user?.packageDetail?.startTime
+            userPremiumPackage.endTime = user?.packageDetail?.endTime
+            setUserPremiumPackage(userPremiumPackage)
+        }
+    }, [user])
     return (
         <ScrollView style={styles.container}>
             <InsideHeader title={'Premium'} />
@@ -58,22 +73,28 @@ export default function Premium() {
                     </View>
                 ))}
                 <View style={{ marginTop: 20 }}>
-                    {premiumPackages.map((prePackage, index) => (
-                        <TouchableOpacity key={index} onPress={() => setActivePremiumPackage(prePackage)} style={prePackage === activePremiumPackage ? styles.prePackageAcive : styles.prePackage}>
-                            <View>
-                                <TitleText title={prePackage.title} style={styles.packageTitle} />
-                                <NormalText text={prePackage.description} />
-                            </View>
-                            {prePackage === activePremiumPackage ?
-                                <Image
-                                    source={premiumCheckIcon}
-                                    style={styles.prePackageActiveCheckImage}
-                                />
-                                : <Image
-                                    style={styles.prePackageCheckImage}
-                                />}
-                        </TouchableOpacity>
-                    ))}
+                    {userPremiumPackage ?
+                        <View style={styles.prePackageAcive}>
+                            <TitleText title={userPremiumPackage.title} style={styles.packageTitle} />
+                            <NormalText text={`Gói premium của bạn đã được xác nhận vào ${format(new Date(userPremiumPackage.startTime), 'dd/MM/yyyy')} và sẽ kết thúc vào ${format(new Date(userPremiumPackage.endTime), 'dd/MM/yyyy')}`} />
+                        </View>
+                        : premiumPackages.map((prePackage, index) => (
+                            <TouchableOpacity key={index} onPress={() => setActivePremiumPackage(prePackage)} style={prePackage === activePremiumPackage ? styles.prePackageAcive : styles.prePackage}>
+                                <View>
+                                    <TitleText title={prePackage.title} style={styles.packageTitle} />
+                                    <NormalText text={prePackage.description} />
+                                </View>
+                                {prePackage === activePremiumPackage ?
+                                    <Image
+                                        source={premiumCheckIcon}
+                                        style={styles.prePackageActiveCheckImage}
+                                    />
+                                    : <Image
+                                        style={styles.prePackageCheckImage}
+                                    />}
+                            </TouchableOpacity>
+                        ))
+                    }
                 </View>
                 <GenericButton
                     title={'Đăng kí ngay'}
