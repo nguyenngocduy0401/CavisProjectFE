@@ -58,7 +58,8 @@ export default function MakeUp() {
     try {
       const data = await getAnalystProducts({
         CompatibleProducts: "Low",
-        Category: "Makeup"
+        Category: "Makeup",
+        PageSize: 5
       });
       setProducts(data?.data?.items)
     } catch (error) {
@@ -157,6 +158,7 @@ const styles = StyleSheet.create({
   },
   productReview: {
     paddingTop: 10,
+    paddingBottom: 10,
     marginLeft: 10,
     marginRight: 10,
   },

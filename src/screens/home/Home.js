@@ -27,13 +27,13 @@ export default function Home() {
     const navigation = useNavigation()
     const user = useSelector(userSelector)
     const currentHour = new Date().getHours();
-    const [checklist, setChecklist] = useState([])
     const [products, setProducts] = useState([])
     const [methods, setMethods] = useState([])
     async function getProducts() {
         try {
             const data = await getAnalystProducts({
-                CompatibleProducts: "Low"
+                CompatibleProducts: "Low",
+                PageSize: 5
             });
             setProducts(data?.data?.items)
         } catch (error) {
@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     },
     productReview: {
         paddingTop: 10,
+        paddingBottom: 10,
         marginLeft: 10,
         marginRight: 10,
     },
