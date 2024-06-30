@@ -114,7 +114,7 @@ export default function Questions({ route }) {
                         <GenericButton
                             title={'Tiếp theo'}
                             onPress={() => setStep(2)}
-                            buttonStyle={[styles.buttonStyleButton, { width: screenWidth - 40 }]}
+                            buttonStyle={[styles.buttonStyleButton]}
                             disabled={!(gender && dateOfBirth)}
                         />
                     </View>
@@ -153,7 +153,7 @@ export default function Questions({ route }) {
                             <GenericButton
                                 title={'Tiếp theo'}
                                 onPress={() => setStep(3)}
-                                buttonStyle={[styles.buttonStyleButton, { width: screenWidth - 40 }]}
+                                buttonStyle={[styles.buttonStyleButton]}
                                 disabled={!skin}
                             />
                         }

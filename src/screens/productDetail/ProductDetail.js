@@ -32,30 +32,28 @@ export default function ProductDetail({ route }) {
         <ScrollView style={styles.container}>
             <InsideHeader title={'Thông tin sản phẩm'} />
             {product &&
-                <>
-                    <View style={styles.detailContainer}>
-                        {/* <View style={styles.brandContainer}>
+                <View style={styles.detailContainer}>
+                    {/* <View style={styles.brandContainer}>
                             <Image
                                 source={{ uri: product.brand.image }}
                                 style={styles.brandImage}
                             />
                         </View> */}
-                        <Image
-                            source={{ uri: product.urlImage }}
-                            style={styles.image}
-                        />
-                        {/* <NormalText text={product.brand.name} /> */}
-                        <TitleText title={product.productName} style={styles.title} />
-                        <NormalText text={'Giá:'} />
-                        <TitleText title={`${product.price.toLocaleString()}₫`} style={styles.price} color={'#DE8186'} />
-                        <NormalText text={product.description} />
-                        <GenericButton
-                            title={'Mua ngay'}
-                            onPress={() => openExternalLink(product.url)}
-                            buttonStyle={styles.buttonStyleButton}
-                        />
-                    </View>
-                </>
+                    <Image
+                        source={{ uri: product.urlImage }}
+                        style={styles.image}
+                    />
+                    {/* <NormalText text={product.brand.name} /> */}
+                    <TitleText title={product.productName} style={styles.title} />
+                    <NormalText text={'Giá:'} />
+                    <TitleText title={`${product.price.toLocaleString()}₫`} style={styles.price} color={'#DE8186'} />
+                    <NormalText text={product.description} />
+                    <GenericButton
+                        title={'Mua ngay'}
+                        onPress={() => openExternalLink(product.url)}
+                        buttonStyle={styles.buttonStyleButton}
+                    />
+                </View>
             }
         </ScrollView>
     )

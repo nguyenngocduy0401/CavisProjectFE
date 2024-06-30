@@ -32,7 +32,7 @@ export default function Payment({ route }) {
                     />
                     <TitleText title={premiumPackage.title} style={styles.title} />
                     <NormalText text={`Vui lòng chuyển khoản với cú pháp:`} />
-                    <TouchableOpacity onPress={async () => await Clipboard.setString(`CAVIS + ${user.phoneNumber}`)}>
+                    <TouchableOpacity onPress={async () => await Clipboard.setString(`CAVIS ${user.phoneNumber}`)}>
                         <TitleText title={`CAVIS + ${user.phoneNumber}`} style={styles.price} color={'#DE8186'} />
                     </TouchableOpacity>
                     <NormalText text={`Vui lòng bấm hoàn tất sau khi chuyển khoản. Chúng tôi sẽ xác nhận trong vòng 24h kể từ lúc thanh toán.`} />
