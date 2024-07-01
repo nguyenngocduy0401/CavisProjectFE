@@ -109,7 +109,7 @@ export default function ChatList() {
         } finally {
             setRefreshing(false);
         }
-    }, []);
+    }, [tab]);
 
     const fetchAllUsers = async () => {
         try {

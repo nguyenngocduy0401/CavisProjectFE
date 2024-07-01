@@ -46,9 +46,9 @@ export default function Premium() {
     const [userPremiumPackage, setUserPremiumPackage] = useState(null)
     useEffect(() => {
         if (isPremiumValid) {
-            const userPremiumPackage = premiumPackages.find(prePackage => user?.packageDetail?.id === prePackage.packagePremiumId)
-            const startTime = user?.packageDetail?.startTime
-            const endTime = user?.packageDetail?.endTime
+            const userPremiumPackage = premiumPackages.find(prePackage => user.packageDetail.packagePremiumId === prePackage.id)
+            const startTime = user.packageDetail.startTime
+            const endTime = user.packageDetail.endTime
             const userPackage = { ...userPremiumPackage, startTime, endTime }
             setUserPremiumPackage(userPackage)
         }
