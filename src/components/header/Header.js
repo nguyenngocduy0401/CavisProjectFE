@@ -19,7 +19,7 @@ export default function Header() {
     async function getNotificationNumber() {
         try {
             // const data = await getSkins();
-            setNotificationsNumber(12)
+            setNotificationsNumber(2)
         } catch (error) {
             console.log(error)
         }
@@ -27,7 +27,7 @@ export default function Header() {
     async function getChatNumber() {
         try {
             // const data = await getSkins();
-            setChatNumber(2)
+            setChatNumber(0)
         } catch (error) {
             console.log(error)
         }
@@ -47,7 +47,7 @@ export default function Header() {
                         source={notificationIcon}
                         containerStyle={styles.notificationContainer}
                     />
-                    {notificationsNumber &&
+                    {notificationsNumber !== null && notificationsNumber !== 0 &&
                         <Badge
                             badgeStyle={styles.badgeStyle}
                             containerStyle={styles.badgeContainer}
@@ -62,7 +62,7 @@ export default function Header() {
                         source={chatIcon}
                         containerStyle={styles.notificationContainer}
                     />
-                    {chatNumber &&
+                    {chatNumber !== null && chatNumber !== 0 &&
                         <Badge
                             badgeStyle={styles.badgeStyle}
                             containerStyle={styles.badgeContainer}

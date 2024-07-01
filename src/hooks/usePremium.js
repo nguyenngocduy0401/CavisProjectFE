@@ -8,7 +8,7 @@ const usePremium = () => {
     const user = useSelector(userSelector);
 
     const isPremiumValid = useMemo(() => {
-        if (user && user.packageDetail && user.packageDetail.status && user.packageDetail.endTime) {
+        if (user && user.packageDetail && user.packageDetail.status === 1 && user.packageDetail.startTime && user.packageDetail.endTime) {
             const endTime = new Date(user.packageDetail.endTime);
             const today = new Date();
             if (compareAsc(endTime, today) !== -1) {

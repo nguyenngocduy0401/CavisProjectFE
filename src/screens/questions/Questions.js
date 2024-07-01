@@ -91,7 +91,7 @@ export default function Questions({ route }) {
     }
     return (
         <View style={styles.container}>
-            {type && <InsideHeader title={'Quay lại trang chủ'} />}
+            {type && <InsideHeader title={'Kiểm tra loại da'} />}
             <Image source={headerLogo} style={styles.topLogo} />
             <LinearProgress
                 style={styles.progress}
