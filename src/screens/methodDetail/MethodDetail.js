@@ -25,18 +25,8 @@ export default function MethodDetail({ route }) {
   `;
     async function getMethodDetail(id) {
         try {
-            // const data = await getMethod(id);
-            // setMethod(data?.data)
-            setMethod({
-                id: 1,
-                urlImage: "https://cdn.tgdd.vn/Files/2023/04/26/1527516/hoc-ngay-cac-buoc-skincare-co-ban-trong-mua-he-de-da-mat-luon-xinh-202304261009570497.jpg",
-                methodName: "New VR Headsets That Will Shape the Metaverse",
-                fullName: "Mason Eduard",
-                userAvatar: "https://nguoinoitieng.tv/images/nnt/108/0/bkw8.jpg",
-                category: "Skincare",
-                creationDate: "2024-01-03T14:48:00.000Z",
-                description: '<h4><strong><span style="font-size:18pt;">1. Chăm sóc da thường</span></strong></h4><p><span style="font-size:11pt;">Da thường là loại da lý tưởng mà nhiều người mong muốn có được. Đây là loại da không nhờn, không khô, ít mụn và thường có độ ẩm cân bằng. Tuy nhiên, để duy trì làn da khỏe đẹp này, bạn vẫn cần có một quy trình chăm sóc da đúng cách.</span></p><p><strong><span style="font-size:18pt;">Phương pháp chăm sóc:</span></strong></p><ol><li style="list-style-type:decimal;font-size:12pt;"><p><strong><span style="font-size:12pt;">Làm sạch da:</span></strong></p><ul><li style="list-style-type:circle;font-size:12pt;"><p><strong><span style="font-size:12pt;">Tẩy trang:</span></strong><span style="font-size:12pt;"> Sử dụng sản phẩm tẩy trang không chứa cồn để loại bỏ mỹ phẩm và bụi bẩn.</span></p></li><li style="list-style-type:circle;font-size:12pt;"><p><strong><span style="font-size:12pt;">Rửa mặt:</span></strong><span style="font-size:12pt;"> Rửa mặt buổi sáng và tối bằng sữa rửa mặt có độ pH từ 4.5-5.5 để duy trì độ cân bằng tự nhiên của da.</span></p></li><li style="list-style-type:circle;font-size:12pt;"><p><strong><span style="font-size:12pt;">Tẩy tế bào chết:</span></strong><span style="font-size:12pt;"> Tẩy tế bào chết 2 lần/tuần để loại bỏ da chết, giúp da mịn màng hơn.</span></p></li></ul></li><li style="list-style-type:decimal;font-size:12pt;"><p><strong><span style="font-size:12pt;">Toner:</span></strong></p><ul><li style="list-style-type:circle;font-size:12pt;"><p><span style="font-size:12pt;"> Sử dụng toner không chứa cồn để cân bằng độ pH và cấp ẩm cho da sau khi rửa mặt.</span></p></li></ul></li><li style="list-style-type:decimal;font-size:12pt;"><p><strong><span style="font-size:12pt;">Dưỡng ẩm:</span></strong></p><ul><li style="list-style-type:circle;font-size:12pt;"><p><span style="font-size:12pt;"> Sử dụng kem dưỡng ẩm ban ngày và ban đêm để duy trì độ ẩm cho da.</span></p></li><li style="list-style-type:circle;font-size:12pt;"><p><span style="font-size:12pt;"> Đắp mặt nạ 2 lần/tuần, ưu tiên các nguyên liệu tự nhiên như yến mạch, bơ để cung cấp thêm dưỡng chất cho da.</span></p></li></ul></li><li style="list-style-type:decimal;font-size:12pt;"><p><strong><span style="font-size:12pt;">Chống nắng:</span></strong></p><ul><li style="list-style-type:circle;font-size:12pt;"><p><span style="font-size:12pt;"> Thoa kem chống nắng hàng ngày để bảo vệ da khỏi tác hại của tia UV.</span></p></li></ul></li></ol>'
-            })
+            const data = await getMethod(id);
+            setMethod(data?.data)
         } catch (error) {
             console.log(error)
         }
