@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     detailContainer: {
         paddingLeft: 20,
         paddingRight: 20,
-        paddingTop: 10,
     },
     image: {
         width: '100%',
@@ -143,7 +142,7 @@ const styles = StyleSheet.create({
     },
     topContainer: {
         width: screenWidth,
-        height: screenWidth / 2 + 100,
+        height: screenWidth / 2 + 30,
         paddingLeft: 20,
         paddingRight: 20,
     },

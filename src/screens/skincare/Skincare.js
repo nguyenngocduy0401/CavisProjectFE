@@ -57,7 +57,7 @@ export default function SkinCare() {
       <TitleText title={'Skincare'} style={styles.title} />
       <GenericCarousel />
       <View style={styles.topButton}>
-        <HomeTopButton onPress={() => navigation.navigate('CameraOpen')} title={'So sánh làn da của tôi'} backgroundColor={'#EBF3F8'} icon={compareTopIcon}
+        <HomeTopButton onPress={() => navigation.navigate('SkinCompare')} title={'So sánh làn da của tôi'} backgroundColor={'#EBF3F8'} icon={compareTopIcon}
           containerStyle={{
             alignItems: 'center',
             flexDirection: 'row',
@@ -71,7 +71,7 @@ export default function SkinCare() {
           }}
           iconStyle={{ padding: 16 }}
         />
-        <HomeTopButton onPress={() => console.log("filter")} backgroundColor={'#FFF9F0'} icon={filterTopIcon}
+        <HomeTopButton onPress={() => navigation.navigate('CameraOpen')} backgroundColor={'#FFF9F0'} icon={filterTopIcon}
           containerStyle={{
             alignItems: 'center',
             justifyContent: 'center',

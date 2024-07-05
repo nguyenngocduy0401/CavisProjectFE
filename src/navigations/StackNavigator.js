@@ -22,6 +22,8 @@ import ChatList from '../screens/chatList/ChatList';
 import Methods from '../screens/methods/Methods';
 import SkincareRoutine from '../screens/skincareRoutine/SkincareRoutine';
 import CameraOpen from '../screens/cameraOpen/CameraOpen';
+import SkinCompare from '../screens/skinCompare/SkinCompare';
+import SkinCompareDetail from '../screens/skinCompareDetail/SkinCompareDetail';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -69,7 +71,9 @@ const StackNavigator = () => {
                         <Stack.Screen name="ChatList" component={ChatList} options={{ headerShown: false }} />
                         <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
                         <Stack.Screen name="SkincareRoutine" component={SkincareRoutine} options={{ headerShown: false }} />
+                        <Stack.Screen name="SkinCompare" component={SkinCompare} options={{ headerShown: false }} />
                         <Stack.Screen name="CameraOpen" component={CameraOpen} options={{ headerShown: false }} />
+                        <Stack.Screen name="SkinCompareDetail" component={SkinCompareDetail} options={{ headerShown: false }} />
                     </>
                     : user.role.toLowerCase().includes('expert') &&
                     <>

@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_URL_ENV from "../config/api";
 import { refresh } from "./RefreshService";
 import { logout } from "./UserService";
+import { store } from "../store/store";
+import { removeUser } from "../store/features/authSlice";
 
 const url = API_URL_ENV;
 const instance = axios.create({
@@ -41,15 +43,17 @@ instance.interceptors.response.use(
                     const oldRefreshToken = await AsyncStorage.getItem("refreshToken");
                     const oldAccessToken = await AsyncStorage.getItem("accessToken");
                     const data = await refresh(oldRefreshToken, oldAccessToken)
-                    if (data) {
+                    if (data.isSuccess) {
                         const accessToken = data.data.accessToken;
                         const refreshToken = data.data.refreshToken;
                         await AsyncStorage.setItem("accessToken", accessToken);
                         await AsyncStorage.setItem("refreshToken", refreshToken);
+                        return instance(originalConfig);
                     } else {
-                        await logout()
+                        await AsyncStorage.removeItem("refreshToken");
+                        await AsyncStorage.removeItem("accessToken");
+                        store.dispatch(removeUser())
                     }
-                    return instance(originalConfig);
                 } catch (_error) {
                     return Promise.reject(_error);
                 }

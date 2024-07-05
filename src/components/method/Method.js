@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     title: {
-        width: "60%",
         textAlign: "left",
         fontSize: 18,
         fontWeight: "600",

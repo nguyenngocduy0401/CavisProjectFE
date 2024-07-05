@@ -9,18 +9,22 @@ const screenWidth = Dimensions.get('window').width;
 const slides = [
     {
         image: require('../../../assets/images/carousel-image-1.png'),
-        title: 'Chụp ảnh',
-        description: 'Khám phá điều làn da bạn nói về bạn'
+        title: 'So sánh da',
+        description: 'So sánh làn da qua các khoảng thời gian khác nhau',
+        link: 'SkinCompare'
     },
     {
         image: require('../../../assets/images/carousel-image-2.png'),
         title: 'Phân tích da',
-        description: 'Khám phá điều làn da bạn nói về bạn'
+        description: 'Phân tích làn da, xác định các vấn đề và cung cấp giải pháp',
+        link: 'Questions',
+        type: 'again'
     },
     {
         image: require('../../../assets/images/carousel-image-3.png'),
-        title: 'Tô điểm',
-        description: 'Khám phá điều làn da bạn nói về bạn'
+        title: 'Gợi ý sản phẩm',
+        description: 'Gợi ý sản phẩm phù hợp với loại da và nhu cầu của bạn',
+        link: 'Products',
     },
 ]
 
@@ -47,7 +51,7 @@ export default function GenericCarousel() {
                                     marginLeft: 0
                                 }}
                                 title={'Thử ngay'}
-                                onPress={() => console.log("try camera")}
+                                onPress={() => slide?.type ? navigation.navigate(slide.link, { type: slide.type }) : navigation.navigate(slide.link)}
                                 buttonStyle={styles.buttonStyleButton}
                             />
                         </View>

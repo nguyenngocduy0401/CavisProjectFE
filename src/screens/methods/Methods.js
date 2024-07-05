@@ -50,8 +50,8 @@ export default function Methods({ route }) {
                 style={styles.methodView}
                 data={methods}
                 keyExtractor={(item) => item.id}
-                renderItem={({ method }) => (
-                    <Method method={method} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
+                renderItem={({ item }) => (
+                    <Method key={item.id} method={item} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
                 )}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

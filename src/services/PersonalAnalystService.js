@@ -18,3 +18,7 @@ export const getAnalystMethods = async (credentials) => {
     });
     return response.data;
 }
+export const getAnalystSkin = async () => {
+    const response = await api.get(API_URL + "/skins");
+    return response.data;
+}
