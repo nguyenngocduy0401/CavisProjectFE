@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import GenericButton from '../../components/button/GenericButton';
 import { Camera, useCameraDevice, useCameraFormat, useCameraPermission } from 'react-native-vision-camera';
@@ -9,29 +9,60 @@ import TitleText from '../../components/text/TitleText';
 import storage from '@react-native-firebase/storage';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';
+import { addPhoto, getPhotos } from '../../services/UserService';
+import usePremium from '../../hooks/usePremium';
+import { isToday, parseISO } from 'date-fns';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function CameraOpen() {
+    const isFocused = useIsFocused()
     const navigation = useNavigation()
     const user = useSelector(userSelector)
+    const isPremiumValid = usePremium()
     const camera = useRef(null)
     const device = useCameraDevice('front')
     const { hasPermission, requestPermission } = useCameraPermission()
     const [showCamera, setShowCamera] = useState(true)
     const [image, setImage] = useState('')
     const [loading, setLoading] = useState(false)
+    const [check, setCheck] = useState(null)
+    
+    if (!isPremiumValid) {
+        navigation.goBack();
+        Toast.show({
+            type: 'error',
+            text1: 'Chức năng này yêu cầu tài khoản premium',
+        });
+    }
 
-    const format = useCameraFormat(device, [
-        { photoResolution: { width: screenWidth, height: screenHeight } }
-    ])
-
-    useEffect(() => {
-        if (!hasPermission) {
-            requestPermission();
+    async function checkToday() {
+        const data = await getPhotos()
+        if (data?.data?.items.some(item => isToday(parseISO(item.creationDate)))) {
+            setCheck(true)
+        } else {
+            setCheck(false)
         }
-    }, []);
+    }
+    useEffect(() => {
+        if (isFocused) {
+            checkToday()
+        }
+    }, [isFocused]);
+    useEffect(() => {
+        if (isFocused) {
+            if (check) {
+                navigation.goBack();
+                Toast.show({
+                    type: 'error',
+                    text1: 'Hãy tiếp tục lưu hình làn da vào ngày mai nhé',
+                });
+            } else if (!hasPermission) {
+                requestPermission();
+            }
+        }
+    }, [check])
 
     const capturePhoto = async () => {
         if (camera.current) {
@@ -66,7 +97,8 @@ export default function CameraOpen() {
                 const reference = storage().ref(fireRef);
                 await reference.putFile(image)
                 const url = await storage().ref(fireRef).getDownloadURL();
-                console.log(url)
+                await addPhoto(url)
+                navigation.navigate('SkinCompare')
             } catch (error) {
                 console.log(error);
                 Toast.show({
@@ -79,7 +111,7 @@ export default function CameraOpen() {
         } else {
             Toast.show({
                 type: 'error',
-                text1: 'Vui lòng chụp ảnh',
+                text1: 'Vui lòng chụp hình',
             });
         }
     }
@@ -109,14 +141,14 @@ export default function CameraOpen() {
                         ref={camera}
                         style={styles.camera}
                         device={device}
-                        isActive={showCamera}
+                        isActive={isFocused && showCamera && check === false}
                         photo={true}
-                        format={format}
                     />
                     <TouchableOpacity disabled={loading} style={styles.captureButton} onPress={capturePhoto}></TouchableOpacity>
                 </> : image &&
                 <>
-                    <Image style={styles.image}
+                    <Image
+                        style={styles.camera}
                         source={{ uri: `file://${image}` }}
                     />
                     <View style={styles.operationContainer}>
@@ -139,9 +171,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     camera: {
-        flex: 1,
-    },
-    image: {
         flex: 1,
     },
     captureButton: {

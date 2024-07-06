@@ -6,6 +6,8 @@ import TitleText from '../../components/text/TitleText';
 import usePremium from '../../hooks/usePremium';
 import SkinView from '../../components/skinView/SkinView';
 import { compareDesc, isToday, parseISO } from 'date-fns';
+import { getPhotos } from '../../services/UserService';
+import Toast from 'react-native-toast-message';
 import { vi } from 'date-fns/locale';
 
 const numCols = 2;
@@ -19,43 +21,26 @@ export default function SkinCompare() {
     const isPremiumValid = usePremium()
     const [refreshing, setRefreshing] = useState(false);
     const [days, setDays] = useState([])
+
+    if (!isPremiumValid) {
+        navigation.goBack();
+        Toast.show({
+            type: 'error',
+            text1: 'Chức năng này yêu cầu tài khoản premium',
+        });
+    }
     async function getDays() {
         try {
-            const data = {
-                data: {
-                    items: [
-                        {
-                            date: "2024-06-27T18:37:21.566Z",
-                            urlImage: "https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/skincheck%2Fbcf8bd91-61ed-4672-a2ba-4ece23f25236%2Fmrousavy-7764879245349578851.jpg?alt=media&token=d55e8e8c-d269-498b-ad8b-be68b2bf523d"
-                        },
-                        {
-                            date: "2024-06-28T18:37:21.566Z",
-                            urlImage: "https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/skincheck%2Fbcf8bd91-61ed-4672-a2ba-4ece23f25236%2Fmrousavy-7764879245349578851.jpg?alt=media&token=d55e8e8c-d269-498b-ad8b-be68b2bf523d"
-                        },
-                        {
-                            date: "2024-06-29T18:37:21.566Z",
-                            urlImage: "https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/skincheck%2Fbcf8bd91-61ed-4672-a2ba-4ece23f25236%2Fmrousavy-7764879245349578851.jpg?alt=media&token=d55e8e8c-d269-498b-ad8b-be68b2bf523d"
-                        },
-                        {
-                            date: "2024-06-30T18:37:21.566Z",
-                            urlImage: "https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/skincheck%2Fbcf8bd91-61ed-4672-a2ba-4ece23f25236%2Fmrousavy-7764879245349578851.jpg?alt=media&token=d55e8e8c-d269-498b-ad8b-be68b2bf523d"
-                        },
-                        {
-                            date: "2024-07-01T18:37:21.566Z",
-                            urlImage: "https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/skincheck%2Fbcf8bd91-61ed-4672-a2ba-4ece23f25236%2Fmrousavy-7764879245349578851.jpg?alt=media&token=d55e8e8c-d269-498b-ad8b-be68b2bf523d"
-                        },
-                    ]
-                }
-            };
+            const data = await getPhotos()
             const items = data?.data?.items
-            if (!items.some(item => isToday(parseISO(item.date)))) {
+            if (!items.some(item => isToday(parseISO(item.creationDate)))) {
                 const today = {
-                    date: new Date().toISOString(),
-                    urlImage: null
+                    creationDate: new Date().toISOString(),
+                    url: null
                 }
                 items.push(today)
             }
-            setDays(items.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date))))
+            setDays(items.sort((a, b) => compareDesc(new Date(a.creationDate), new Date(b.creationDate))))
         } catch (error) {
             console.log(error)
         } finally {
@@ -80,7 +65,7 @@ export default function SkinCompare() {
                 style={styles.skinView}
                 data={days}
                 numColumns={numCols}
-                keyExtractor={(item) => item.date}
+                keyExtractor={(item) => item.creationDate}
                 renderItem={({ item }) => (
                     <SkinView skin={item} onPress={() => navigation.navigate("SkinCompareDetail", { skin: item })} />
                 )}

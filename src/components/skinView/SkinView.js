@@ -5,7 +5,7 @@ import { vi } from 'date-fns/locale'
 import { useNavigation } from '@react-navigation/native'
 import SendButton from '../button/SendButton'
 import plusIcon from '../../../assets/icons/plus-icon.png';
-import plusImage from '../../../assets/images/carousel-image-2.png';
+import plusImage from '../../../assets/images/carousel-image-3.png';
 
 const screenWidth = Dimensions.get('window').width
 
@@ -13,15 +13,15 @@ export default function SkinView({ skin, onPress }) {
     const navigation = useNavigation()
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}>
-            {skin.urlImage
-                ? <Image source={{ uri: skin?.urlImage }} style={styles.image} />
+            {skin.url
+                ? <Image source={{ uri: skin?.url }} style={styles.image} />
                 : <TouchableOpacity style={styles.openCamera} onPress={() => navigation.navigate("CameraOpen")} >
                     <ImageBackground style={styles.plusBackground} source={plusImage} />
                     <SendButton icon={plusIcon} onPress={() => navigation.navigate("CameraOpen")} />
                 </TouchableOpacity>
             }
-            {skin?.date && <View style={styles.tagContainer}>
-                <Text style={styles.tagText}>{format(new Date(skin.date), 'd, MMM yyyy', { locale: vi })}</Text>
+            {skin?.creationDate && <View style={styles.tagContainer}>
+                <Text style={styles.tagText}>{format(new Date(skin.creationDate), 'd, MMM yyyy', { locale: vi })}</Text>
             </View>}
         </TouchableOpacity>
     )

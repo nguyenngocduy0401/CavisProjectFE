@@ -7,6 +7,8 @@ import TitleText from '../../components/text/TitleText';
 import GenericButton from '../../components/button/GenericButton';
 import GenericWhiteButton from '../../components/button/GenericWhiteButton';
 import Toast from 'react-native-toast-message';
+import { getSkincareRoutine } from '../../services/UserService';
+import { setSkincareRoutine } from '../../services/SkincareRoutineService';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -114,27 +116,78 @@ export default function SkincareRoutine({ route }) {
     const [routine, setRoutine] = useState([]);
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [skincareData, setSkincareData] = useState(null);
+    async function getSkincare() {
+        try {
+            const data = await getSkincareRoutine();
+            setSkincareData(data?.data);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setRefreshing(false);
+        }
+    }
+    useEffect(() => {
+        getSkincare()
+    }, [])
     useEffect(() => {
         const currentHour = new Date().getHours();
-        if (type === 'Morning' && 6 < currentHour && currentHour < 10) {
-            setRoutine(morningRoutine)
-        } else if (type === 'Night' && 20 < currentHour && currentHour < 23) {
-            setRoutine(nightRoutine)
-        } else {
-            navigation.goBack()
-            if (type === 'Morning') {
+        if (skincareData && type === 'Morning') {
+            if (skincareData.moring) {
+                navigation.goBack()
+                Toast.show({
+                    type: 'error',
+                    text1: 'Bạn đã skincare buổi sáng rồi',
+                });
+            } else if (currentHour < 6 && currentHour > 10) {
+                navigation.goBack()
                 Toast.show({
                     type: 'error',
                     text1: 'Hãy skincare buổi sáng trong khung giờ 6h - 10h',
                 });
-            } else if (type === 'Night') {
+            } else {
+                setRoutine(morningRoutine)
+            }
+        } else if (skincareData && type === 'Night') {
+            if (skincareData.night) {
+                navigation.goBack()
+                Toast.show({
+                    type: 'error',
+                    text1: 'Bạn đã skincare buổi tối rồi',
+                });
+            } else if (currentHour < 20 && currentHour > 23) {
+                navigation.goBack()
                 Toast.show({
                     type: 'error',
                     text1: 'Hãy skincare buổi tối trong khung giờ 20h - 23h',
                 });
+            } else {
+                setRoutine(nightRoutine)
             }
         }
-    }, [])
+    }, [skincareData]);
+    const handleCompleted = async () => {
+        try {
+            setLoading(true);
+            const id = skincareData.id
+            if (type === 'Morning') {
+                await setSkincareRoutine(id, {
+                    moring: true,
+                    night: skincareData.night,
+                })
+            } else if (type === 'Night') {
+                await setSkincareRoutine(id, {
+                    moring: skincareData.moring,
+                    night: true,
+                })
+            }
+            navigation.goBack()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false);
+        }
+    }
     return (
         <ScrollView style={styles.container}>
             <InsideHeader title={'Quy trình skincare'} />
@@ -164,7 +217,7 @@ export default function SkincareRoutine({ route }) {
                                     />
                                     <GenericButton
                                         title={'Hoàn thành'}
-                                        onPress={() => navigation.goBack()}
+                                        onPress={handleCompleted}
                                         buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
                                         disabled={loading}
                                     />

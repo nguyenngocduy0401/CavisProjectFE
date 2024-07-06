@@ -23,7 +23,6 @@ export default function Products({ route }) {
     const [products, setProducts] = useState([])
     const [compatible, setCompatible] = useState(1)
     async function getProducts() {
-        console.log(compatible)
         try {
             setRefreshing(true);
             const credential = {}
@@ -41,6 +40,7 @@ export default function Products({ route }) {
                     credential.CompatibleProducts = "Extremely"
                 }
             }
+            credential.PageSize = 999
             const data = await getAnalystProducts(credential);
             setProducts(data?.data?.items)
         } catch (error) {

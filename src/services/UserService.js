@@ -30,3 +30,20 @@ export const registerPremium = async (id) => {
     const response = await api.post(API_URL + `/mine/premium-packages/${id}`);
     return response.data;
 };
+
+export const addPhoto = async (url) => {
+    const response = await api.put(API_URL + "/mine/personal-images", {
+        url
+    });
+    return response.data;
+};
+
+export const getPhotos = async () => {
+    const response = await api.get(API_URL + "/mine/personal-images");
+    return response.data;
+};
+
+export const getSkincareRoutine = async () => {
+    const response = await api.get(API_URL + "/mine/skincare-routines");
+    return response.data;
+};

@@ -28,8 +28,7 @@ export default function Register() {
   });
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollView}>
-      <View style={styles.container}>
+    <ScrollView style={styles.container}>
         <View style={styles.topHalf}>
           <ImageBackground source={headerImage} style={styles.topImage} >
             <View style={styles.mainTitle}>
@@ -144,16 +143,6 @@ export default function Register() {
           </Formik>
           <View style={styles.optionsRow}>
           </View>
-          <View style={styles.options}>
-            <View style={styles.line} />
-            <Text style={styles.using}>Đăng kí bằng cách khác</Text>
-            <View style={styles.line} />
-          </View>
-          <View style={styles.buttonLogin}>
-            <ButtonLoginGoogle
-
-            />
-          </View>
           <View style={styles.optionsSignUp}>
             <Text >Đã có tài khoản? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login') && setErrorMessage(null)} >
@@ -161,16 +150,14 @@ export default function Register() {
             </TouchableOpacity>
           </View>
         </View>
-
-      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: screenWidth,
-    height: 1000,
+    flex: 1,
+    backgroundColor: 'white',
   },
 
   mainTitle: {
@@ -189,8 +176,6 @@ const styles = StyleSheet.create({
     paddingEnd: '34%',
   },
   topHalf: {
-    position: 'absolute',
-    top: 0,
   },
   topImage: {
     width: screenWidth,
@@ -199,7 +184,7 @@ const styles = StyleSheet.create({
   bottomHalf: {
     backgroundColor: 'white',
     position: 'relative',
-    top: 180,
+    top: -30,
     borderTopLeftRadius: 30, // Bo tròn góc trên bên trái
     borderTopRightRadius: 30, // Bo tròn góc trên bên phải
     paddingTop: 30,
