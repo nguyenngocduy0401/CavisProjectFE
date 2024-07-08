@@ -116,7 +116,7 @@ export default function Login() {
           />
         </View>
 
-        <View style={styles.options}>
+        {/* <View style={styles.options}>
           <View style={styles.line} />
           <Text style={styles.using}>Đăng nhập bằng cách khác</Text>
           <View style={styles.line} />
@@ -125,7 +125,7 @@ export default function Login() {
           <ButtonLoginGoogle
             onPress={handleForgotPassword}
           />
-        </View>
+        </View> */}
         <View style={styles.optionsSignUp}>
           <Text >Chưa có tài khoản? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Register') && setErrorMessage(null)} >

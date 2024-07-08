@@ -25,9 +25,9 @@ export default function Methods({ route }) {
             setRefreshing(true);
             let data = []
             if (type) {
-                data = await getAnalystMethods({ category: type });
+                data = await getAnalystMethods({ Category: type, PageSize: 999 });
             } else {
-                data = await getAnalystMethods(null);
+                data = await getAnalystMethods({ PageSize: 999 });
             }
             setMethods(data?.data?.items)
         } catch (error) {
@@ -45,13 +45,13 @@ export default function Methods({ route }) {
     }, []);
     return (
         <View style={styles.container}>
-            <InsideHeader title={'Phương pháp hữu ích'} />
+            <InsideHeader title={`Phương pháp ${type ? type.toLowerCase() : 'hữu ích'}`} />
             <FlatList
                 style={styles.methodView}
                 data={methods}
                 keyExtractor={(item) => item.id}
-                renderItem={({ method }) => (
-                    <Method method={method} onPress={() => navigation.navigate("MethodDetail", { id: method.id })} />
+                renderItem={({ item }) => (
+                    <Method key={item.id} method={item} onPress={() => navigation.navigate("MethodDetail", { id: item.id })} />
                 )}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

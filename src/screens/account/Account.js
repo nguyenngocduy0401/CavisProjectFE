@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, Dimensions, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { logout } from '../../services/UserService'
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeUser } from '../../store/features/authSlice'
 import { Avatar, Button, Divider, ListItem } from '@rneui/themed'
@@ -14,27 +14,31 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/MaterialIcons";
 import premiumIcon from '../../../assets/icons/premium-icon.png';
 import LinearGradient from 'react-native-linear-gradient'
+import { getAnalystSkin } from '../../services/PersonalAnalystService'
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Account() {
+  const isFocused = useIsFocused();
   const navigation = useNavigation()
   const user = useSelector(userSelector)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-  const [skin, setSkin] = useState({
-    skinsName: 'Da khô',
-  })
-  const [concerns, setConcerns] = useState([
-    {
-      id: 1,
-      skinsName: 'Mụn',
-    }, {
-      id: 2,
-      skinsName: 'Nám',
-    },
-  ])
+  const [skin, setSkin] = useState(null)
+  const [concerns, setConcerns] = useState([])
+  useEffect(() => {
+    const getUserSkin = async () => {
+      const data = await getAnalystSkin()
+      if (data.data) {
+        setSkin(data.data?.skinType)
+        setConcerns(data.data?.skinConditions)
+      }
+    }
+    if (isFocused && user && user.role.toLowerCase() === "customer") {
+      getUserSkin()
+    }
+  }, [user, isFocused])
   const handleLogout = async () => {
     try {
       setLoading(true)
@@ -74,7 +78,15 @@ export default function Account() {
             marginTop: 10,
           }}
           title={'Chỉnh sửa thông tin'}
-          onPress={() => console.log('Edit profile')}
+          onPress={() => navigation.navigate("UpdateUser")}
+        />
+        <GenericWhiteButton
+          buttonStyle={{
+            height: 40,
+            borderRadius: 30,
+          }}
+          title={'Đổi mật khẩu'}
+          onPress={() => navigation.navigate("UpdatePassword")}
         />
       </View>
       {user && user.role.toLowerCase() === "customer" &&
@@ -109,14 +121,14 @@ export default function Account() {
             <ListItem containerStyle={styles.listItem}>
               <ListItem.Content style={styles.listContent}>
                 <ListItem.Subtitle style={styles.listSubtitle}>Loại da</ListItem.Subtitle>
-                <ListItem.Title style={styles.listTitle}>{skin?.skinsName}</ListItem.Title>
+                <ListItem.Title style={styles.listTitle}>{skin}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
             <Divider style={styles.divider} />
             <ListItem containerStyle={styles.listItem}>
               <ListItem.Content style={styles.listContent}>
                 <ListItem.Subtitle style={styles.listSubtitle}>Vấn đề da</ListItem.Subtitle>
-                <ListItem.Title style={styles.listTitle}>{concerns.length > 0 && concerns.length > 2 ? concerns.slice(0, 2).map(concern => concern.skinsName).join(' + ') + '...' : concerns.map(concern => concern.skinsName).join(' + ')}</ListItem.Title>
+                <ListItem.Title style={styles.listTitle}>{concerns.length > 0 && concerns.length > 2 ? concerns.slice(0, 2).map(concern => concern).join(' + ') + '...' : concerns.map(concern => concern).join(' + ')}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
             <Divider style={styles.divider} />
@@ -211,5 +223,10 @@ const styles = StyleSheet.create({
     color: '#6E6E6E',
     fontSize: 16,
   },
-  listTitle: {}
+  listTitle: {},
+  center: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 })

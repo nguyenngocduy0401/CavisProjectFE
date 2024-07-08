@@ -31,7 +31,7 @@ export default function GenericWhiteButton({
 const styles = StyleSheet.create({
     container: {
         marginHorizontal: 10,
-        marginVertical: 10,
+        marginVertical: 5,
     },
     titleStyle: {
         color: "black",

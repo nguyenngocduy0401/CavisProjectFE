@@ -100,7 +100,7 @@ const BottomTabNavigator = () => {
                                     fontWeight: '300',
                                     position: "absolute",
                                     bottom: 10,
-                                }}>Insights</Text>
+                                }}>Lịch trình</Text>
                             </View>
                         )
                     },

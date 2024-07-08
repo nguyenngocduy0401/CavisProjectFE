@@ -21,33 +21,7 @@ export default function Products({ route }) {
     const isPremiumValid = usePremium()
     const [refreshing, setRefreshing] = useState(false);
     const [products, setProducts] = useState([])
-    const [compatible, setCompatible] = useState("Low")
-    const convertCompatible = (value) => {
-        if (value == 1) {
-            return "Low"
-        }
-        if (value == 2) {
-            return "Medium"
-        }
-        if (value == 3) {
-            return "High"
-        }
-        if (value == 4) {
-            return "Extremely"
-        }
-        if (value == "Low") {
-            return 1
-        }
-        if (value == "Medium") {
-            return 2
-        }
-        if (value == "High") {
-            return 3
-        }
-        if (value == "Extremely") {
-            return 4
-        }
-    }
+    const [compatible, setCompatible] = useState(1)
     async function getProducts() {
         try {
             setRefreshing(true);
@@ -56,8 +30,17 @@ export default function Products({ route }) {
                 credential.Category = type
             }
             if (compatible) {
-                credential.CompatibleProducts = compatible
+                if (compatible === 1) {
+                    credential.CompatibleProducts = "Low"
+                } else if (compatible === 2) {
+                    credential.CompatibleProducts = "Medium"
+                } else if (compatible === 3) {
+                    credential.CompatibleProducts = "High"
+                } else if (compatible === 4) {
+                    credential.CompatibleProducts = "Extremely"
+                }
             }
+            credential.PageSize = 999
             const data = await getAnalystProducts(credential);
             setProducts(data?.data?.items)
         } catch (error) {
@@ -72,10 +55,10 @@ export default function Products({ route }) {
 
     const onRefresh = useCallback(() => {
         getProducts()
-    }, []);
+    }, [compatible]);
     return (
         <View style={styles.container}>
-            <InsideHeader title={'Gợi ý sản phẩm'} />
+            <InsideHeader title={`Gợi ý sản phẩm ${type ? type.toLowerCase() : ''}`} />
             {isPremiumValid &&
                 <>
                     <TitleText title={'Mức độ phù hợp'}
@@ -87,8 +70,8 @@ export default function Products({ route }) {
                         }} />
                     <View style={styles.sliderContainer}>
                         <Slider
-                            value={convertCompatible(compatible)}
-                            onValueChange={(value) => setCompatible(convertCompatible(value))}
+                            value={compatible}
+                            onValueChange={setCompatible}
                             maximumValue={4}
                             minimumValue={1}
                             step={1}
@@ -106,7 +89,8 @@ export default function Products({ route }) {
                                         left: -30,
                                         bottom: -20,
                                         textAlign: "center"
-                                    }} text={compatible} />
+                                    }} text={compatible === 1 ? "Low" : compatible === 2 ? "Medium" : compatible === 3 ? "High" : compatible === 4 && "Extremely"}
+                                    />
                                 ),
                             }}
                         />
@@ -148,6 +132,6 @@ const styles = StyleSheet.create({
     },
     sliderContainer: {
         paddingHorizontal: 25,
-        marginBottom: 5,
+        marginBottom: 10,
     }
 })

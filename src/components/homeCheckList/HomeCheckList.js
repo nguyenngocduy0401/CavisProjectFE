@@ -1,40 +1,16 @@
 import { View, Text, Dimensions, FlatList } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native';
 import CheckComponent from './CheckComponent';
 import TitleText from '../text/TitleText';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { getSkincareRoutine, getTodayPhoto } from '../../services/UserService';
 
 const screenWidth = Dimensions.get('window').width;
 
 const dailyListData = [
-    // {
-    //     id: 1,
-    //     title: "Nhật ký buổi sáng",
-    //     backgroundColor: "#E7F2E7",
-    //     checkColor: "#7CB97C",
-    //     image: require('../../../assets/images/morning-log-image.png'),
-    //     check: true,
-    // },
-    // {
-    //     id: 2,
-    //     title: "Nhật ký buổi tối",
-    //     backgroundColor: "#EBE2F5",
-    //     checkColor: "#703CAA",
-    //     image: require('../../../assets/images/evening-log-image.png'),
-    //     check: true,
-    // },
     {
-        id: 3,
-        title: "Nhật ký chụp ảnh",
-        backgroundColor: "#FDF0F0",
-        checkColor: "#BE3333",
-        image: require('../../../assets/images/selfie-log-image.png'),
-        check: false,
-        page: '',
-    },
-    {
-        id: 4,
+        id: 1,
         title: "Lịch trình buổi sáng",
         backgroundColor: "#FAF3E8",
         checkColor: "#DCBD9E",
@@ -44,19 +20,56 @@ const dailyListData = [
         type: 'Morning',
     },
     {
-        id: 5,
+        id: 2,
         title: "Lịch trình buổi tối",
         backgroundColor: "#E6F0F6",
         checkColor: "#78B5D1",
         image: require('../../../assets/images/evening-routine.png'),
-        check: true,
+        check: false,
         page: 'SkincareRoutine',
         type: 'Night',
+    },
+    {
+        id: 3,
+        title: "Nhật ký làn da",
+        backgroundColor: "#FDF0F0",
+        checkColor: "#BE3333",
+        image: require('../../../assets/images/selfie-log-image.png'),
+        check: false,
+        page: 'CameraOpen',
     },
 ]
 
 export default function HomeCheckList() {
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
+    async function getSkincare() {
+        const data = await getSkincareRoutine();
+        dailyListData.map(daily => {
+            if (daily.type === 'Morning') {
+                daily.check = data?.data?.morning
+            } else if (daily.type === 'Night') {
+                daily.check = data?.data?.night
+            }
+        })
+    }
+    async function getDays() {
+        const data = await getTodayPhoto()
+        const items = data?.data?.items
+        if (items && items.length > 0) {
+            dailyListData.map(daily => {
+                if (daily.page === 'CameraOpen') {
+                    daily.check = true
+                }
+            })
+        }
+    }
+    useEffect(() => {
+        if (isFocused) {
+            getDays()
+            getSkincare()
+        }
+    }, [isFocused])
     return (
         <>
             <View style={styles.titleContainer}>

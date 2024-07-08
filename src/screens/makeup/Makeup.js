@@ -100,7 +100,7 @@ export default function MakeUp() {
       <>
         <View style={styles.titleContainer}>
           <View style={{ width: "80%" }}>
-            <TitleText title={'Sản phẩm gợi ý'} style={styles.title} />
+            <TitleText title={'Sản phẩm makeup'} style={styles.title} />
           </View>
           <SeeAllButton onPress={() => navigation.navigate('Products', { type: "Makeup" })} />
         </View>
@@ -117,7 +117,7 @@ export default function MakeUp() {
       <>
         <View style={styles.titleContainer}>
           <View style={{ width: "80%" }}>
-            <TitleText title={'Phương pháp hữu ích'} style={styles.title} />
+            <TitleText title={'Phương pháp makeup'} style={styles.title} />
           </View>
           <SeeAllButton onPress={() => navigation.navigate('Methods', { type: "Makeup" })} />
         </View>

@@ -35,7 +35,7 @@ const ExpertBottomTabNavigator = () => {
                             <View style={styles.tabBarContainer}>
                                 {focused && <View style={styles.tabLabelBarActive}></View>}
                                 <Image source={icon} style={styles.tabIcon} />
-                                <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Insights</Text>
+                                <Text style={focused ? styles.tabLabelActive : styles.tabLabel}>Lịch trình</Text>
                             </View>
                         )
                     },

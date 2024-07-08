@@ -6,10 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width
 
-export default function InsideHeader({ title, onPress }) {
+export default function InsideHeader({ title, style }) {
     const navigation = useNavigation()
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <Icon
                 name='chevron-left'
                 type='feather'

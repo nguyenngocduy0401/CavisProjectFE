@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Image, ScrollView, Linking, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, StyleSheet, Dimensions, FlatList } from 'react-native';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';
@@ -20,29 +19,28 @@ const screenHeight = Dimensions.get('window').height;
 
 export default function Chat({ route }) {
     const { receiver } = route.params
-    const navigation = useNavigation()
     const user = useSelector(userSelector)
     const [loading, setLoading] = useState(false)
     const [chat, setChat] = useState([])
     const [message, setMessage] = useState(null)
-    const [receiverData, setReceiverData] = useState(null)
+    // const [receiverData, setReceiverData] = useState(null)
     const [roomId, setRoomId] = useState(receiver.roomId)
 
-    const fetchReceiverData = async () => {
-        try {
-            const userRef = firebase
-                .app()
-                .database(DATABASE_LINK)
-                .ref(`/users/${receiver.id}`);
-            const userSnapshot = await userRef.once('value');
-            const userData = userSnapshot.val();
-            setReceiverData(userData)
-        } catch (error) {
-            console.log('Error fetching user:', error);
-        }
-    };
+    // const fetchReceiverData = async () => {
+    //     try {
+    //         const userRef = firebase
+    //             .app()
+    //             .database(DATABASE_LINK)
+    //             .ref(`/users/${receiver.id}`);
+    //         const userSnapshot = await userRef.once('value');
+    //         const userData = userSnapshot.val();
+    //         setReceiverData(userData)
+    //     } catch (error) {
+    //         console.log('Error fetching user:', error);
+    //     }
+    // };
     useEffect(() => {
-        fetchReceiverData()
+        // fetchReceiverData()
         const cleanupMessageData = fetchMessageData();
 
         return () => {

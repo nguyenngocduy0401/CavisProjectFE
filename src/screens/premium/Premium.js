@@ -46,10 +46,11 @@ export default function Premium() {
     const [userPremiumPackage, setUserPremiumPackage] = useState(null)
     useEffect(() => {
         if (isPremiumValid) {
-            const userPremiumPackage = premiumPackages.find(prePackage => user?.packageDetail?.id === prePackage.id)
-            userPremiumPackage.startTime = user?.packageDetail?.startTime
-            userPremiumPackage.endTime = user?.packageDetail?.endTime
-            setUserPremiumPackage(userPremiumPackage)
+            const userPremiumPackage = premiumPackages.find(prePackage => user.packageDetail.packagePremiumId === prePackage.id)
+            const startTime = user.packageDetail.startTime
+            const endTime = user.packageDetail.endTime
+            const userPackage = { ...userPremiumPackage, startTime, endTime }
+            setUserPremiumPackage(userPackage)
         }
     }, [user])
     return (
@@ -74,7 +75,7 @@ export default function Premium() {
                 ))}
                 <View style={{ marginTop: 20 }}>
                     {userPremiumPackage ?
-                        <View style={styles.prePackageAcive}>
+                        <View style={styles.userPackage}>
                             <TitleText title={userPremiumPackage.title} style={styles.packageTitle} />
                             <NormalText text={`Gói premium của bạn đã được xác nhận vào ${format(new Date(userPremiumPackage.startTime), 'dd/MM/yyyy')} và sẽ kết thúc vào ${format(new Date(userPremiumPackage.endTime), 'dd/MM/yyyy')}`} />
                         </View>
@@ -96,12 +97,12 @@ export default function Premium() {
                         ))
                     }
                 </View>
-                <GenericButton
+                {!userPremiumPackage && <GenericButton
                     title={'Đăng kí ngay'}
                     disabled={!activePremiumPackage}
                     onPress={() => navigation.navigate('Payment', { premiumPackage: activePremiumPackage })}
                     buttonStyle={styles.buttonStyleButton}
-                />
+                />}
             </View>
         </ScrollView>
     )
@@ -155,6 +156,13 @@ const styles = StyleSheet.create({
         marginTop: 0,
         marginBottom: 5,
         fontSize: 18,
+    },
+    userPackage: {
+        borderColor: '#F27272',
+        borderWidth: 1,
+        borderRadius: 16,
+        padding: 20,
+        marginTop: 15,
     },
     prePackageAcive: {
         borderColor: '#F27272',
