@@ -24,6 +24,8 @@ import SkincareRoutine from '../screens/skincareRoutine/SkincareRoutine';
 import CameraOpen from '../screens/cameraOpen/CameraOpen';
 import SkinCompare from '../screens/skinCompare/SkinCompare';
 import SkinCompareDetail from '../screens/skinCompareDetail/SkinCompareDetail';
+import UpdateUser from '../screens/updateUser/UpdateUser';
+import UpdatePassword from '../screens/updatePassword/UpdatePassword';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -74,6 +76,8 @@ const StackNavigator = () => {
                         <Stack.Screen name="SkinCompare" component={SkinCompare} options={{ headerShown: false }} />
                         <Stack.Screen name="CameraOpen" component={CameraOpen} options={{ headerShown: false }} />
                         <Stack.Screen name="SkinCompareDetail" component={SkinCompareDetail} options={{ headerShown: false }} />
+                        <Stack.Screen name="UpdateUser" component={UpdateUser} options={{ headerShown: false }} />
+                        <Stack.Screen name="UpdatePassword" component={UpdatePassword} options={{ headerShown: false }} />
                     </>
                     : user.role.toLowerCase().includes('expert') &&
                     <>

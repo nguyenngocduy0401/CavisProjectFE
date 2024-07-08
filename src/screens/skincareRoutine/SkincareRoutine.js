@@ -133,13 +133,13 @@ export default function SkincareRoutine({ route }) {
     useEffect(() => {
         const currentHour = new Date().getHours();
         if (skincareData && type === 'Morning') {
-            if (skincareData.moring) {
+            if (skincareData.morning) {
                 navigation.goBack()
                 Toast.show({
                     type: 'error',
                     text1: 'Bạn đã skincare buổi sáng rồi',
                 });
-            } else if (currentHour < 6 && currentHour > 10) {
+            } else if (currentHour < 6 || currentHour > 10) {
                 navigation.goBack()
                 Toast.show({
                     type: 'error',
@@ -155,7 +155,7 @@ export default function SkincareRoutine({ route }) {
                     type: 'error',
                     text1: 'Bạn đã skincare buổi tối rồi',
                 });
-            } else if (currentHour < 20 && currentHour > 23) {
+            } else if (currentHour < 20 || currentHour > 23) {
                 navigation.goBack()
                 Toast.show({
                     type: 'error',
@@ -172,12 +172,12 @@ export default function SkincareRoutine({ route }) {
             const id = skincareData.id
             if (type === 'Morning') {
                 await setSkincareRoutine(id, {
-                    moring: true,
+                    morning: true,
                     night: skincareData.night,
                 })
             } else if (type === 'Night') {
                 await setSkincareRoutine(id, {
-                    moring: skincareData.moring,
+                    morning: skincareData.morning,
                     night: true,
                 })
             }

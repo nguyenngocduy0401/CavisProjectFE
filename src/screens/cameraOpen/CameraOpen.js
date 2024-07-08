@@ -9,9 +9,8 @@ import TitleText from '../../components/text/TitleText';
 import storage from '@react-native-firebase/storage';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../store/selector';
-import { addPhoto, getPhotos } from '../../services/UserService';
+import { addPhoto, getTodayPhoto } from '../../services/UserService';
 import usePremium from '../../hooks/usePremium';
-import { isToday, parseISO } from 'date-fns';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -28,7 +27,7 @@ export default function CameraOpen() {
     const [image, setImage] = useState('')
     const [loading, setLoading] = useState(false)
     const [check, setCheck] = useState(null)
-    
+
     if (!isPremiumValid) {
         navigation.goBack();
         Toast.show({
@@ -38,8 +37,8 @@ export default function CameraOpen() {
     }
 
     async function checkToday() {
-        const data = await getPhotos()
-        if (data?.data?.items.some(item => isToday(parseISO(item.creationDate)))) {
+        const data = await getTodayPhoto()
+        if (data?.data?.items && data?.data?.items.length > 0) {
             setCheck(true)
         } else {
             setCheck(false)
@@ -56,7 +55,7 @@ export default function CameraOpen() {
                 navigation.goBack();
                 Toast.show({
                     type: 'error',
-                    text1: 'Hãy tiếp tục lưu hình làn da vào ngày mai nhé',
+                    text1: 'Hãy tiếp tục chụp hình vào ngày mai nhé',
                 });
             } else if (!hasPermission) {
                 requestPermission();

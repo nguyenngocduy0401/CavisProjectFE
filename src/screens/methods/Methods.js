@@ -45,7 +45,7 @@ export default function Methods({ route }) {
     }, []);
     return (
         <View style={styles.container}>
-            <InsideHeader title={'Phương pháp hữu ích'} />
+            <InsideHeader title={`Phương pháp ${type ? type.toLowerCase() : 'hữu ích'}`} />
             <FlatList
                 style={styles.methodView}
                 data={methods}

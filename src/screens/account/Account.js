@@ -78,7 +78,15 @@ export default function Account() {
             marginTop: 10,
           }}
           title={'Chỉnh sửa thông tin'}
-          onPress={() => console.log('Edit profile')}
+          onPress={() => navigation.navigate("UpdateUser")}
+        />
+        <GenericWhiteButton
+          buttonStyle={{
+            height: 40,
+            borderRadius: 30,
+          }}
+          title={'Đổi mật khẩu'}
+          onPress={() => navigation.navigate("UpdatePassword")}
         />
       </View>
       {user && user.role.toLowerCase() === "customer" &&
@@ -215,5 +223,10 @@ const styles = StyleSheet.create({
     color: '#6E6E6E',
     fontSize: 16,
   },
-  listTitle: {}
+  listTitle: {},
+  center: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 })

@@ -84,7 +84,7 @@ export default function SkinCare() {
       <>
         <View style={styles.titleContainer}>
           <View style={{ width: "80%" }}>
-            <TitleText title={'Sản phẩm gợi ý'} style={styles.title} />
+            <TitleText title={'Sản phẩm skincare'} style={styles.title} />
           </View>
           <SeeAllButton onPress={() => navigation.navigate('Products', { type: "Skincare" })} />
         </View>
@@ -101,7 +101,7 @@ export default function SkinCare() {
       <>
         <View style={styles.titleContainer}>
           <View style={{ width: "80%" }}>
-            <TitleText title={'Phương pháp hữu ích'} style={styles.title} />
+            <TitleText title={'Phương pháp skincare'} style={styles.title} />
           </View>
           <SeeAllButton onPress={() => navigation.navigate('Methods', { type: "Skincare" })} />
         </View>

@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from './ApiService';
 import { store } from '../store/store';
 import { removeUser } from '../store/features/authSlice';
+import { startOfToday } from 'date-fns';
 
 const API_URL = "/api/v1/users";
 export const getCurrentUser = async () => {
@@ -10,6 +11,10 @@ export const getCurrentUser = async () => {
 };
 export const updateUser = async (credentials) => {
     const response = await api.put(API_URL + "/mine", credentials);
+    return response.data;
+};
+export const updateUserPassword = async (credentials) => {
+    const response = await api.put(API_URL + "/mine/password", credentials);
     return response.data;
 };
 
@@ -40,6 +45,18 @@ export const addPhoto = async (url) => {
 
 export const getPhotos = async () => {
     const response = await api.get(API_URL + "/mine/personal-images");
+    return response.data;
+};
+
+export const getTodayPhoto = async () => {
+    const StartDate = startOfToday();
+    const PageSize = 1;
+    const response = await api.get(API_URL + "/mine/personal-images", {
+        params: {
+            StartDate,
+            PageSize
+        }
+    });
     return response.data;
 };
 

@@ -58,7 +58,7 @@ export default function Products({ route }) {
     }, [compatible]);
     return (
         <View style={styles.container}>
-            <InsideHeader title={'Gợi ý sản phẩm'} />
+            <InsideHeader title={`Gợi ý sản phẩm ${type ? type.toLowerCase() : ''}`} />
             {isPremiumValid &&
                 <>
                     <TitleText title={'Mức độ phù hợp'}
