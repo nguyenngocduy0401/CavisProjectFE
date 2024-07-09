@@ -4,10 +4,9 @@ import Header from '../../components/header/Header';
 import TitleText from '../../components/text/TitleText';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Agenda, LocaleConfig } from 'react-native-calendars';
-import { endOfMonth, endOfWeek, format, parse, startOfMonth, startOfWeek } from 'date-fns';
+import { endOfMonth, format, parse, startOfMonth } from 'date-fns';
 import { Divider } from '@rneui/themed';
-import NormalText from '../../components/text/NormalText';
-import { color } from '@rneui/base';
+import SeeAllButton from '../../components/button/SeeAllButton';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -37,8 +36,6 @@ LocaleConfig.defaultLocale = 'vi';
 export default function Insights() {
   const isFocused = useIsFocused();
   const navigation = useNavigation()
-
-
   const [selected, setSelected] = useState(format(new Date(), "yyyy-MM-dd"));
   const [schedules, setSchedules] = useState([])
   const [schedulesMark, setSchedulesMark] = useState([])
@@ -129,7 +126,10 @@ export default function Insights() {
   return (
     <View style={styles.container}>
       <Header />
-      <TitleText title={'Lịch trình'} style={styles.title} />
+      <View style={styles.header}>
+        <TitleText title={'Lịch trình'} style={styles.title} />
+        <SeeAllButton text={'Đặt lịch'} onPress={() => navigation.navigate('Booking')} />
+      </View>
       <Agenda
         items={schedules}
         onDayPress={day => {
@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: 0,
     marginTop: 20,
+    width:'50%'
   },
   item: {
     backgroundColor: '#F27272',
@@ -201,5 +202,11 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 14,
     color: 'white',
-  }
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 20,
+    alignItems: 'center'
+  },
 })

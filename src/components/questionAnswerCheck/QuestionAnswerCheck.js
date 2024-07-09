@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export default function QuestionAnswerCheck({ label, active, onPress, width, height }) {
+export default function QuestionAnswerCheck({disabled, label, active, onPress, width, height }) {
     return (
-        <TouchableOpacity onPress={onPress} style={[active ? styles.containerActive : styles.container, { width: width ? width : 'auto', height: height ? height : 50}]}>
+        <TouchableOpacity disabled={disabled} onPress={onPress} style={[active ? styles.containerActive : styles.container, { width: width ? width : 'auto', height: height ? height : 50}]}>
             <Text style={active ? styles.labelActive : styles.label}>{label}</Text>
         </TouchableOpacity>
     )

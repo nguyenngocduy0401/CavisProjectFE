@@ -44,7 +44,12 @@ export const addPhoto = async (url) => {
 };
 
 export const getPhotos = async () => {
-    const response = await api.get(API_URL + "/mine/personal-images");
+    const PageSize = 100;
+    const response = await api.get(API_URL + "/mine/personal-images", {
+        params: {
+            PageSize
+        }
+    });
     return response.data;
 };
 

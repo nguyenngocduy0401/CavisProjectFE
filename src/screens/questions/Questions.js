@@ -184,7 +184,8 @@ export default function Questions({ route }) {
                             title={'Tiếp theo'}
                             onPress={handleSubmit}
                             buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
-                            disabled={(!(concernList.length > 0)) || loading}
+                            disabled={(!(concernList.length > 0))}
+                            loading={loading}
                         />
                     </View>
                 </>
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
         gap: 20,
     },
     datePicker: {
-        width: 700,
+        width: screenWidth,
     },
     buttonStyleButton: {
         height: 50,
