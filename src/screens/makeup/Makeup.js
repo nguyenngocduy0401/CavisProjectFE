@@ -17,41 +17,31 @@ const screenHeight = Dimensions.get('window').height;
 
 const categoryData = [
   {
-    id: 1,
-    icon: require('../../../assets/icons/lips-icon.png'),
-    title: "Môi"
+    id: "9dba7949-edd0-469a-9ee2-225a864ede5b",
+    icon: require('../../../assets/icons/primer-icon.png'),
+    title: "Kem lót"
   },
   {
-    id: 2,
-    icon: require('../../../assets/icons/firm-icon.png'),
-    title: "Da"
+    id: "d7114e75-445e-411f-85cc-c2ad4b0ca65c",
+    icon: require('../../../assets/icons/foundation-icon.png'),
+    title: "Kem nền"
   },
   {
-    id: 3,
-    icon: require('../../../assets/icons/chin-icon.png'),
-    title: "Cằm"
+    id: "786b79fb-576a-4999-bf57-ce5ff3792ef6",
+    icon: require('../../../assets/icons/cushion-icon.png'),
+    title: "Cushion"
   },
   {
-    id: 4,
-    icon: require('../../../assets/icons/acne-icon.png'),
-    title: "Mụn"
-  },
-  {
-    id: 5,
-    icon: require('../../../assets/icons/eyes-icon.png'),
-    title: "Mắt"
-  },
-  {
-    id: 6,
-    icon: require('../../../assets/icons/eyes-icon-2.png'),
-    title: "Mí"
+    id: "f301d7ab-8c96-4f4b-8b34-5bd8bd2f3798",
+    icon: require('../../../assets/icons/blush-icon.png'),
+    title: "Phấn má"
   },
 ]
 export default function MakeUp() {
   const isFocused = useIsFocused();
   const navigation = useNavigation()
 
-  const [category, setCategory] = useState(categoryData)
+  const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
   const [methods, setMethods] = useState([])
   async function getProducts() {
@@ -76,10 +66,18 @@ export default function MakeUp() {
       console.log(error)
     }
   }
+  async function getCategory() {
+    try {
+      setCategories(categoryData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
     if (isFocused) {
       getProducts()
       getMethods()
+      getCategory()
     }
   }, [isFocused])
   return (
@@ -87,15 +85,11 @@ export default function MakeUp() {
       <Header />
       <TitleText title={'Makeup'} style={styles.title} />
       <GenericCarousel />
-      <FlatList
-        style={styles.category}
-        horizontal
-        data={category}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <MakeupCategory key={item.id} icon={item.icon} title={item.title} onPress={() => console.log("click category" + item.id)} />
+      <View style={styles.category}>
+        {categories.length > 0 && categories.map(item =>
+          <MakeupCategory key={item.id} icon={item.icon} title={item.title} onPress={() => navigation.navigate('Products', { type: "Makeup", category: item.id })} />
         )}
-      />
+      </View>
       <PremiumBanner />
       <>
         <View style={styles.titleContainer}>
@@ -163,7 +157,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   category: {
-    paddingLeft: 20,
-    gap: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
 })

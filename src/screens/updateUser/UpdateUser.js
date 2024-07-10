@@ -55,9 +55,9 @@ export default function UpdateUser() {
         <ScrollView style={styles.container}>
             <Formik
                 initialValues={{
-                    name: user.fullName,
-                    email: user.email,
-                    phoneNumber: user.phoneNumber,
+                    name: user?.fullName,
+                    email: user?.email,
+                    phoneNumber: user?.phoneNumber,
                 }}
                 onSubmit={async (values) => {
                     try {

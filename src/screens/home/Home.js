@@ -70,7 +70,7 @@ export default function Home() {
                         style={{ marginTop: 0, marginBottom: 0, marginLeft: 10 }}
                     />
                     <TitleText
-                        title={user.fullName ? user.fullName : user.userName}
+                        title={user.fullName ? user?.fullName : user?.userName}
                         style={{ marginTop: 0, marginBottom: 0, marginLeft: 10 }}
                     />
                 </View>

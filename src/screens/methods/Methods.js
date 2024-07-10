@@ -1,14 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Dimensions, FlatList, RefreshControl, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ProductView from '../../components/productView/ProductView';
 import InsideHeader from '../../components/insideHeader/InsideHeader';
-import { getAnalystMethods, getAnalystProducts } from '../../services/PersonalAnalystService';
-import InputGeneric from '../../components/genericInput/InputGeneric';
-import SendButton from '../../components/button/SendButton';
-import searchIcon from '../../../assets/icons/search-icon.png';
-import { Slider } from '@rneui/themed';
-import NormalText from '../../components/text/NormalText';
+import { getAnalystMethods } from '../../services/PersonalAnalystService';
 import TitleText from '../../components/text/TitleText';
 import Method from '../../components/method/Method';
 

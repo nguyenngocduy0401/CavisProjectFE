@@ -10,20 +10,20 @@ const slides = [
     {
         image: require('../../../assets/images/carousel-image-1.png'),
         title: 'So sánh da',
-        description: 'So sánh làn da qua các khoảng thời gian khác nhau',
+        description: 'heo dõi sự thay đổi của làn da mỗi ngày',
         link: 'SkinCompare'
     },
     {
         image: require('../../../assets/images/carousel-image-2.png'),
         title: 'Phân tích da',
-        description: 'Phân tích làn da, xác định các vấn đề và cung cấp giải pháp',
+        description: 'Phân tích làn da, xác định các vấn đề',
         link: 'Questions',
         type: 'again'
     },
     {
         image: require('../../../assets/images/carousel-image-3.png'),
         title: 'Gợi ý sản phẩm',
-        description: 'Gợi ý sản phẩm phù hợp với loại da và nhu cầu của bạn',
+        description: 'Gợi ý sản phẩm phù hợp với loại da và nhu cầu',
         link: 'Products',
     },
 ]
