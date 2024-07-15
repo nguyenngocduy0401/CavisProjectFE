@@ -11,6 +11,7 @@ export const fetchUser = createAsyncThunk(
     'auth/fetch_user',
     async () => {
         try {
+            console.log("fetch user")
             const data = await getCurrentUser()
             if (data.isSuccess) {
                 firebase

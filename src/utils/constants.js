@@ -1,1 +1,1 @@
-export const QR_IMAGE = 'https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/z5542560537238_8c44406c9f2bd704649351d9cdf803fb.jpg?alt=media&token=ac578083-b244-43f2-9627-0f6465410110';
+export const QR_IMAGE = 'https://firebasestorage.googleapis.com/v0/b/cavisproject.appspot.com/o/z5621005467385_141a3f40b87ef0b5645c965bfd8b5cba.jpg?alt=media&token=af8fca14-732e-4914-bf86-73f3196cea37';

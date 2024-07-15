@@ -2,10 +2,10 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Avatar } from '@rneui/themed';
 
-export default function SendButton({ onPress, icon, disabled }) {
+export default function SendButton({ size, onPress, icon, disabled }) {
     return (
         <TouchableOpacity disabled={disabled} onPress={onPress}>
-            <Avatar size={50} rounded source={icon} containerStyle={styles.avatar} />
+            <Avatar size={size ? size : 50} rounded source={icon} containerStyle={styles.avatar} />
         </TouchableOpacity>
     )
 }

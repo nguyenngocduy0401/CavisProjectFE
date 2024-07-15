@@ -13,18 +13,30 @@ import { DATABASE_LINK } from '../../config/firebase/realtimedb';
 import uuid from 'react-native-uuid';
 import sendIcon from '../../../assets/icons/send-icon.png';
 import Toast from 'react-native-toast-message';
+import usePremium from '../../hooks/usePremium';
+import { useNavigation } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Chat({ route }) {
     const { receiver } = route.params
+    const navigation = useNavigation()
     const user = useSelector(userSelector)
+    const isPremiumValid = usePremium()
     const [loading, setLoading] = useState(false)
     const [chat, setChat] = useState([])
     const [message, setMessage] = useState(null)
     // const [receiverData, setReceiverData] = useState(null)
     const [roomId, setRoomId] = useState(receiver.roomId)
+
+    if (!isPremiumValid && user.role === 'Customer') {
+        navigation.goBack();
+        Toast.show({
+            type: 'error',
+            text1: 'Chức năng này yêu cầu tài khoản premium',
+        });
+    }
 
     // const fetchReceiverData = async () => {
     //     try {

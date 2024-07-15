@@ -67,7 +67,7 @@ export default function Account() {
       <View style={styles.account}>
         <Avatar size={130} rounded source={user?.urlImage ? { uri: user.urlImage } : emptyAvatar} containerStyle={styles.avatar} />
         <TitleText
-          title={user.fullName ? user.fullName : user.userName}
+          title={user?.fullName ? user.fullName : user?.userName}
           style={{ marginTop: 0, marginBottom: 0, marginLeft: 0, textAlign: 'center' }}
         />
         <NormalText text={user?.email} style={{ marginTop: 0, marginBottom: 0, textAlign: 'center' }} />

@@ -2,10 +2,10 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Icon } from '@rneui/themed';
 
-export default function SeeAllButton({ onPress, style }) {
+export default function SeeAllButton({ text, onPress, style }) {
     return (
         <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-            <Text style={styles.text}>Tất cả</Text>
+            <Text style={styles.text}>{text ? text : 'Tất cả'}</Text>
             <Icon
                 name='chevron-right'
                 type='entypo'
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 30,
+        marginTop: 20,
     },
     text: {
         color: '#6E6E6E',

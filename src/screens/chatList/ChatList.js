@@ -10,6 +10,8 @@ import { useNavigation } from '@react-navigation/native';
 import TitleText from '../../components/text/TitleText';
 import { Tab } from '@rneui/themed';
 import { compareDesc, parseISO } from 'date-fns';
+import usePremium from '../../hooks/usePremium';
+import Toast from 'react-native-toast-message';
 
 const tabs = [
     {
@@ -25,9 +27,18 @@ const tabs = [
 export default function ChatList() {
     const user = useSelector(userSelector);
     const navigation = useNavigation()
+    const isPremiumValid = usePremium()
     const [chatList, setChatList] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [tab, setTab] = useState(0);
+
+    if (!isPremiumValid && user.role === 'Customer') {
+        navigation.goBack();
+        Toast.show({
+            type: 'error',
+            text1: 'Chức năng này yêu cầu tài khoản premium',
+        });
+    }
 
     const getChatList = (usersData) => {
         const chatListRef = firebase

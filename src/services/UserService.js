@@ -44,7 +44,12 @@ export const addPhoto = async (url) => {
 };
 
 export const getPhotos = async () => {
-    const response = await api.get(API_URL + "/mine/personal-images");
+    const PageSize = 100;
+    const response = await api.get(API_URL + "/mine/personal-images", {
+        params: {
+            PageSize
+        }
+    });
     return response.data;
 };
 
@@ -62,5 +67,14 @@ export const getTodayPhoto = async () => {
 
 export const getSkincareRoutine = async () => {
     const response = await api.get(API_URL + "/mine/skincare-routines");
+    return response.data;
+};
+
+export const setSkincareAppointment = async (credentials) => {
+    const response = await api.post(API_URL + "/mine/skincare-appointments", credentials);
+    return response.data;
+};
+export const setMakeupAppointment = async (credentials) => {
+    const response = await api.post(API_URL + "/mine/makeup-appointments", credentials);
     return response.data;
 };

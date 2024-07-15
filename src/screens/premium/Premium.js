@@ -16,12 +16,10 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const premiumFunctions = [
-    "Truy cập đầy đủ vào thông tin và hướng dẫn cá nhân hóa hàng ngày",
-    "Các đề xuất linh hoạt cho loại da và vấn đề của bạn",
-    "Đề xuất lịch trình cá nhân hóa để đạt được mục tiêu làn da của bạn",
-    "Truy cập độc quyền vào giáo dục hàng ngày về chăm sóc da và cộng đồng các chuyên gia chăm sóc da",
-    "Nhận diện các yếu tố gây kích ứng da của bạn",
-    "Thêm các loại mỹ phẩm khác nhau vào bộ sưu tập của bạn"
+    "Nhận ngay các đề xuất sản phẩm tốt nhất cho làn da của bạn, giúp giải quyết mọi vấn đề da.",
+    "Theo dõi sự thay đổi của làn da bạn hàng ngày với tính năng chụp hình.",
+    "Trò chuyện trực tiếp với các chuyên gia hàng đầu về skincare và makeup bất cứ khi nào bạn cần.",
+    "Đặt lịch hẹn trực tiếp với các chuyên gia để có được những tư vấn chi tiết và chính xác nhất.",
 ];
 const premiumPackages = [
     {

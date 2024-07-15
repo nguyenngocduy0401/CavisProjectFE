@@ -40,7 +40,7 @@ export default function Header() {
         <View style={styles.container}>
             <Image source={headerLogo} style={styles.topLogo} />
             <View style={styles.interactContainer}>
-                <TouchableOpacity onPress={() => console.log("navigate notification screen")}>
+                {/* <TouchableOpacity onPress={() => console.log("navigate notification screen")}>
                     <Avatar
                         size={45}
                         rounded
@@ -54,7 +54,7 @@ export default function Header() {
                             value={notificationsNumber}
                         />
                     }
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity onPress={() => navigation.navigate('ChatList')}>
                     <Avatar
                         size={45}
