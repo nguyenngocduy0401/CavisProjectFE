@@ -69,3 +69,12 @@ export const getSkincareRoutine = async () => {
     const response = await api.get(API_URL + "/mine/skincare-routines");
     return response.data;
 };
+
+export const setSkincareAppointment = async (credentials) => {
+    const response = await api.post(API_URL + "/mine/skincare-appointments", credentials);
+    return response.data;
+};
+export const setMakeupAppointment = async (credentials) => {
+    const response = await api.post(API_URL + "/mine/makeup-appointments", credentials);
+    return response.data;
+};

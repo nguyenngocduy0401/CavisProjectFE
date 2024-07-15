@@ -4,10 +4,10 @@ import Header from '../../components/header/Header';
 import TitleText from '../../components/text/TitleText';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Agenda, LocaleConfig } from 'react-native-calendars';
-import { endOfMonth, endOfWeek, format, parse, startOfMonth, startOfWeek } from 'date-fns';
+import { compareAsc, eachDayOfInterval, endOfMonth, format, parse, parseISO, startOfMonth } from 'date-fns';
 import { Divider } from '@rneui/themed';
-import NormalText from '../../components/text/NormalText';
-import { color } from '@rneui/base';
+import SeeAllButton from '../../components/button/SeeAllButton';
+import { getAppointments } from '../../services/AppointmentService';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -38,80 +38,88 @@ export default function ExpertInsights() {
   const isFocused = useIsFocused();
   const navigation = useNavigation()
   const [selected, setSelected] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [preSelected, setPreSelected] = useState(null);
   const [schedules, setSchedules] = useState([])
   const [schedulesMark, setSchedulesMark] = useState([])
   const [refreshing, setRefreshing] = useState(false);
+  const formatDataAgenda = (scheduleData, startDate, endDate) => {
+    const allDates = generateDateRange(startDate, endDate);
+    const formattedData = {};
+    allDates.forEach(date => {
+      formattedData[date] = [];
+    });
+
+    scheduleData.forEach(item => {
+      const dateKey = format(parseISO(item.date), 'yyyy-MM-dd');
+      if (!formattedData[dateKey]) {
+        formattedData[dateKey] = [];
+      }
+      formattedData[dateKey].push(item);
+    });
+    return formattedData;
+  };
+  const formatMarkedData = (scheduleData, startDate, endDate) => {
+    const allDates = generateDateRange(startDate, endDate);
+    const formattedData = {};
+    allDates.forEach(date => {
+      formattedData[date] = { marked: false };
+    });
+
+    scheduleData.forEach(item => {
+      const dateKey = format(parseISO(item.date), 'yyyy-MM-dd');
+      if (formattedData[dateKey]) {
+        formattedData[dateKey].marked = true;
+      }
+    });
+    return formattedData;
+  };
+  const getStartDateEndDate = (selectedDate) => {
+    const startOfMonthDate = startOfMonth(selectedDate);
+    const endOfMonthDate = endOfMonth(selectedDate);
+    return { startDate: startOfMonthDate, endDate: endOfMonthDate };
+  };
+  const generateDateRange = (startDate, endDate) => {
+    return eachDayOfInterval({
+      start: startDate,
+      end: endDate,
+    }).map(date => format(date, 'yyyy-MM-dd'));
+  };
   async function getSchedules() {
-    const date = parse(selected, 'yyyy-MM-dd', new Date());
-    const startOfMonthDate = startOfMonth(date);
-    const endOfMonthDate = endOfMonth(date);
     try {
       setRefreshing(true);
-      const data = {
-        "2024-07-07": [],
-        "2024-07-08": [
-          {
-            user: {
-              fullName: "Nguyễn Văn A",
-            },
-            startTime: "12:00",
-            endTime: "14:00",
-          },
-          {
-            user: {
-              fullName: "Nguyễn Văn B",
-            },
-            startTime: "12:00",
-            endTime: "14:00",
-          }
-        ],
-        "2024-07-09": [
-          {
-            user: {
-              fullName: "Nguyễn Văn A",
-            },
-            startTime: "12:00",
-            endTime: "14:00",
-          }
-        ],
-        "2024-07-10": [
-          {
-            user: {
-              fullName: "Nguyễn Văn A",
-            },
-            startTime: "12:00",
-            endTime: "14:00",
-          }
-        ],
-        "2024-07-11": [
-          {
-            user: {
-              fullName: "Nguyễn Văn A",
-            },
-            startTime: "12:00",
-            endTime: "14:00",
-          }
-        ],
-        "2024-07-12": [],
-        "2024-07-13": [],
+      const date = parse(selected, "yyyy-MM-dd", new Date());
+      const { startDate, endDate } = getStartDateEndDate(date);
+      const data = await getAppointments(startDate, endDate);
+      if (data?.isSuccess) {
+        const sortData = data?.data?.items.sort((a, b) => {
+          const dateA = parseISO(a.date)
+          const dateB = parseISO(b.date)
+          return compareAsc(dateA, dateB);
+        })
+        const newData = formatDataAgenda(sortData, startDate, endDate)
+        setSchedules(newData)
+        const markedData = formatMarkedData(sortData, startDate, endDate)
+        setSchedulesMark(markedData)
+        setPreSelected(selected)
+      } else {
+        setSchedules([])
+        setSchedulesMark([])
       }
-      const markedData = {
-        '2024-07-08': { marked: true },
-        '2024-07-09': { marked: true },
-        '2024-07-10': { marked: true },
-        '2024-07-11': { marked: true },
-      }
-      setSchedulesMark(markedData)
-      setSchedules(data)
     } catch (error) {
       console.log(error)
+      setSchedules([])
+      setSchedulesMark([])
     } finally {
       setRefreshing(false);
     }
   }
   useEffect(() => {
     if (isFocused) {
-      getSchedules()
+      if (!preSelected || parse(preSelected, "yyyy-MM-dd", new Date()).getMonth() !== parse(selected, "yyyy-MM-dd", new Date()).getMonth()) {
+        getSchedules()
+      }
+    } else {
+      setPreSelected(null)
     }
   }, [isFocused, selected])
   const onRefresh = useCallback(() => {
@@ -128,11 +136,15 @@ export default function ExpertInsights() {
         onDayPress={day => {
           setSelected(day.dateString);
         }}
+        onDayChange={day => {
+          setSelected(day.dateString);
+        }}
         selected={selected}
         markedDates={schedulesMark}
         renderItem={(item, isFirst) => (
           <View style={styles.item} >
-            <Text style={styles.itemTitle}>{item.user.fullName}</Text>
+            <Text style={styles.itemTitle}>{item.userInfo.userName} - {item.userInfo.phoneNumber}</Text>
+            <Text style={styles.itemText}>{item.title}</Text>
             <Text style={styles.itemText}>{item.startTime} - {item.endTime}</Text>
           </View>
         )}

@@ -118,8 +118,9 @@ export default function CameraOpen() {
     if (!hasPermission) {
         return (
             <View style={styles.container}>
-                <TitleText title={'Tính năng này yêu cầu quyền truy cập vào máy ảnh'} />
-                <GenericButton title="Cấp quyền" onPress={() => requestPermission()} />
+                <InsideHeader title={'Camera'} />
+                <TitleText style={{ marginLeft: 20 }} title={'Tính năng này yêu cầu quyền truy cập vào máy ảnh'} />
+                <GenericButton buttonStyle={styles.buttonStyleButton} title="Cấp quyền" onPress={() => requestPermission()} />
             </View>
         );
     }
@@ -127,7 +128,8 @@ export default function CameraOpen() {
     if (device == null) {
         return (
             <View style={styles.container}>
-                <TitleText title={'Đang mở camera...'} />
+                <InsideHeader title={'Camera'} />
+                <TitleText style={{ marginLeft: 20 }} title={'Đang mở camera...'} />
             </View>
         );
     }
@@ -198,5 +200,10 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 18,
         fontWeight: '600',
+    },
+    buttonStyleButton: {
+        height: 50,
+        borderWidth: 0,
+        borderRadius: 30,
     },
 })

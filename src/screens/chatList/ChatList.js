@@ -32,7 +32,7 @@ export default function ChatList() {
     const [refreshing, setRefreshing] = useState(false);
     const [tab, setTab] = useState(0);
 
-    if (!isPremiumValid) {
+    if (!isPremiumValid && user.role === 'Customer') {
         navigation.goBack();
         Toast.show({
             type: 'error',

@@ -137,8 +137,8 @@ export default function Products({ route }) {
     return (
         <View style={styles.container}>
             <InsideHeader title={`Gợi ý sản phẩm ${type ? type.toLowerCase() : ''}`} />
-            {isPremiumValid &&
-                <>
+            <>
+                {isPremiumValid && type !== "Makeup" &&
                     <TitleText title={'Mức độ phù hợp'}
                         style={{
                             marginLeft: 20,
@@ -146,7 +146,9 @@ export default function Products({ route }) {
                             marginTop: 10,
                             fontSize: 20
                         }} />
-                    <View style={styles.filterContainer}>
+                }
+                <View style={styles.filterContainer}>
+                    {isPremiumValid && type !== "Makeup" ?
                         <Slider
                             style={styles.slider}
                             value={compatible}
@@ -172,11 +174,11 @@ export default function Products({ route }) {
                                     />
                                 ),
                             }}
-                        />
-                        <SendButton size={40} icon={filterIcon} onPress={() => setIsShowCategories(true)} />
-                    </View>
-                </>
-            }
+                        /> : <View style={{ width: '90%' }} />
+                    }
+                    <SendButton size={40} icon={filterIcon} onPress={() => setIsShowCategories(true)} />
+                </View>
+            </>
             <FlatList
                 style={styles.productView}
                 data={products}
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
         paddingRight: 20,
     },
     bottomSheetStyle: {
-        height: screenHeight / 10 * 4,
+        minHeight: screenHeight / 10 * 4,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
         backgroundColor: 'white',

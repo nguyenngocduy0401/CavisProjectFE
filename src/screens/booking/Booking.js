@@ -13,11 +13,18 @@ import InsideHeader from '../../components/insideHeader/InsideHeader';
 import usePremium from '../../hooks/usePremium';
 import Toast from 'react-native-toast-message';
 import { Dropdown } from 'react-native-element-dropdown';
+import { compareAsc, format, isAfter, parse, parseISO } from 'date-fns';
+import { getCalendars } from '../../services/CalendarService';
+import { setMakeupAppointment, setSkincareAppointment } from '../../services/UserService';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../../store/selector';
+import { getAppointmentExperts } from '../../services/AppointmentService';
 
 const screenWidth = Dimensions.get('window').width
 const screenHeight = Dimensions.get('window').height
 
 export default function Booking() {
+    const user = useSelector(userSelector)
     const navigation = useNavigation();
     const isPremiumValid = usePremium()
     if (!isPremiumValid) {
@@ -28,7 +35,13 @@ export default function Booking() {
         });
     }
     const [step, setStep] = useState(1);
-    const [date, setDate] = useState(new Date())
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const minimumTime = new Date();
+    minimumTime.setHours(8, 0, 0, 0);
+    const maximumTime = new Date();
+    maximumTime.setHours(20, 0, 0, 0);
+    const [date, setDate] = useState(tomorrow)
     const [type, setType] = useState(null)
     const [startTime, setStartTime] = useState(new Date())
     const [endTime, setEndTime] = useState(new Date())
@@ -40,33 +53,20 @@ export default function Booking() {
     const [refreshing, setRefreshing] = useState(false);
     async function getTimeRange() {
         try {
-            const data = [
-                {
-                    id: 1,
-                    timeRange: "8:00 - 9:00",
-                },
-                {
-                    id: 2,
-                    timeRange: "9:00 - 10:00",
-                },
-                {
-                    id: 3,
-                    timeRange: "10:00 - 11:00",
-                },
-                {
-                    id: 4,
-                    timeRange: "13:00 - 14:00",
-                },
-                {
-                    id: 5,
-                    timeRange: "15:00 - 16:00",
-                },
-                {
-                    id: 6,
-                    timeRange: "16:00 - 17:00",
-                },
-            ]
-            setSkincareSchedules(data)
+            const data = await getCalendars(date);
+            if (data.isSuccess) {
+                const schedules = data.data.items.sort((a, b) => {
+                    const timeA = parse(a.startTime, 'HH:mm', new Date())
+                    const timeB = parse(b.startTime, 'HH:mm', new Date())
+                    return compareAsc(timeA, timeB);
+                }).map((schedule) => ({
+                    ...schedule,
+                    timeRange: `${schedule.startTime} - ${schedule.endTime}`
+                }))
+                setSkincareSchedules(schedules)
+            } else {
+                setSkincareSchedules([])
+            }
         } catch (error) {
             console.log(error)
         }
@@ -74,25 +74,21 @@ export default function Booking() {
     async function getExperts() {
         try {
             setRefreshing(true);
-            const data = [
-                {
-                    id: 1,
-                    fullName: "Nguyễn Văn A"
-                },
-                {
-                    id: 2,
-                    fullName: "Nguyễn Văn B"
-                },
-                {
-                    id: 3,
-                    fullName: "Nguyễn Văn C"
-                },
-                {
-                    id: 4,
-                    fullName: "Nguyễn Văn D"
-                },
-            ]
-            setExperts(data)
+            let StartTime = null;
+            let EndTime = null;
+            let Role = null;
+            if (type === 'skincare') {
+                const timeRange = skincareSchedules.find(schedule => schedule.id === timeRangeSkincare)
+                StartTime = timeRange.startTime;
+                EndTime = timeRange.endTime;
+                Role = "ExpertSkinCare";
+            } else if (type === 'makeup') {
+                StartTime = format(startTime, "HH:mm")
+                EndTime = format(endTime, "HH:mm")
+                Role = "ExpertMakeup";
+            }
+            const data = await getAppointmentExperts(date, StartTime, EndTime, Role)
+            setExperts(data?.data?.items)
         } catch (error) {
             console.log(error)
         } finally {
@@ -101,7 +97,7 @@ export default function Booking() {
     }
     useEffect(() => {
         getTimeRange()
-    }, [])
+    }, [date])
     useEffect(() => {
         if (type && date && (timeRangeSkincare || startTime && endTime)) {
             getExperts()
@@ -115,16 +111,37 @@ export default function Booking() {
     const handleSubmit = async () => {
         try {
             setLoading(true);
-            console.log({ type, timeRangeSkincare, startTime, endTime, expert })
-            navigation.goBack()
+            const mainData = { date: format(date, "yyyy-MM-dd"), expertId: expert, phoneNumber: user.phoneNumber, email: user.email }
+            let data = null
+            if (type === 'skincare') {
+                data = await setSkincareAppointment({ ...mainData, calendarId: timeRangeSkincare });
+            } else if (type === 'makeup') {
+                data = await setMakeupAppointment({ ...mainData, startTime: format(startTime, "HH:mm"), endTime: format(endTime, "HH:mm") })
+            }
+            if (data?.isSuccess) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Đặt lịch hẹn thành công',
+                });
+                navigation.goBack()
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: data?.message,
+                });
+            }
         } catch (error) {
             console.log(error)
+            Toast.show({
+                type: 'error',
+                text1: 'Có lỗi xảy ra, xin vui lòng thử lại sau',
+            });
         } finally {
             setLoading(false)
         }
     }
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <InsideHeader title={'Đặt lịch với chuyên gia'} />
             <View style={styles.center}>
                 <Image source={headerLogo} style={styles.topLogo} />
@@ -154,9 +171,10 @@ export default function Booking() {
                 </View>
             }
             {step === 2 &&
-                <View style={[styles.center, {height: screenHeight}]}>
+                <ScrollView>
+                    <View style={styles.center}>
                     <TitleText title="Hãy chọn ngày hẹn:" />
-                    <DatePicker locale='vi' minimumDate={new Date()} style={styles.datePicker} date={date} onDateChange={setDate} mode='date' />
+                    <DatePicker locale='vi' minimumDate={tomorrow} style={styles.datePicker} date={date} onDateChange={setDate} mode='date' />
                     <TitleText title="Hãy chọn thời gian hẹn:" />
                     {type === 'skincare' ?
                         <Dropdown
@@ -171,11 +189,11 @@ export default function Booking() {
                             onChange={item => {
                                 setTimeRangeSkincare(item.id);
                             }}
-                        />:
+                        /> :
                         <View style={styles.flexRow}>
                             <View style={styles.center}>
                                 <Text style={styles.labelStyle}>Bắt đầu</Text>
-                                <DatePicker locale='vi' minimumDate={new Date()} style={styles.timePicker} date={startTime} onDateChange={setStartTime} mode='time' />
+                                <DatePicker locale='vi' minimumDate={minimumTime} maximumDate={maximumTime} style={styles.timePicker} date={startTime} onDateChange={setStartTime} mode='time' />
                             </View>
                             <Icon
                                 name='chevron-right'
@@ -186,7 +204,7 @@ export default function Booking() {
                             />
                             <View style={styles.center}>
                                 <Text style={styles.labelStyle}>Kết thúc</Text>
-                                <DatePicker locale='vi' minimumDate={startTime} style={styles.timePicker} date={endTime} onDateChange={setEndTime} mode='time' />
+                                <DatePicker locale='vi' minimumDate={minimumTime && startTime} maximumDate={maximumTime} style={styles.timePicker} date={endTime} onDateChange={setEndTime} mode='time' />
                             </View>
                         </View>
                     }
@@ -200,10 +218,11 @@ export default function Booking() {
                             title={'Tiếp theo'}
                             onPress={() => setStep(3)}
                             buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
-                            disabled={!(type === "skincare" && date && timeRangeSkincare) && !(type === "makeup" && date && startTime && endTime)}
+                            disabled={!(type === "skincare" && date && timeRangeSkincare) && !(type === "makeup" && date && startTime && endTime && isAfter(endTime, startTime))}
                         />
                     </View>
-                </View>
+                    </View>
+                </ScrollView>
             }
             {step === 3 &&
                 <View style={styles.center}>
@@ -211,10 +230,10 @@ export default function Booking() {
                     <FlatList
                         style={styles.answers}
                         data={experts}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => item.expertId}
                         renderItem={({ item }) => (
                             <View style={{ marginBottom: 10 }}>
-                                <QuestionAnswerCheck disabled={loading} active={item.id === expert} onPress={() => setExpert(item.id)} label={item.fullName} />
+                                <QuestionAnswerCheck disabled={loading} active={item.expertId === expert} onPress={() => setExpert(item.expertId)} label={item.expertName} />
                             </View>
                         )}
                         refreshControl={
@@ -248,7 +267,7 @@ export default function Booking() {
                     </View>
                 </View>
             }
-        </ScrollView>
+        </View>
     )
 }
 const styles = StyleSheet.create({

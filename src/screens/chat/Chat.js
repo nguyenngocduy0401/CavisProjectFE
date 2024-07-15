@@ -29,8 +29,8 @@ export default function Chat({ route }) {
     const [message, setMessage] = useState(null)
     // const [receiverData, setReceiverData] = useState(null)
     const [roomId, setRoomId] = useState(receiver.roomId)
-    
-    if (!isPremiumValid) {
+
+    if (!isPremiumValid && user.role === 'Customer') {
         navigation.goBack();
         Toast.show({
             type: 'error',
