@@ -125,10 +125,9 @@ export default function Booking() {
                 });
                 navigation.goBack()
             } else {
-                console.log(data?.message)
                 Toast.show({
                     type: 'error',
-                    text1: 'Có lỗi xảy ra, xin vui lòng thử lại sau',
+                    text1: data?.message,
                 });
             }
         } catch (error) {

@@ -162,7 +162,7 @@ export default function Insights() {
               textAlign: 'center',
               marginLeft: 0
             }}
-            title={'Không có lịch hẹn'}
+            title={'Không có lịch hẹn tháng này'}
           />
         )}
         showClosingKnob={true}

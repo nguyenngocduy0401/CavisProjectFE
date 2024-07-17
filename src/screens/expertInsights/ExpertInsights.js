@@ -159,7 +159,7 @@ export default function ExpertInsights() {
               textAlign: 'center',
               marginLeft: 0
             }}
-            title={'Không có lịch hẹn'}
+            title={'Không có lịch hẹn tháng này'}
           />
         )}
         showClosingKnob={true}
