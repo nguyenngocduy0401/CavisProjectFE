@@ -99,15 +99,19 @@ export default function Booking() {
         getTimeRange()
     }, [date])
     useEffect(() => {
-        if (type && date && (timeRangeSkincare || startTime && endTime)) {
+        if (step === 3 && type && date && (timeRangeSkincare || startTime && endTime)) {
             getExperts()
+        } else {
+            setExperts([])
         }
-    }, [type, date, timeRangeSkincare, startTime, endTime])
+    }, [step, type, date, timeRangeSkincare, startTime, endTime])
     const onRefresh = useCallback(() => {
-        if (type && date && (timeRangeSkincare || startTime && endTime)) {
+        if (step === 3 && type && date && (timeRangeSkincare || startTime && endTime)) {
             getExperts()
+        } else {
+            setExperts([])
         }
-    }, [type, date, timeRangeSkincare, startTime, endTime])
+    }, [step, type, date, timeRangeSkincare, startTime, endTime])
     const handleSubmit = async () => {
         try {
             setLoading(true);
@@ -173,54 +177,54 @@ export default function Booking() {
             {step === 2 &&
                 <ScrollView>
                     <View style={styles.center}>
-                    <TitleText title="Hãy chọn ngày hẹn:" />
-                    <DatePicker locale='vi' minimumDate={tomorrow} style={styles.datePicker} date={date} onDateChange={setDate} mode='date' />
-                    <TitleText title="Hãy chọn thời gian hẹn:" />
-                    {type === 'skincare' ?
-                        <Dropdown
-                            style={styles.dropdown}
-                            data={skincareSchedules}
-                            maxHeight={150}
-                            labelField="timeRange"
-                            valueField="id"
-                            placeholderStyle={styles.dropdownPlaceholder}
-                            placeholder={'Khung giờ'}
-                            value={timeRangeSkincare}
-                            onChange={item => {
-                                setTimeRangeSkincare(item.id);
-                            }}
-                        /> :
-                        <View style={styles.flexRow}>
-                            <View style={styles.center}>
-                                <Text style={styles.labelStyle}>Bắt đầu</Text>
-                                <DatePicker locale='vi' minimumDate={minimumTime} maximumDate={maximumTime} style={styles.timePicker} date={startTime} onDateChange={setStartTime} mode='time' />
+                        <TitleText title="Hãy chọn ngày hẹn:" />
+                        <DatePicker locale='vi' minimumDate={tomorrow} style={styles.datePicker} date={date} onDateChange={setDate} mode='date' />
+                        <TitleText title="Hãy chọn thời gian hẹn:" />
+                        {type === 'skincare' ?
+                            <Dropdown
+                                style={styles.dropdown}
+                                data={skincareSchedules}
+                                maxHeight={150}
+                                labelField="timeRange"
+                                valueField="id"
+                                placeholderStyle={styles.dropdownPlaceholder}
+                                placeholder={'Khung giờ'}
+                                value={timeRangeSkincare}
+                                onChange={item => {
+                                    setTimeRangeSkincare(item.id);
+                                }}
+                            /> :
+                            <View style={styles.flexRow}>
+                                <View style={styles.center}>
+                                    <Text style={styles.labelStyle}>Bắt đầu</Text>
+                                    <DatePicker locale='vi' minimumDate={minimumTime} maximumDate={maximumTime} style={styles.timePicker} date={startTime} onDateChange={setStartTime} mode='time' />
+                                </View>
+                                <Icon
+                                    name='chevron-right'
+                                    type='entypo'
+                                    color='black'
+                                    containerStyle={styles.icon}
+                                    iconProps={{ size: 20 }}
+                                />
+                                <View style={styles.center}>
+                                    <Text style={styles.labelStyle}>Kết thúc</Text>
+                                    <DatePicker locale='vi' minimumDate={minimumTime && startTime} maximumDate={maximumTime} style={styles.timePicker} date={endTime} onDateChange={setEndTime} mode='time' />
+                                </View>
                             </View>
-                            <Icon
-                                name='chevron-right'
-                                type='entypo'
-                                color='black'
-                                containerStyle={styles.icon}
-                                iconProps={{ size: 20 }}
+                        }
+                        <View style={styles.buttonContainer}>
+                            <GenericWhiteButton
+                                title={'Quay lại'}
+                                onPress={() => setStep(1)}
+                                buttonStyle={[styles.whiteButtonStyleButton, { width: screenWidth / 2 - 40 }]}
                             />
-                            <View style={styles.center}>
-                                <Text style={styles.labelStyle}>Kết thúc</Text>
-                                <DatePicker locale='vi' minimumDate={minimumTime && startTime} maximumDate={maximumTime} style={styles.timePicker} date={endTime} onDateChange={setEndTime} mode='time' />
-                            </View>
+                            <GenericButton
+                                title={'Tiếp theo'}
+                                onPress={() => setStep(3)}
+                                buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
+                                disabled={!(type === "skincare" && date && timeRangeSkincare) && !(type === "makeup" && date && startTime && endTime && isAfter(endTime, startTime))}
+                            />
                         </View>
-                    }
-                    <View style={styles.buttonContainer}>
-                        <GenericWhiteButton
-                            title={'Quay lại'}
-                            onPress={() => setStep(1)}
-                            buttonStyle={[styles.whiteButtonStyleButton, { width: screenWidth / 2 - 40 }]}
-                        />
-                        <GenericButton
-                            title={'Tiếp theo'}
-                            onPress={() => setStep(3)}
-                            buttonStyle={[styles.buttonStyleButton, { width: screenWidth / 2 - 40 }]}
-                            disabled={!(type === "skincare" && date && timeRangeSkincare) && !(type === "makeup" && date && startTime && endTime && isAfter(endTime, startTime))}
-                        />
-                    </View>
                     </View>
                 </ScrollView>
             }
