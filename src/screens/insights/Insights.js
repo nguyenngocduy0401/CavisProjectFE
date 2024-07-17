@@ -90,7 +90,7 @@ export default function Insights() {
       const date = parse(selected, "yyyy-MM-dd", new Date());
       const { startDate, endDate } = getStartDateEndDate(date);
       const data = await getAppointments(startDate, endDate);
-      if (data?.isSuccess) {
+      if (data?.isSuccess && data?.data.items.length > 0) {
         const sortData = data?.data?.items.sort((a, b) => {
           const dateA = parseISO(a.date)
           const dateB = parseISO(b.date)
@@ -102,8 +102,8 @@ export default function Insights() {
         setSchedulesMark(markedData)
         setPreSelected(selected)
       } else {
-        setSchedules([])
-        setSchedulesMark([])
+        setSchedules(null)
+        setSchedulesMark(null)
       }
     } catch (error) {
       console.log(error)

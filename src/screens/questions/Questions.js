@@ -33,7 +33,7 @@ export default function Questions({ route }) {
     if (user.checkExistPersonal && !type) {
         navigation.replace('Root')
     }
-    const [step, setStep] = useState(user.checkExistPersonal ? 2 : 1);
+    const [step, setStep] = useState(type ? 2 : 1);
     const [gender, setGender] = useState(null);
     const [dateOfBirth, setDateOfBirth] = useState(new Date(new Date().setFullYear(new Date().getFullYear() - 12)))
 
@@ -82,7 +82,7 @@ export default function Questions({ route }) {
             }
             const list = [...concernList, skin]
             await addSkinAnalyst(list)
-                .then(() => navigation.navigate('Root'))
+                .then(() => navigation.replace('Root'))
         } catch (error) {
             console.log(error)
         } finally {
