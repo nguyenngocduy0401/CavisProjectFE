@@ -10,7 +10,7 @@ const screenWidth = Dimensions.get('window').width
 export default function ReceiverMessage({ user, messageData }) {
     return (
         <View style={styles.container}>
-            <Text style={styles.fullName}>{user?.fullName}</Text>
+            <Text style={styles.fullName}>{user?.fullName ? user?.fullName : user?.userName ? user?.userName : user?.expertName}</Text>
             <View style={styles.detailContainer}>
                 <Avatar size={40} rounded source={user?.urlImage ? { uri: user.urlImage } : emptyAvatar} containerStyle={styles.avatar} />
                 <View style={styles.messageContainer}>

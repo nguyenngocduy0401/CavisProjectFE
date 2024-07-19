@@ -27,7 +27,6 @@ export default function Chat({ route }) {
     const [loading, setLoading] = useState(false)
     const [chat, setChat] = useState([])
     const [message, setMessage] = useState(null)
-    // const [receiverData, setReceiverData] = useState(null)
     const [roomId, setRoomId] = useState(receiver.roomId)
 
     if (!isPremiumValid && user.role === 'Customer') {
@@ -38,21 +37,7 @@ export default function Chat({ route }) {
         });
     }
 
-    // const fetchReceiverData = async () => {
-    //     try {
-    //         const userRef = firebase
-    //             .app()
-    //             .database(DATABASE_LINK)
-    //             .ref(`/users/${receiver.id}`);
-    //         const userSnapshot = await userRef.once('value');
-    //         const userData = userSnapshot.val();
-    //         setReceiverData(userData)
-    //     } catch (error) {
-    //         console.log('Error fetching user:', error);
-    //     }
-    // };
     useEffect(() => {
-        // fetchReceiverData()
         const cleanupMessageData = fetchMessageData();
 
         return () => {
@@ -87,6 +72,7 @@ export default function Chat({ route }) {
             return false;
         }
         setLoading(true);
+        const receiverId = receiver.id ? receiver.id : receiver.userId ? receiver.userId : receiver.expertId
         if (!roomId) {
             let roomId = uuid.v4();
             setRoomId(roomId);
@@ -101,11 +87,11 @@ export default function Chat({ route }) {
             firebase
                 .app()
                 .database(DATABASE_LINK)
-                .ref('/chatlist/' + receiver.id + '/' + user.id)
+                .ref('/chatlist/' + receiverId + '/' + user.id)
                 .update(senderData)
             let receiverData = {
                 roomId,
-                id: receiver.id,
+                id: receiverId,
                 lastMessage: '',
                 lastMessageFrom: '',
                 timestamp: timestamp,
@@ -113,7 +99,7 @@ export default function Chat({ route }) {
             firebase
                 .app()
                 .database(DATABASE_LINK)
-                .ref('/chatlist/' + user.id + '/' + receiver.id)
+                .ref('/chatlist/' + user.id + '/' + receiverId)
                 .update(receiverData)
             const newMessageRef = firebase
                 .app()
@@ -124,7 +110,7 @@ export default function Chat({ route }) {
                 roomId: roomId,
                 message: message,
                 from: user.id,
-                to: receiver.id,
+                to: receiverId,
                 timestamp: timestamp,
                 messageType: 'text',
             }).then(() => {
@@ -136,12 +122,12 @@ export default function Chat({ route }) {
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + receiver.id + '/' + user.id)
+                    .ref('/chatlist/' + receiverId + '/' + user.id)
                     .update(chatListupdate)
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + user.id + '/' + receiver.id)
+                    .ref('/chatlist/' + user.id + '/' + receiverId)
                     .update(chatListupdate)
             })
         } else {
@@ -155,7 +141,7 @@ export default function Chat({ route }) {
                 roomId: receiver.roomId,
                 message: message,
                 from: user.id,
-                to: receiver.id,
+                to: receiverId,
                 timestamp: timestamp,
                 messageType: 'text',
             }).then(() => {
@@ -167,12 +153,12 @@ export default function Chat({ route }) {
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + receiver.id + '/' + user.id)
+                    .ref('/chatlist/' + receiverId + '/' + user.id)
                     .update(chatListupdate)
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + user.id + '/' + receiver.id)
+                    .ref('/chatlist/' + user.id + '/' + receiverId)
                     .update(chatListupdate)
             })
         }
@@ -188,6 +174,7 @@ export default function Chat({ route }) {
             return false;
         }
         setLoading(true);
+        const receiverId = receiver.id ? receiver.id : receiver.userId ? receiver.userId : receiver.expertId
         if (!roomId) {
             const timestamp = new Date().toISOString()
             let roomId = uuid.v4();
@@ -202,11 +189,11 @@ export default function Chat({ route }) {
             firebase
                 .app()
                 .database(DATABASE_LINK)
-                .ref('/chatlist/' + receiver.id + '/' + user.id)
+                .ref('/chatlist/' + receiverId + '/' + user.id)
                 .update(senderData)
             let receiverData = {
                 roomId,
-                id: receiver.id,
+                id: receiverId,
                 lastMessage: '',
                 lastMessageFrom: '',
                 timestamp: timestamp,
@@ -214,7 +201,7 @@ export default function Chat({ route }) {
             firebase
                 .app()
                 .database(DATABASE_LINK)
-                .ref('/chatlist/' + user.id + '/' + receiver.id)
+                .ref('/chatlist/' + user.id + '/' + receiverId)
                 .update(receiverData)
             const newMessageRef = firebase
                 .app()
@@ -225,7 +212,7 @@ export default function Chat({ route }) {
                 roomId: roomId,
                 message: message,
                 from: user.id,
-                to: receiver.id,
+                to: receiverId,
                 timestamp: new Date().toISOString(),
                 messageType: 'text',
             }).then(() => {
@@ -237,12 +224,12 @@ export default function Chat({ route }) {
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + receiver.id + '/' + user.id)
+                    .ref('/chatlist/' + receiverId + '/' + user.id)
                     .update(chatListupdate)
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + user.id + '/' + receiver.id)
+                    .ref('/chatlist/' + user.id + '/' + receiverId)
                     .update(chatListupdate)
             })
         } else {
@@ -256,7 +243,7 @@ export default function Chat({ route }) {
                 roomId: receiver.roomId,
                 message: message,
                 from: user.id,
-                to: receiver.id,
+                to: receiverId,
                 timestamp: timestamp,
                 messageType: 'text',
             }).then(() => {
@@ -268,12 +255,12 @@ export default function Chat({ route }) {
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + receiver.id + '/' + user.id)
+                    .ref('/chatlist/' + receiverId + '/' + user.id)
                     .update(chatListupdate)
                 firebase
                     .app()
                     .database(DATABASE_LINK)
-                    .ref('/chatlist/' + user.id + '/' + receiver.id)
+                    .ref('/chatlist/' + user.id + '/' + receiverId)
                     .update(chatListupdate)
             })
         }
@@ -281,7 +268,7 @@ export default function Chat({ route }) {
     };
     return (
         <View style={styles.container}>
-            <InsideHeader title={receiver?.fullName} />
+            <InsideHeader title={receiver?.fullName ? receiver?.fullName : receiver?.userName ? receiver?.userName : receiver?.expertName} />
             <FlatList
                 style={{ flex: 1 }}
                 data={chat}

@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, RefreshControl, TouchableOpacity } from 'react-native';
 import Header from '../../components/header/Header';
 import TitleText from '../../components/text/TitleText';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Agenda, LocaleConfig } from 'react-native-calendars';
 import { compareAsc, eachDayOfInterval, endOfMonth, format, parse, parseISO, startOfMonth } from 'date-fns';
 import { Divider } from '@rneui/themed';
-import SeeAllButton from '../../components/button/SeeAllButton';
 import { getAppointments } from '../../services/AppointmentService';
+import { firebase } from '@react-native-firebase/database';
+import { DATABASE_LINK } from '../../config/firebase/realtimedb';
+import Toast from 'react-native-toast-message';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -39,8 +41,8 @@ export default function ExpertInsights() {
   const navigation = useNavigation()
   const [selected, setSelected] = useState(format(new Date(), "yyyy-MM-dd"));
   const [preSelected, setPreSelected] = useState(null);
-  const [schedules, setSchedules] = useState([])
-  const [schedulesMark, setSchedulesMark] = useState([])
+  const [schedules, setSchedules] = useState({})
+  const [schedulesMark, setSchedulesMark] = useState({})
   const [refreshing, setRefreshing] = useState(false);
   const formatDataAgenda = (scheduleData, startDate, endDate) => {
     const allDates = generateDateRange(startDate, endDate);
@@ -102,15 +104,39 @@ export default function ExpertInsights() {
         setSchedulesMark(markedData)
         setPreSelected(selected)
       } else {
-        setSchedules(null)
-        setSchedulesMark(null)
+        setSchedules({})
+        setSchedulesMark({})
       }
     } catch (error) {
       console.log(error)
-      setSchedules([])
-      setSchedulesMark([])
+      setSchedules({})
+      setSchedulesMark({})
     } finally {
       setRefreshing(false);
+    }
+  }
+  const navigateChat = async (item) => {
+    const userInfo = item?.userInfo;
+    const expertInfo = item?.expertInfo;
+    const chatListRef = firebase
+      .app()
+      .database(DATABASE_LINK)
+      .ref('/chatlist/' + expertInfo?.expertId + '/' + userInfo?.userId)
+    try {
+      const snapshot = await chatListRef.once('value');
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const userData = { ...data, ...userInfo }
+        navigation.navigate('Chat', { receiver: userData })
+      } else {
+        navigation.navigate('Chat', { receiver: userInfo })
+      }
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Có lỗi xảy ra, xin vui lòng thử lại sau',
+      });
     }
   }
   useEffect(() => {
@@ -125,6 +151,8 @@ export default function ExpertInsights() {
   const onRefresh = useCallback(() => {
     if (isFocused) {
       getSchedules()
+    } else {
+      setPreSelected(null)
     }
   }, [isFocused, selected]);
   return (
@@ -142,11 +170,11 @@ export default function ExpertInsights() {
         selected={selected}
         markedDates={schedulesMark}
         renderItem={(item, isFirst) => (
-          <View style={styles.item} >
+          <TouchableOpacity onPress={() => navigateChat(item)} style={styles.item} >
             <Text style={styles.itemTitle}>{item.userInfo.userName} - {item.userInfo.phoneNumber}</Text>
             <Text style={styles.itemText}>{item.title}</Text>
             <Text style={styles.itemText}>{item.startTime} - {item.endTime}</Text>
-          </View>
+          </TouchableOpacity>
         )}
         renderEmptyDate={() => (
           <View style={{ flex: 1, justifyContent: 'center' }}>
