@@ -2,7 +2,6 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import API_URL_ENV from "../config/api";
 import { refresh } from "./RefreshService";
-import { logout } from "./UserService";
 import { store } from "../store/store";
 import { removeUser } from "../store/features/authSlice";
 

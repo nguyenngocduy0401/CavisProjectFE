@@ -1,7 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { logout } from "./UserService";
 import API_URL_ENV from "../config/api";
+import { store } from "../store/store";
+import { removeUser } from "../store/features/authSlice";
 
 const url = API_URL_ENV;
 const instance = axios.create({
@@ -32,7 +33,9 @@ instance.interceptors.response.use(
     async (err) => {
         if (err.response) {
             if (err.response.status === 401 || err.response.status === 500) {
-                await logout()
+                await AsyncStorage.removeItem("refreshToken");
+                await AsyncStorage.removeItem("accessToken");
+                store.dispatch(removeUser())
             }
         }
         return Promise.reject(err);
